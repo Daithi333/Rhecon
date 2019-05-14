@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Consultant } from './consultant.model';
+import { Specialties } from './specialties.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ConsultantsService {
       'Dr',
       'Li Na',
       'Zhong',
-      'Paediatrics',
+      Specialties.Paediatrics,
       'https://ak2.picdn.net/shutterstock/videos/3707312/thumb/1.jpg'
     ),
     new Consultant(
@@ -19,7 +20,7 @@ export class ConsultantsService {
       'Dr',
       'Yousef',
       'Amari',
-      'Dermatology',
+      Specialties.Dermatology,
       'https://image.freepik.com/free-photo/portrait-middle-eastern-doctor-standing-with-white-background_21730-11194.jpg'
     ),
     new Consultant(
@@ -27,7 +28,7 @@ export class ConsultantsService {
       'Dr',
       'Sara',
       'Hemsworth',
-      'Neurology',
+      Specialties.Neurology,
       'https://debatechamber.com/wp-content/uploads/2017/02/bigstock-Portrait-of-a-friendly-female-26984102-2-238x300.jpg'
     ),
     new Consultant(
@@ -35,7 +36,7 @@ export class ConsultantsService {
       'Dr',
       'Marcus',
       'Stevens',
-      'General Practice',
+      Specialties.GeneralPractice,
       'https://www.healthyplace.com/sites/default/files/uploads/2017/10/When-To-See-Your-Doctor-About-Your-Anxiety.jpg'
     ),
   ];
