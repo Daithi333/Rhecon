@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Consultant } from './consultant.model';
+import { ConsultantsService } from './consultants.service';
 
 @Component({
   selector: 'app-consultants',
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./consultants.page.scss'],
 })
 export class ConsultantsPage implements OnInit {
+  consultants: Consultant[];
 
-  constructor() { }
+  constructor(private consultantsService: ConsultantsService) { }
 
   ngOnInit() {
+    this.consultants = this.consultantsService.consultants;
   }
 
 }

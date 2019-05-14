@@ -16,7 +16,8 @@
         <ion-list>
           <ion-item
             *ngFor="let patient of patients"
-            [routerLink]="['/', 'tabs', 'patients', patient.id]">
+            [routerLink]="['/', 'tabs', 'patients', patient.id]"
+            detail>
             <ion-thumbnail slot="start">
                 <ion-img [src]="patient.potraitUrl"></ion-img>
               </ion-thumbnail>

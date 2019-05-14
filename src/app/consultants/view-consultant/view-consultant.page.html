@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/consultants"></ion-back-button>
+    </ion-buttons>
+    <ion-title>View Consultant</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col padding>
+        <ion-img [src]="consultant.portraitUrl"></ion-img>
+        <h2>{{ consultant.title }} {{ consultant.firstName }} {{ consultant.lastName }}</h2>
+        <h4>{{ consultant.specialism }}</h4>
+        <p>Pertinent information on the consultants schedule and contact parameters.</p>
+       </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="success">Send Request</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

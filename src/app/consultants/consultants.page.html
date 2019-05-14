@@ -5,5 +5,24 @@
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
+        <ion-list>
+          <ion-item
+            *ngFor="let consultant of consultants"
+            [routerLink]="['/', 'tabs', 'consultants', consultant.id]"
+            detail>
+            <ion-thumbnail slot="start">
+              <ion-img [src]="consultant.portraitUrl"></ion-img>
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{ consultant.title }} {{ consultant.firstName }} {{ consultant.lastName }}</h2>
+              <p>{{ consultant.specialism }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -44,6 +44,10 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../consultants/consultants.module#ConsultantsPageModule'
+          },
+          {
+            path: ':consultantId',
+            loadChildren: '../consultants/view-consultant/view-consultant.module#ViewConsultantPageModule'
           }
         ]
       },
