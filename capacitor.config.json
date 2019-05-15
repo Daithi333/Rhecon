@@ -1,0 +1,7 @@
+{
+  "appId": "com.rhecon.app",
+  "appName": "Rhecon",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}

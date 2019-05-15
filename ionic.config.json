@@ -1,5 +1,7 @@
 {
   "name": "Rhecon",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
