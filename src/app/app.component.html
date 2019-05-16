@@ -1,3 +1,51 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu side="start">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          Rhecon
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="toggleClose()">
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle>
+          <ion-item lines="none">
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-label>Profile</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item lines="none">
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            <ion-label>Appointments</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+         <ion-menu-toggle>
+          <ion-item lines="none">
+            <ion-icon name="people" slot="start"></ion-icon>
+            <ion-label>Groups</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+            <ion-item lines="none" routerLink="/settings">
+              <ion-icon name="settings" slot="start"></ion-icon>
+              <ion-label>Settings</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item lines="none" (click)="onLogout()" button>
+            <ion-icon name="exit" slot="start"></ion-icon>
+            <ion-label>Logout</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>

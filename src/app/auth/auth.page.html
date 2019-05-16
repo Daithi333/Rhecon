@@ -1,9 +1,21 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>auth</ion-title>
+  <ion-toolbar color="tertiary">
+    <ion-title>Authentication</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content text-center padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center padding>
+        <h2>Welcome to Rhecon!</h2>
+        <p>Remote Healthcare Consultation</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center padding>
+        <ion-button color="success" (click)="onLogin()">Login</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
