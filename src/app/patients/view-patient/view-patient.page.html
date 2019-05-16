@@ -6,17 +6,25 @@
     <ion-buttons slot="primary">
         <ion-button [routerLink]="['/', 'tabs', 'patients', 'edit-patient', patient.id]">Edit</ion-button>
       </ion-buttons>
-    <ion-title>{{ patient.firstName }} {{ patient.lastName }}</ion-title>
+    <ion-title>Patient Info</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col padding>
-        <ion-img [src]="patient.potraitUrl"></ion-img>
-        <p>{{ patient.gender }}</p>
-        <p>DOB: {{ patient.dob }}</p>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
+        <ion-card>
+          <ion-img [src]="patient.potraitUrl"></ion-img>
+          <ion-card-header>
+            <ion-card-title>{{ patient.firstName }} {{ patient.lastName }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p><strong>DOB:</strong> {{ patient.dob }}</p>
+            <p><strong>Notes:</strong> {{ patient.notes }}</p>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

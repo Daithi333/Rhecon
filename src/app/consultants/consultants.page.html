@@ -13,9 +13,9 @@
             *ngFor="let consultant of consultants"
             [routerLink]="['/', 'tabs', 'consultants', consultant.id]"
             detail>
-            <ion-thumbnail slot="start">
+            <ion-avatar slot="start">
               <ion-img [src]="consultant.portraitUrl"></ion-img>
-            </ion-thumbnail>
+            </ion-avatar>
             <ion-label>
               <h2>{{ consultant.title }} {{ consultant.firstName }} {{ consultant.lastName }}</h2>
               <p>{{ consultant.specialism }}</p>

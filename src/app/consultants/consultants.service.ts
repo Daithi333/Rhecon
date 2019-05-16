@@ -13,7 +13,9 @@ export class ConsultantsService {
       'Li Na',
       'Zhong',
       Specialties.Paediatrics,
-      'https://ak2.picdn.net/shutterstock/videos/3707312/thumb/1.jpg'
+      'https://ak2.picdn.net/shutterstock/videos/3707312/thumb/1.jpg',
+      'Eager to lend my expertise to help the less fortunate. Available for live consultation if necessary.'
+
     ),
     new Consultant(
       2,
@@ -21,7 +23,8 @@ export class ConsultantsService {
       'Yousef',
       'Amari',
       Specialties.Dermatology,
-      'https://image.freepik.com/free-photo/portrait-middle-eastern-doctor-standing-with-white-background_21730-11194.jpg'
+      'https://image.freepik.com/free-photo/portrait-middle-eastern-doctor-standing-with-white-background_21730-11194.jpg',
+      'Available for live consultation if necessary'
     ),
     new Consultant(
       3,
@@ -29,7 +32,8 @@ export class ConsultantsService {
       'Sara',
       'Hemsworth',
       Specialties.Neurology,
-      'https://debatechamber.com/wp-content/uploads/2017/02/bigstock-Portrait-of-a-friendly-female-26984102-2-238x300.jpg'
+      'https://debatechamber.com/wp-content/uploads/2017/02/bigstock-Portrait-of-a-friendly-female-26984102-2-238x300.jpg',
+      'App requests only.'
     ),
     new Consultant(
       4,
@@ -37,7 +41,8 @@ export class ConsultantsService {
       'Marcus',
       'Stevens',
       Specialties.GeneralPractice,
-      'https://www.healthyplace.com/sites/default/files/uploads/2017/10/When-To-See-Your-Doctor-About-Your-Anxiety.jpg'
+      'https://www.healthyplace.com/sites/default/files/uploads/2017/10/When-To-See-Your-Doctor-About-Your-Anxiety.jpg',
+      'Happy to help with initial consultations and further referal if needed'
     ),
   ];
 

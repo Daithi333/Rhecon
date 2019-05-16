@@ -5,6 +5,7 @@ export class Patient {
     public lastName: string,
     public dob: string,
     public gender: string,
-    public potraitUrl: string
+    public potraitUrl: string,
+    public notes: string
   ) {}
 }

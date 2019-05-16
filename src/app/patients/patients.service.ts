@@ -12,7 +12,8 @@ export class PatientsService {
       'Doe',
       '1980-05-15',
       'Male',
-      'https://www.eharmony.com/blog/wp-content/uploads/2010/04/eHarmony-Blog-profile-picture.jpg'
+      'https://www.eharmony.com/blog/wp-content/uploads/2010/04/eHarmony-Blog-profile-picture.jpg',
+      'From the neighbouring town'
     ),
     new Patient(
       2,
@@ -20,7 +21,8 @@ export class PatientsService {
       'Doe',
       '1982-02-30',
       'Female',
-      'https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg'
+      'https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg',
+      'Repeat visitor to the health center, complains of migranes'
     ),
     new Patient(
       3,
@@ -28,7 +30,8 @@ export class PatientsService {
       'Bloggs',
       '1995-12-04',
       'Male',
-      'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg'
+      'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg',
+      ''
     ),
     new Patient(
       4,
@@ -36,7 +39,8 @@ export class PatientsService {
       'Briggs',
       '1990-08-31',
       'Female',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSodylrg6Lyn15aQMFE9K8ZOGwQ1ZDbBBUJu6DAwO4Xmg1_B53B'
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSodylrg6Lyn15aQMFE9K8ZOGwQ1ZDbBBUJu6DAwO4Xmg1_B53B',
+      ''
     ),
   ];
 
