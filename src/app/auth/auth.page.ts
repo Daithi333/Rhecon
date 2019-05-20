@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+
+import { AuthService } from './auth.service';
+import { LoginComponent } from './login/login.component';
 
 @Component({
   selector: 'app-auth',
@@ -9,15 +12,22 @@ import { Router } from '@angular/router';
 })
 export class AuthPage implements OnInit {
 
-  constructor(private authService: AuthService,
-              private router: Router) {
+  constructor(private router: Router,
+              private modalController: ModalController) {
   }
 
   ngOnInit() {
   }
 
   onLogin() {
-    this.authService.login();
-    this.router.navigateByUrl('/tabs/home');
+    this.modalController.create({
+      component: LoginComponent
+    }).then(modalEl => {
+      modalEl.present();
+    });
+  }
+
+  onSignup() {
+    console.log('');
   }
 }

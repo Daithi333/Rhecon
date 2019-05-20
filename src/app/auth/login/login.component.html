@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onClose()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              type="email"
+              ngModel name="email"
+              required
+              email
+              #emailCtrl="ngModel">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password"
+              ngModel
+              name="password"
+              required
+              minlength="8"
+              #passwordCtrl="ngModel">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="(!passwordCtrl.valid && passwordCtrl.touched) || (!emailCtrl.valid && emailCtrl.touched)" lines="none">
+        <ion-col size-sm="8" offset-sm="2">
+          <small><ion-text color="medium">Email or password not valid</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <br>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-button type="submit" expand="block" (click)="onLogin()" [disabled]="!f.valid">Login</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

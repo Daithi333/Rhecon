@@ -4,17 +4,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content text-center padding>
-  <ion-grid>
-    <ion-row>
+<ion-content text-center>
+  <ion-grid no-padding>
+    <ion-row align-items-end>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center padding>
-        <h2>Welcome to Rhecon!</h2>
-        <p>Remote Healthcare Consultation</p>
+        <ion-thumbnail>
+          <ion-img [src]="'https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX13565127.jpg'" ></ion-img>
+        </ion-thumbnail>
+        <h1><strong>Rhecon</strong></h1>
+        <h5>Remote Healthcare Consultation</h5>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <form></form>
+    <ion-row align-items-end>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center padding>
-        <ion-button color="success" (click)="onLogin()">Login</ion-button>
+        <ion-button color="primary" expand="block"(click)="onLogin()">Login</ion-button>
+        <ion-button fill="clear" expand="block"(click)="onSignup()">New to Rhecon? Sign up</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
