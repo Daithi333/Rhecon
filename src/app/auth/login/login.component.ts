@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   onClose() {
-    this.modalController.dismiss(null, 'cancel');
+    this.modalController.dismiss(null, 'cancel', 'login');
   }
 
   onLogin() {

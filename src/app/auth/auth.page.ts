@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 
 import { AuthService } from './auth.service';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 
 @Component({
   selector: 'app-auth',
@@ -21,13 +22,19 @@ export class AuthPage implements OnInit {
 
   onLogin() {
     this.modalController.create({
-      component: LoginComponent
+      component: LoginComponent,
+      id: 'login'
     }).then(modalEl => {
       modalEl.present();
     });
   }
 
   onSignup() {
-    console.log('');
+    this.modalController.create({
+      component: SignupComponent,
+      id: 'signup'
+    }).then(modalEl => {
+      modalEl.present();
+    });
   }
 }

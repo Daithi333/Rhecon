@@ -8,5 +8,57 @@
 </ion-header>
 
 <ion-content>
-
+  <form [formGroup]="form">
+    <ion-grid>
+      <br>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-thumbnail>
+            <ion-img src="{{ patient.potraitUrl }}"></ion-img>
+          </ion-thumbnail>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">First Name</ion-label>
+            <ion-input type="text" formControlName="firstName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Last Name</ion-label>
+            <ion-input type="text" formControlName="lastName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label>DOB</ion-label>
+            <ion-datetime
+              formControlName="dob"
+              display-format="DD MMM YYYY"
+              picker-format="DD MMM YYYY">
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Notes</ion-label>
+            <ion-textarea rows="3" formControlName="notes"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-button type="submit" color="tertiary" expand="block" (click)="onUpdatePatient()" [disabled]="!form.valid">Update</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

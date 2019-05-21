@@ -22,7 +22,7 @@ export class PatientsService {
       '1982-02-30',
       'Female',
       'https://content-static.upwork.com/uploads/2014/10/01073427/profilephoto1.jpg',
-      'Repeat visitor to the health center, complains of migranes'
+      'Repeat visitor to the health centre, complains of migraines'
     ),
     new Patient(
       3,
