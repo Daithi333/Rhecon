@@ -20,6 +20,13 @@
       </ion-row>
       <ion-row>
         <ion-col size-sm="8" offset-sm="2">
+          <div class="input-container">
+            <ion-input type="file" formControlName="patientImage" #patientImage></ion-input>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
@@ -48,7 +55,7 @@
       </ion-row>
       <ion-row>
         <ion-col size-sm="8" offset-sm="2">
-          <ion-item>
+          <ion-item lines="none">
             <ion-label position="floating">Notes</ion-label>
             <ion-textarea rows="3" formControlName="notes"></ion-textarea>
           </ion-item>
