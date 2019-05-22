@@ -7,7 +7,8 @@ import { Patient } from './patient.model';
 })
 export class PatientsService {
   private patientList: Patient[] = [
-    new Patient(1,
+    new Patient(
+      1,
       'John',
       'Doe',
       '1980-05-15',

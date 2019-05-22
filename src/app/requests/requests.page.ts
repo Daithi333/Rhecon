@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Request } from './request.model';
+import { RequestsService } from './requests.service';
 
 @Component({
   selector: 'app-requests',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./requests.page.scss'],
 })
 export class RequestsPage implements OnInit {
+  activeRequests: Request[];
+  inactiveRequests: Request[];
 
-  constructor() { }
+  constructor(private requestsService: RequestsService) { }
 
   ngOnInit() {
+    this.activeRequests = this.requestsService.activeRequests;
+    this.inactiveRequests = this.requestsService.inactiveRequests;
   }
 
 }
