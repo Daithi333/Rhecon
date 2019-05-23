@@ -13,7 +13,7 @@
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" padding>
           <ion-item>
             <ion-label position="floating">Email</ion-label>
             <ion-input
@@ -27,7 +27,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
           <ion-item>
             <ion-label position="floating">Password</ion-label>
             <ion-input type="password"
@@ -41,14 +41,15 @@
         </ion-col>
       </ion-row>
       <ion-row *ngIf="(!passwordCtrl.valid && passwordCtrl.touched) || (!emailCtrl.valid && emailCtrl.touched)" lines="none">
-        <ion-col size-sm="8" offset-sm="2" padding>
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
           <small><ion-text color="medium">Email or password not valid</ion-text></small>
         </ion-col>
       </ion-row>
       <br>
-      <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2" padding>
           <ion-button type="submit" expand="block" (click)="onLogin()" [disabled]="!f.valid">Login</ion-button>
+          <ion-button fill="clear" expand="block">Forgot password?</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

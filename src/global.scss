@@ -13,3 +13,12 @@
 .ion-invalid.ion-touched ion-label{
   color: var(--ion-color-danger, #f04141);
 }
+
+.grow {
+  flex-grow: 1;
+}
+
+.sidePadding {
+  padding-left: 16px;
+  padding-right: 16px;
+}

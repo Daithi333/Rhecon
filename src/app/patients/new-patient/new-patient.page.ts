@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PatientsService } from '../patients.service';
 
 @Component({
   selector: 'app-new-patient',
@@ -11,7 +12,7 @@ export class NewPatientPage implements OnInit {
   isLoading = false;
   placeholderImage = 'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg';
 
-  constructor() { }
+  constructor(private patientsService: PatientsService) { }
 
   ngOnInit() {
     // create reactive form group and controls
