@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Request } from './request.model';
 import { RequestsService } from './requests.service';
+import { SegmentChangeEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-requests',
@@ -16,6 +17,10 @@ export class RequestsPage implements OnInit {
   ngOnInit() {
     this.activeRequests = this.requestsService.activeRequests;
     this.inactiveRequests = this.requestsService.inactiveRequests;
+  }
+
+  onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
+    console.log('event.detail');
   }
 
 }
