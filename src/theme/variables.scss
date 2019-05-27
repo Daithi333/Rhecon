@@ -77,4 +77,13 @@
 
   --ion-toolbar-background: var(--ion-color-tertiary, #7044ff);
   --ion-toolbar-color: var(--ion-color-tertiary-contrast, #ffffff);
+
+  ion-toolbar {
+    ion-button,
+    ion-back-button,
+    ion-menu-button,
+    .sc-ion-back-button-ios-h {
+      --color: white;
+    }
+  }
 }

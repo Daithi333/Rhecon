@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Request } from '../request.model';
-import { NavController } from '@ionic/angular';
 import { RequestsService } from '../requests.service';
 
 @Component({
@@ -12,6 +13,8 @@ import { RequestsService } from '../requests.service';
 })
 export class EditRequestPage implements OnInit {
   request: Request;
+  requestForm: FormGroup;
+  isLoading = false;
 
   constructor(private route: ActivatedRoute,
               private navController: NavController,
@@ -25,7 +28,29 @@ export class EditRequestPage implements OnInit {
         return;
       }
       this.request = this.requestsService.getRequest(+paramMap.get('requestId'));
+      this.requestForm = new FormGroup({
+        title: new FormControl(this.request.title, {
+          updateOn: 'blur',
+          validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+        }),
+        patient: new FormControl(this.request.patientId, {
+          updateOn: 'blur',
+          validators: [Validators.required]
+        }),
+        consultant: new FormControl(this.request.consultantId, {
+          updateOn: 'blur',
+          validators: [Validators.required]
+        }),
+        details: new FormControl(this.request.notes, {
+          updateOn: 'blur',
+          validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+        }),
+      });
     });
+  }
+
+  onUpdateRequest() {
+    console.log(this.requestForm);
   }
 
 }

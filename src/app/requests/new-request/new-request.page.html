@@ -8,5 +8,59 @@
 </ion-header>
 
 <ion-content>
-
+  <form [formGroup]="requestForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
+          <ion-list>
+            <ion-item>
+              <ion-icon slot="start" name="paper"></ion-icon>
+              <ion-label position="floating">
+                <h2>Title</h2>
+              </ion-label>
+              <ion-input type="text" formControlName="title"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-icon slot="start" name="medkit"></ion-icon>
+              <ion-label position="floating">
+                <h2>Patient</h2>
+              </ion-label>
+              <ion-input type="text" formControlName="patient"></ion-input>
+              <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-icon slot="start" name="person"></ion-icon>
+              <ion-label position="floating">
+                <h2>Consultant</h2>
+              </ion-label>
+              <ion-input type="text" formControlName="consultant"></ion-input>
+              <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-icon slot="start" name="list"></ion-icon>
+              <ion-label position="floating">
+                <h2>Details</h2>
+              </ion-label>
+              <ion-textarea rows="3" formControlName="details"></ion-textarea>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-icon slot="start" name="attach"></ion-icon>
+              <ion-label>
+                <h2>Attach</h2>
+              </ion-label>
+                <ion-icon slot="end" name="camera"></ion-icon>
+                <ion-icon slot="end" name="videocam"></ion-icon>
+                <ion-icon slot="end" name="document"></ion-icon>
+                <ion-icon slot="end" name="mic"></ion-icon>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-button type="submit" color="tertiary" expand="block" (click)="onAddRequest()" [disabled]="!requestForm.valid">Submit Request</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

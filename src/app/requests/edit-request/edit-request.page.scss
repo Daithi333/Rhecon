@@ -1,0 +1,12 @@
+form {
+  height: 100%;
+}
+ion-grid {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.grow {
+  flex-grow: 1;
+}

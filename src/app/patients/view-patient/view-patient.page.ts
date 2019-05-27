@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 import { Patient } from '../patient.model';
 import { PatientsService } from '../patients.service';
@@ -11,8 +11,9 @@ import { PatientsService } from '../patients.service';
   templateUrl: './view-patient.page.html',
   styleUrls: ['./view-patient.page.scss'],
 })
-export class ViewPatientPage implements OnInit {
+export class ViewPatientPage implements OnInit, OnDestroy{
   patient: Patient;
+  private patientSub: Subscription;
 
   constructor(private patientsService: PatientsService,
               private route: ActivatedRoute,
@@ -25,8 +26,17 @@ export class ViewPatientPage implements OnInit {
         this.navController.navigateBack('/tabs/patients');
         return;
       }
-      this.patient = this.patientsService.getPatient(+paramMap.get('patientId'));
+      this.patientSub = this.patientsService.getPatient(+paramMap.get('patientId'))
+        .subscribe(patient => {
+          this.patient = patient;
+        });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.patientSub) {
+      this.patientSub.unsubscribe();
+    }
   }
 
 }

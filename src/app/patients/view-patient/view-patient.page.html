@@ -4,7 +4,9 @@
       <ion-back-button defaultHref="/tabs/patients"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-        <ion-button [routerLink]="['/', 'tabs', 'patients', 'edit-patient', patient.id]">Edit</ion-button>
+        <ion-button [routerLink]="['/', 'tabs', 'patients', 'edit-patient', patient.id]">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
       </ion-buttons>
     <ion-title>Patient Info</ion-title>
   </ion-toolbar>
@@ -22,7 +24,7 @@
             <ion-img [src]="patient.potraitUrl"></ion-img>
           </ion-thumbnail>
           <ion-card-content>
-            <p><strong>DOB:</strong> {{ patient.dob }}</p>
+            <p><strong>DOB:</strong> {{ patient.dob | date: 'dd/MM/yy' }}</p>
             <p><strong>Notes:</strong> {{ patient.notes }}</p>
           </ion-card-content>
         </ion-card>

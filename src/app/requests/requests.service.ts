@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Request } from './request.model';
-import { PatientsService } from '../patients/patients.service';
-import { ConsultantsService } from '../consultants/consultants.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +11,9 @@ export class RequestsService {
     new Request(
       1001,
       'Recurring migranes',
-      1,
-      this.consultantsService.getConsultant(4),
-      this.patientsService.getPatient(2),
+      this.authService.userId,
+      4,
+      2,
       'Patient Jane has visited on a number of occasions complaining of migranes',
       true,
       new Date('2019-05-20'),
@@ -23,9 +22,9 @@ export class RequestsService {
     new Request(
       1002,
       'Unknown skin condition',
+      this.authService.userId,
+      2,
       1,
-      this.consultantsService.getConsultant(2),
-      this.patientsService.getPatient(1),
       'Looks like an allergic reaction, but no obvious trigger. Would you agree?',
       true,
       new Date('2019-05-20'),
@@ -33,10 +32,10 @@ export class RequestsService {
     ),
     new Request(
       1003,
-      'Jow Bloggs suspected Malaria',
-      1,
-      this.consultantsService.getConsultant(4),
-      this.patientsService.getPatient(3),
+      'Joe Bloggs suspected Malaria',
+      this.authService.userId,
+      4,
+      3,
       'Please confirm if these symptoms look like Malaria',
       false,
       new Date('2019-05-18'),
@@ -45,9 +44,9 @@ export class RequestsService {
     new Request(
       1004,
       'CT scan analysis',
-      1,
-      this.consultantsService.getConsultant(3),
-      this.patientsService.getPatient(4),
+      this.authService.userId,
+      3,
+      4,
       'We were able to take a CT scan but need some consultation on the diagnosis',
       false,
       new Date('2019-05-18'),
@@ -55,10 +54,7 @@ export class RequestsService {
     )
   ];
 
-  constructor(
-    private patientsService: PatientsService,
-    private consultantsService: ConsultantsService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   get activeRequests() {
     return [...this.requestList];

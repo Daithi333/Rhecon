@@ -27,7 +27,7 @@
             </ion-avatar>
             <ion-label>
               <h3>{{ patient.firstName }} {{ patient.lastName }}</h3>
-              <p>{{ patient.dob }}</p>
+              <p>DOB: {{ patient.dob | date: 'dd/MM/yy' }}</p>
             </ion-label>
           </ion-item>
         </ion-list>
