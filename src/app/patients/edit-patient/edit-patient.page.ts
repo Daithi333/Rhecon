@@ -44,7 +44,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
               updateOn: 'blur',
               validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
             }),
-            dob: new FormControl(this.patient.dob, {
+            dob: new FormControl(this.patient.dob.toISOString(), {
               updateOn: 'blur'
             }),
             notes: new FormControl(this.patient.notes, {
