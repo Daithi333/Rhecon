@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { Consultant } from './consultant.model';
 import { ConsultantsService } from './consultants.service';
 
@@ -7,13 +9,22 @@ import { ConsultantsService } from './consultants.service';
   templateUrl: './consultants.page.html',
   styleUrls: ['./consultants.page.scss'],
 })
-export class ConsultantsPage implements OnInit {
+export class ConsultantsPage implements OnInit, OnDestroy {
   consultants: Consultant[];
+  consultantsSub: Subscription;
 
   constructor(private consultantsService: ConsultantsService) { }
 
   ngOnInit() {
-    this.consultants = this.consultantsService.consultants;
+    this.consultantsSub = this.consultantsService.consultants.subscribe(consultants => {
+      this.consultants = consultants;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.consultantsSub) {
+      this.consultantsSub.unsubscribe();
+    }
   }
 
 }

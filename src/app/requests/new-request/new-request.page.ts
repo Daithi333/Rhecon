@@ -12,8 +12,6 @@ import { ConsultantsService } from 'src/app/consultants/consultants.service';
 export class NewRequestPage implements OnInit {
   requestForm: FormGroup;
   isLoading = false;
-  selectedPatient = 'Select patient';
-  selectedConsultant = 'Select consultant';
 
   constructor(private patientsService: PatientsService, private usersService: ConsultantsService) { }
 

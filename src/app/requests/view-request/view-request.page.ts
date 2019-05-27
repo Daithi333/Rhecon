@@ -41,7 +41,10 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         .subscribe(patient => {
           this.patient = patient;
         });
-      this.consultant = this.usersService.getConsultant(this.request.consultantId);
+      this.consultantSub = this.usersService.getConsultant(this.request.consultantId)
+        .subscribe(consultant => {
+          this.consultant = consultant;
+        });
     });
   }
 
