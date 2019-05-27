@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Consultant } from './consultant.model';
-import { Specialties } from './specialties.enum';
+import { Specialism } from './specialism.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class ConsultantsService {
       'Dr',
       'Li Na',
       'Zhong',
-      Specialties.Paediatrics,
+      Specialism.Paediatrics,
       'https://ak2.picdn.net/shutterstock/videos/3707312/thumb/1.jpg',
       'Eager to lend my expertise to help the less fortunate. Available for live consultation if necessary.'
 
@@ -22,7 +22,7 @@ export class ConsultantsService {
       'Dr',
       'Yousef',
       'Amari',
-      Specialties.Dermatology,
+      Specialism.Dermatology,
       'https://image.freepik.com/free-photo/portrait-middle-eastern-doctor-standing-with-white-background_21730-11194.jpg',
       'Available for live consultation if necessary'
     ),
@@ -31,7 +31,7 @@ export class ConsultantsService {
       'Dr',
       'Sara',
       'Hemsworth',
-      Specialties.Neurology,
+      Specialism.Neurology,
       'https://debatechamber.com/wp-content/uploads/2017/02/bigstock-Portrait-of-a-friendly-female-26984102-2-238x300.jpg',
       'App requests only.'
     ),
@@ -40,7 +40,7 @@ export class ConsultantsService {
       'Dr',
       'Marcus',
       'Stevens',
-      Specialties.GeneralPractice,
+      Specialism.GeneralPractice,
       'https://www.healthyplace.com/sites/default/files/uploads/2017/10/When-To-See-Your-Doctor-About-Your-Anxiety.jpg',
       'Happy to help with initial consultations and further referal if needed'
     ),

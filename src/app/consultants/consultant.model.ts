@@ -1,4 +1,4 @@
-import { Specialties } from './specialties.enum';
+import { Specialism } from './specialism.enum';
 
 export class Consultant {
   constructor(
@@ -6,7 +6,7 @@ export class Consultant {
     public title: string,
     public firstName: string,
     public lastName: string,
-    public specialism: Specialties,
+    public specialism: Specialism,
     public portraitUrl: string,
     public bio: string
   ) {}

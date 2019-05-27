@@ -1,6 +1,3 @@
-import { Consultant } from '../consultants/consultant.model';
-import { Patient } from '../patients/patient.model';
-
 export class Request {
   constructor(
     public id: number,
