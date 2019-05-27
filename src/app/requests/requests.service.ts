@@ -56,14 +56,8 @@ export class RequestsService {
 
   constructor(private authService: AuthService) {}
 
-  get activeRequests() {
+  get requests() {
     return [...this.requestList];
-    // return [...this.requestList.filter(request => request.requestActive === true)];
-  }
-
-  get inactiveRequests() {
-    return [...this.requestList];
-    // return [...this.requestList.filter(request => request.requestActive === false)];
   }
 
   getRequest(id: number) {

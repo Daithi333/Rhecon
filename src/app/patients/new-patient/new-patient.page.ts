@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { PatientsService } from '../patients.service';
 
@@ -10,10 +12,13 @@ import { PatientsService } from '../patients.service';
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
-  isLoading = false;
   placeholderImage = 'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg';
 
-  constructor(private patientsService: PatientsService) { }
+  constructor(
+    private patientsService: PatientsService,
+    private loadingController: LoadingController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     // create reactive form group and controls
@@ -42,7 +47,21 @@ export class NewPatientPage implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    console.log(this.form);
+    this.loadingController.create({
+      message: 'Adding Patient'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.patientsService.addPatient(
+        this.form.value.firstName,
+        this.form.value.lastName,
+        new Date(this.form.value.dob),
+        this.form.value.notes
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        this.form.reset();
+        this.router.navigate(['/tabs/patients']);
+      });
+    });
   }
 
 }

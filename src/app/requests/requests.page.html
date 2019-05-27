@@ -23,7 +23,7 @@
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
         <ion-list>
           <ion-item
-            *ngFor="let request of activeRequests"
+            *ngFor="let request of viewableRequests"
             [routerLink]="['/', 'tabs', 'requests', request.id]"
             detail>
             <ion-avatar slot="start">

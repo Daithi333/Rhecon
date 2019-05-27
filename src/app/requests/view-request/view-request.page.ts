@@ -21,6 +21,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   consultant: Consultant;
   private patientSub: Subscription;
   private consultantSub: Subscription;
+  canEdit = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +38,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         return;
       }
       this.request = this.requestsService.getRequest(+paramMap.get('requestId'));
+      if (this.request.requestActive === false) {
+        this.canEdit = false;
+      }
       this.patientSub = this.patientsService.getPatient(this.request.patientId)
         .subscribe(patient => {
           this.patient = patient;

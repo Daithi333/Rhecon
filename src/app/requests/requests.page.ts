@@ -13,8 +13,8 @@ import { Patient } from '../patients/patient.model';
   styleUrls: ['./requests.page.scss'],
 })
 export class RequestsPage implements OnInit, OnDestroy {
-  activeRequests: Request[];
-  inactiveRequests: Request[];
+  requests: Request[];
+  viewableRequests: Request[];
   patients: Patient[];
   private patientsSub: Subscription;
 
@@ -24,15 +24,25 @@ export class RequestsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.activeRequests = this.requestsService.activeRequests;
-    this.inactiveRequests = this.requestsService.inactiveRequests;
+    this.requests = this.requestsService.requests;
+    this.viewableRequests = this.requests;
     this.patientsSub = this.patientsService.patients.subscribe(patients => {
       this.patients = patients;
     });
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
-    console.log('event.detail');
+    // console.log('event.detail');
+    if (event.detail.value === 'active') {
+      this.viewableRequests = this.requests.filter(
+        request => request.requestActive === true
+      );
+    } else {
+      this.viewableRequests = this.requests.filter(
+        request => request.requestActive === false
+      );
+    }
+
   }
 
   ngOnDestroy() {

@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/patients"></ion-back-button>
     </ion-buttons>
-    <ion-title>Add Patient</ion-title>
+    <ion-title>New Patient</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,9 +19,14 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" text-center>
           <div class="input-container">
-            <ion-input type="file" formControlName="patientImage" #patientImage></ion-input>
+            <ion-icon name="attach">
+              <ion-input type="file" formControlName="patientImage" #patientImage></ion-input>
+            </ion-icon>
+            <ion-icon name="camera">
+              <ion-input type="file" formControlName="patientImage" #patientImage></ion-input>
+            </ion-icon>
           </div>
         </ion-col>
       </ion-row>
