@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { NgForm } from '@angular/forms';
 
-import { Consultant } from 'src/app/consultants/consultant.model';
-import { ConsultantsService } from 'src/app/consultants/consultants.service';
+import { Consultant } from '../../consultants/consultant.model';
+import { ConsultantsService } from '../../consultants/consultants.service';
 
 @Component({
   selector: 'app-select-consultant',
@@ -28,16 +27,8 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
     this.modalController.dismiss(null, 'cancel', 'consultantSelect');
   }
 
-  onConsultantSelect() {
-    this.modalController.dismiss(null, 'cancel', 'consultantSelect');
-  }
-
-  onSubmit(form: NgForm) {
-    if (!form.valid) {
-      return;
-    }
-    const consultantId = form.value.selectedConsultant;
-    console.log(consultantId);
+  onConsultantSelect(selectedConsultant: Consultant) {
+    this.modalController.dismiss(selectedConsultant, 'cancel', 'consultantSelect');
   }
 
   ngOnDestroy() {

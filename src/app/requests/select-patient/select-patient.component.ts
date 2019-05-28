@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { NgForm } from '@angular/forms';
 
 import { PatientsService } from '../../patients/patients.service';
 import { Patient } from '../../patients/patient.model';
@@ -29,16 +28,8 @@ export class SelectPatientComponent implements OnInit, OnDestroy {
     this.modalController.dismiss(null, 'cancel', 'patientSelect');
   }
 
-  onPatientSelect() {
-    this.modalController.dismiss(null, 'cancel', 'patientSelect');
-  }
-
-  onSubmit(form: NgForm) {
-    if (!form.valid) {
-      return;
-    }
-    const patientId = form.value.selectedPatient;
-    console.log(patientId);
+  onPatientSelect(selectedPatient: Patient) {
+    this.modalController.dismiss(selectedPatient, 'cancel', 'patientSelect');
   }
 
   ngOnDestroy() {

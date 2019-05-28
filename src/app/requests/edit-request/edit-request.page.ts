@@ -8,6 +8,8 @@ import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../select-consultant/select-consultant.component';
+import { Patient } from '../../patients/patient.model';
+import { Consultant } from '../../consultants/consultant.model';
 
 @Component({
   selector: 'app-edit-request',
@@ -18,6 +20,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
   request: Request;
   requestForm: FormGroup;
   isLoading = false;
+  selectedPatient: Patient;
+  selectedConsultant: Consultant;
   private requestSub: Subscription;
 
   constructor(private route: ActivatedRoute,
@@ -67,6 +71,20 @@ export class EditRequestPage implements OnInit, OnDestroy {
       id: 'patientSelect'
     }).then(modalEl => {
       modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(returnedData => {
+      console.log(returnedData.data);
+      this.selectedPatient = returnedData.data;
+      if (returnedData.data != null) {
+        this.requestForm.patchValue(
+          {
+            patient : this.selectedPatient.firstName
+            + ' ' +
+            this.selectedPatient.lastName
+          }
+        );
+      }
     });
   }
 
@@ -76,6 +94,21 @@ export class EditRequestPage implements OnInit, OnDestroy {
       id: 'consultantSelect'
     }).then(modalEl => {
       modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(returnedData => {
+      this.selectedConsultant = returnedData.data;
+      if (returnedData.data != null) {
+        this.requestForm.patchValue(
+          {
+            consultant : this.selectedConsultant.title
+            + ' ' +
+            this.selectedConsultant.firstName
+            + ' ' +
+            this.selectedConsultant.lastName
+          }
+        );
+      }
     });
   }
 

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { LoadingController, ModalController } from '@ionic/angular';
 
-import { PatientsService } from 'src/app/patients/patients.service';
-import { ConsultantsService } from 'src/app/consultants/consultants.service';
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../select-consultant/select-consultant.component';
+import { Patient } from '../../patients/patient.model';
+import { Consultant } from '../../consultants/consultant.model';
 
 @Component({
   selector: 'app-new-request',
@@ -18,10 +17,10 @@ import { SelectConsultantComponent } from '../select-consultant/select-consultan
 export class NewRequestPage implements OnInit {
   requestForm: FormGroup;
   isLoading = false;
+  selectedPatient: Patient;
+  selectedConsultant: Consultant;
 
   constructor(
-    private patientsService: PatientsService,
-    private usersService: ConsultantsService,
     private requestsService: RequestsService,
     private loadingController: LoadingController,
     private router: Router,
@@ -74,8 +73,23 @@ export class NewRequestPage implements OnInit {
     this.modalController.create({
       component: SelectPatientComponent,
       id: 'patientSelect'
-    }).then(modalEl => {
+    })
+    .then(modalEl => {
       modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(returnedData => {
+      // console.log(returnedData);
+      this.selectedPatient = returnedData.data;
+      if (returnedData.data != null) {
+        this.requestForm.patchValue(
+          {
+            patient : this.selectedPatient.firstName
+            + ' ' +
+            this.selectedPatient.lastName
+          }
+        );
+      }
     });
   }
 
@@ -83,8 +97,22 @@ export class NewRequestPage implements OnInit {
     this.modalController.create({
       component: SelectConsultantComponent,
       id: 'consultantSelect'
-    }).then(modalEl => {
+    })
+    .then(modalEl => {
       modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(returnedData => {
+      this.selectedConsultant = returnedData.data;
+      if (returnedData.data != null) {
+        this.requestForm.patchValue(
+          {
+            consultant : this.selectedConsultant.title + ' ' +
+            this.selectedConsultant.firstName + ' ' +
+            this.selectedConsultant.lastName
+          }
+        );
+      }
     });
   }
 
