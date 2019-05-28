@@ -17,6 +17,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   viewableRequests: Request[];
   patients: Patient[];
   private patientsSub: Subscription;
+  private requestSub: Subscription;
 
   constructor(
     private requestsService: RequestsService,
@@ -24,7 +25,10 @@ export class RequestsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.requests = this.requestsService.requests;
+    this.requestSub = this.requestsService.requests
+      .subscribe(requests => {
+        this.requests = requests;
+      });
     this.viewableRequests = this.requests;
     this.patientsSub = this.patientsService.patients.subscribe(patients => {
       this.patients = patients;
@@ -48,6 +52,9 @@ export class RequestsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.patientsSub) {
       this.patientsSub.unsubscribe();
+    }
+    if (this.requestSub) {
+      this.requestSub.unsubscribe();
     }
   }
 

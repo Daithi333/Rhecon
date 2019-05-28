@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
@@ -11,10 +12,11 @@ import { RequestsService } from '../requests.service';
   templateUrl: './edit-request.page.html',
   styleUrls: ['./edit-request.page.scss'],
 })
-export class EditRequestPage implements OnInit {
+export class EditRequestPage implements OnInit, OnDestroy {
   request: Request;
   requestForm: FormGroup;
   isLoading = false;
+  private requestSub: Subscription;
 
   constructor(private route: ActivatedRoute,
               private navController: NavController,
@@ -27,11 +29,14 @@ export class EditRequestPage implements OnInit {
         this.navController.navigateBack('/tabs/requests');
         return;
       }
-      this.request = this.requestsService.getRequest(+paramMap.get('requestId'));
+      this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
+        .subscribe(request => {
+          this.request = request;
+        });
       this.requestForm = new FormGroup({
         title: new FormControl(this.request.title, {
           updateOn: 'blur',
-          validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+          validators: [Validators.required]
         }),
         patient: new FormControl(this.request.patientId, {
           updateOn: 'blur',
@@ -43,7 +48,7 @@ export class EditRequestPage implements OnInit {
         }),
         details: new FormControl(this.request.notes, {
           updateOn: 'blur',
-          validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+          validators: [Validators.required]
         }),
       });
     });
@@ -51,6 +56,12 @@ export class EditRequestPage implements OnInit {
 
   onUpdateRequest() {
     console.log(this.requestForm);
+  }
+
+  ngOnDestroy() {
+    if (this.requestSub) {
+      this.requestSub.unsubscribe();
+    }
   }
 
 }

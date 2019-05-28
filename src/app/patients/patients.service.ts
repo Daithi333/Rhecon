@@ -80,8 +80,9 @@ export class PatientsService {
       notes,
       this.authService.userId
     );
-    // returned for new-patient loading controller to know when completed.
-    // take allows observation without consuming the Observable
+    // returned for new-patient loading controller to know when completed
+    // take 1 peek at the observable and close (single use observable doesnt need)
+    // tap (i/o suscribe) allows observation without consuming the Observable
     return this.patients.pipe(
       take(1),
       delay(1000),

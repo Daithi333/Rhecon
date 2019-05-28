@@ -19,9 +19,10 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   request: Request;
   patient: Patient;
   consultant: Consultant;
+  canEdit = true;
   private patientSub: Subscription;
   private consultantSub: Subscription;
-  canEdit = true;
+  private requestSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,7 +38,10 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/tabs/requests');
         return;
       }
-      this.request = this.requestsService.getRequest(+paramMap.get('requestId'));
+      this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
+        .subscribe(request => {
+          this.request = request;
+        });
       if (this.request.requestActive === false) {
         this.canEdit = false;
       }
@@ -58,6 +62,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     }
     if (this.consultantSub) {
       this.consultantSub.unsubscribe();
+    }
+    if (this.requestSub) {
+      this.requestSub.unsubscribe();
     }
   }
 
