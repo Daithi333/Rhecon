@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+
+import { LoadingController, ModalController } from '@ionic/angular';
 
 import { PatientsService } from 'src/app/patients/patients.service';
 import { ConsultantsService } from 'src/app/consultants/consultants.service';
 import { RequestsService } from '../requests.service';
+import { SelectPatientComponent } from '../select-patient/select-patient.component';
+import { SelectConsultantComponent } from '../select-consultant/select-consultant.component';
 
 @Component({
   selector: 'app-new-request',
@@ -21,7 +24,8 @@ export class NewRequestPage implements OnInit {
     private usersService: ConsultantsService,
     private requestsService: RequestsService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -63,6 +67,24 @@ export class NewRequestPage implements OnInit {
         this.requestForm.reset();
         this.router.navigate(['/tabs/requests']);
       });
+    });
+  }
+
+  onPatientSelect() {
+    this.modalController.create({
+      component: SelectPatientComponent,
+      id: 'patientSelect'
+    }).then(modalEl => {
+      modalEl.present();
+    });
+  }
+
+  onConsultantSelect() {
+    this.modalController.create({
+      component: SelectConsultantComponent,
+      id: 'consultantSelect'
+    }).then(modalEl => {
+      modalEl.present();
     });
   }
 

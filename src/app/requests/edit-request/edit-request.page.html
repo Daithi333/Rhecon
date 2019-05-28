@@ -34,7 +34,9 @@
                 <h2>Patient</h2>
               </ion-label>
               <ion-input type="text" formControlName="patient"></ion-input>
-              <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+              <ion-button slot="end" fill="clear" type="button" (click)="onPatientSelect()">
+                <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+              </ion-button>
             </ion-item>
             <ion-item>
               <ion-icon slot="start" name="person"></ion-icon>
@@ -42,7 +44,9 @@
                 <h2>Consultant</h2>
               </ion-label>
               <ion-input type="text" formControlName="consultant"></ion-input>
-              <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+              <ion-button slot="end" fill="clear" type="button" (click)="onConsultantSelect()">
+                <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
+              </ion-button>
             </ion-item>
             <ion-item>
               <ion-icon slot="start" name="list"></ion-icon>

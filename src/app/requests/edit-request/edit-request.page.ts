@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
+import { SelectPatientComponent } from '../select-patient/select-patient.component';
+import { SelectConsultantComponent } from '../select-consultant/select-consultant.component';
 
 @Component({
   selector: 'app-edit-request',
@@ -20,7 +22,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private navController: NavController,
-              private requestsService: RequestsService
+              private requestsService: RequestsService,
+              private modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -46,7 +49,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
           updateOn: 'blur',
           validators: [Validators.required]
         }),
-        details: new FormControl(this.request.notes, {
+        notes: new FormControl(this.request.notes, {
           updateOn: 'blur',
           validators: [Validators.required]
         }),
@@ -56,6 +59,24 @@ export class EditRequestPage implements OnInit, OnDestroy {
 
   onUpdateRequest() {
     console.log(this.requestForm);
+  }
+
+  onPatientSelect() {
+    this.modalController.create({
+      component: SelectPatientComponent,
+      id: 'patientSelect'
+    }).then(modalEl => {
+      modalEl.present();
+    });
+  }
+
+  onConsultantSelect() {
+    this.modalController.create({
+      component: SelectConsultantComponent,
+      id: 'consultantSelect'
+    }).then(modalEl => {
+      modalEl.present();
+    });
   }
 
   ngOnDestroy() {
