@@ -18,6 +18,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   patients: Patient[];
   private patientsSub: Subscription;
   private requestSub: Subscription;
+  private currentSegment = 'active';
 
   constructor(
     private requestsService: RequestsService,
@@ -28,20 +29,32 @@ export class RequestsPage implements OnInit, OnDestroy {
     this.requestSub = this.requestsService.requests
       .subscribe(requests => {
         this.requests = requests;
+
+        if (this.currentSegment === 'active') {
+          this.viewableRequests = this.requests.filter(
+            request => request.requestActive === true
+          );
+        } else {
+          this.viewableRequests = this.requests.filter(
+            request => request.requestActive === false
+          );
+        }
       });
-    this.viewableRequests = this.requests;
-    this.patientsSub = this.patientsService.patients.subscribe(patients => {
-      this.patients = patients;
-    });
+    this.patientsSub = this.patientsService.patients
+      .subscribe(patients => {
+        this.patients = patients;
+      });
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
     // console.log('event.detail');
     if (event.detail.value === 'active') {
+      this.currentSegment = 'active';
       this.viewableRequests = this.requests.filter(
         request => request.requestActive === true
       );
     } else {
+      this.currentSegment = 'inactive';
       this.viewableRequests = this.requests.filter(
         request => request.requestActive === false
       );
@@ -59,6 +72,6 @@ export class RequestsPage implements OnInit, OnDestroy {
   }
 
   getPatient(id: number) {
-    return  { ...this.patients.find(p => p.id === id) };
+    return { ...this.patients.find(p => p.id === id) };
   }
 }

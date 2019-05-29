@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 
 import { RequestsService } from '../requests.service';
-import { SelectPatientComponent } from '../select-patient/select-patient.component';
-import { SelectConsultantComponent } from '../select-consultant/select-consultant.component';
+import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
+import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
 import { Consultant } from '../../consultants/consultant.model';
 
@@ -43,29 +43,8 @@ export class NewRequestPage implements OnInit {
       }),
       notes: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+        validators: [Validators.required]
       }),
-    });
-  }
-
-  onAddRequest() {
-    if (!this.requestForm.valid) {
-      return;
-    }
-    this.loadingController.create({
-      message: 'Creating Request'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.requestsService.addRequest(
-        this.requestForm.value.title,
-        this.requestForm.value.patient.id,
-        this.requestForm.value.consultant.id,
-        this.requestForm.value.notes
-      ).subscribe(() => {
-        this.loadingController.dismiss();
-        this.requestForm.reset();
-        this.router.navigate(['/tabs/requests']);
-      });
     });
   }
 
@@ -79,7 +58,6 @@ export class NewRequestPage implements OnInit {
       return modalEl.onDidDismiss();
     })
     .then(returnedData => {
-      // console.log(returnedData);
       this.selectedPatient = returnedData.data;
       if (returnedData.data != null) {
         this.requestForm.patchValue(
@@ -115,5 +93,30 @@ export class NewRequestPage implements OnInit {
       }
     });
   }
+  
+  onAddRequest() {
+    if (!this.requestForm.valid) {
+      return;
+    }
+    this.loadingController.create({
+      message: 'Creating Request'
+    })
+    .then(loadingEl => {
+      loadingEl.present();
+      this.requestsService.addRequest(
+        this.requestForm.value.title,
+        this.selectedPatient.id,
+        this.selectedConsultant.id,
+        this.requestForm.value.notes
+      )
+      .subscribe(() => {
+        this.loadingController.dismiss();
+        this.requestForm.reset();
+        this.router.navigate(['/tabs/requests']);
+      });
+    });
+  }
+
+
 
 }

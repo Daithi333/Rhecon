@@ -15,8 +15,8 @@ export class RequestsService {
         1001,
         'Recurring migranes',
         this.authService.userId,
-        4,
         2,
+        4,
         'Patient Jane has visited on a number of occasions complaining of migranes',
         true,
         new Date('2019-05-20'),
@@ -26,8 +26,8 @@ export class RequestsService {
         1002,
         'Unknown skin condition',
         this.authService.userId,
-        2,
         1,
+        2,
         'Looks like an allergic reaction, but no obvious trigger. Would you agree?',
         true,
         new Date('2019-05-20'),
@@ -37,8 +37,8 @@ export class RequestsService {
         1003,
         'Joe Bloggs suspected Malaria',
         this.authService.userId,
-        4,
         3,
+        4,
         'Please confirm if these symptoms look like Malaria',
         false,
         new Date('2019-05-18'),
@@ -48,8 +48,8 @@ export class RequestsService {
         1004,
         'CT scan analysis',
         this.authService.userId,
-        3,
         4,
+        3,
         'We were able to take a CT scan but need some consultation on the diagnosis',
         false,
         new Date('2019-05-18'),
@@ -74,16 +74,16 @@ export class RequestsService {
 
   addRequest(
     title: string,
-    consultantId: number,
     patientId: number,
+    consultantId: number,
     notes: string
   ) {
     const newRequest = new Request(
       Math.floor(Math.random() * 10000) + 1001,
       title,
       this.authService.userId,
-      consultantId,
       patientId,
+      consultantId,
       notes,
       true,
       new Date(),
@@ -94,10 +94,38 @@ export class RequestsService {
       delay(1000),
       tap(requests => {
         this._requests.next(requests.concat(newRequest));
-      }));
+      })
+    );
   }
 
-  updateRequest() {
+  updateRequest(
+    requestId: number,
+    title: string,
+    patientId: number,
+    consultantId: number,
+    notes: string
+  ) {
+    return this.requests.pipe(
+      take(1),
+      delay(1000),
+      tap(requests => {
+        const updatedRequestIndex = requests.findIndex(r => r.id === requestId);
+        const updatedRequests = [...requests];
+        const oldRequest = updatedRequests[updatedRequestIndex];
+        updatedRequests[updatedRequestIndex] = new Request(
+          oldRequest.id,
+          title,
+          this.authService.userId,
+          patientId,
+          consultantId,
+          notes,
+          true,
+          oldRequest.createdOn,
+          new Date()
+        );
+        this._requests.next(updatedRequests);
+      })
+    );
 
   }
 
