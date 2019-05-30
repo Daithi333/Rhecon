@@ -4,7 +4,7 @@ export class Patient {
     public firstName: string,
     public lastName: string,
     public dob: Date,
-    public potraitUrl: string,
+    public portraitUrl: string,
     public notes: string,
     public userId: number
   ) {}

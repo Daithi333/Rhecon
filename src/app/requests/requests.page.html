@@ -27,7 +27,7 @@
             [routerLink]="['/', 'tabs', 'requests', request.id]"
             detail>
             <ion-avatar slot="start">
-              <ion-img [src]="getPatient(request.patientId).potraitUrl"></ion-img>
+              <ion-img [src]="getPatient(request.patientId).portraitUrl"></ion-img>
             </ion-avatar>
             <ion-label>
               <h3>{{ getPatient(request.patientId).firstName }} {{ getPatient(request.patientId).lastName }}</h3>

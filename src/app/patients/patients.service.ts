@@ -72,7 +72,7 @@ export class PatientsService {
     firstName: string,
     lastName: string,
     dob: Date,
-    // potraitUrl: string,
+    // portraitUrl: string,
     notes: string,
   ) {
     let uniqueId: number;
@@ -86,9 +86,9 @@ export class PatientsService {
       this.authService.userId
     );
     return this.httpClient
-    .post('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php', {
-      ...newPatient, id: null
-    })
+    .post('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
+    { ...newPatient, id: null }
+    )
     .pipe(tap(resData => {
       console.log(resData);
     }));
@@ -117,7 +117,7 @@ export class PatientsService {
     firstName: string,
     lastName: string,
     dob: Date,
-    // potraitUrl: string,
+    // portraitUrl: string,
     notes: string,
   ) {
     return this.patients.pipe(
@@ -132,7 +132,7 @@ export class PatientsService {
           firstName,
           lastName,
           new Date(dob),
-          preUpdatePatient.potraitUrl,
+          preUpdatePatient.portraitUrl,
           notes,
           preUpdatePatient.userId
         );

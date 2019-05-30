@@ -50,7 +50,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
             notes: new FormControl(this.patient.notes, {
               updateOn: 'blur'
             }),
-            patientImage: new FormControl(this.patient.potraitUrl, {
+            patientImage: new FormControl(this.patient.portraitUrl, {
               updateOn: 'blur'
             })
           });
