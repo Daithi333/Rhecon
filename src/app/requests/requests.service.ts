@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { take, map, delay, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
@@ -58,7 +59,10 @@ export class RequestsService {
     ]
   );
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private httpClient: HttpClient
+  ) {}
 
   get requests() {
     return this._requests.asObservable();
@@ -89,6 +93,7 @@ export class RequestsService {
       new Date(),
       new Date()
     );
+    // this.httpClient.post('https://rhecon-fddbf.firebaseio.com/request.json', { ...newRequest, id: null });
     return this.requests.pipe(
       take(1),
       delay(1000),
