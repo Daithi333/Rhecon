@@ -37,7 +37,7 @@ export class ViewPatientPage implements OnInit, OnDestroy{
         .subscribe(patient => {
           this.patient = patient;
           this.isLoading = false;
-        }, 
+        },
         error => {
           this.alertController.create({
             header: 'Error',

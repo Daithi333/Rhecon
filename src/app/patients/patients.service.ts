@@ -27,10 +27,12 @@ export class PatientsService {
     private httpClient: HttpClient
   ) {}
 
+  // returns the locally stored list of patients
   get patients() {
     return this._patients.asObservable();
   }
 
+  // retrieves patients from DB and stores them in local Subject for subscription
   fetchPatients() {
     return this.httpClient.get<{[key: number]: PatientData}>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read.php?userId=${this.authService.userId}`

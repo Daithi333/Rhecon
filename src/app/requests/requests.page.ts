@@ -16,6 +16,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   requests: Request[];
   viewableRequests: Request[];
   patients: Patient[];
+  isLoading = false;
   private patientsSub: Subscription;
   private requestSub: Subscription;
   private currentSegment = 'active';
