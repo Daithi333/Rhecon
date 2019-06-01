@@ -25,7 +25,7 @@ export class PatientsService {
   constructor(
     private authService: AuthService,
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   get patients() {
     return this._patients.asObservable();
@@ -37,7 +37,6 @@ export class PatientsService {
     )
     .pipe(
       map(resData => {
-        // console.log(resData);
         const patients = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
@@ -121,13 +120,13 @@ export class PatientsService {
     lastName: string,
     dob: Date,
     // portraitUrl: string,
-    notes: string,
+    notes: string
   ) {
     let updatedPatients: Patient[];
     return this.patients.pipe(
       take(1),
       switchMap(patients => {
-        const updatedPatientIndex = patients.findIndex(p => p.id === patientId);
+        const updatedPatientIndex = patients.findIndex(p => +p.id === patientId);
         updatedPatients = [...patients];
         const preUpdatePatient = updatedPatients[updatedPatientIndex];
         updatedPatients[updatedPatientIndex] = new Patient(
