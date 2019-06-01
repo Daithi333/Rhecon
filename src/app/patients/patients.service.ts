@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { take, map, tap, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -60,7 +60,7 @@ export class PatientsService {
       })
     );
   }
-  // could fethc locally if better performance is needed
+
   getPatient(id: number) {
     return this.httpClient.get<PatientData>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${this.authService.userId}&id=${id}`
@@ -99,7 +99,7 @@ export class PatientsService {
     );
     return this.httpClient
     .post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
-    { ...newPatient, id: null }
+      { ...newPatient, id: null }
     )
     .pipe(
       switchMap(responseData => {
@@ -126,6 +126,14 @@ export class PatientsService {
     return this.patients.pipe(
       take(1),
       switchMap(patients => {
+        // fetch patients from db if user reloads app on a page where local list is not initialised.
+        if (!patients || patients.length <= 0) {
+          return this.fetchPatients();
+        } else {
+          return of(patients);
+        }
+      }),
+      switchMap(patients => {
         const updatedPatientIndex = patients.findIndex(p => +p.id === patientId);
         updatedPatients = [...patients];
         const preUpdatePatient = updatedPatients[updatedPatientIndex];
@@ -142,33 +150,10 @@ export class PatientsService {
           'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/update.php',
           { ...updatedPatients[updatedPatientIndex] }
         );
-      }), tap(() => {
+      }),
+      tap(() => {
         this._patients.next(updatedPatients);
       }));
-    }
-
-    // return this.patients.pipe(
-    //   take(1),
-    //   delay(1000),
-    //   tap(patients => {
-    //     const updatedPatientIndex = patients.findIndex(pt => pt.id === patientId);
-    //     const updatedPatients = [...patients];
-    //     const preUpdatePatient = updatedPatients[updatedPatientIndex];
-    //     updatedPatients[updatedPatientIndex] = new Patient(
-    //       preUpdatePatient.id,
-    //       firstName,
-    //       lastName,
-    //       new Date(dob),
-    //       preUpdatePatient.portraitUrl,
-    //       notes,
-    //       preUpdatePatient.userId
-    //     );
-    //     this._patients.next(updatedPatients);
-    //   })
-    // );
-
-  deletePatient() {
-
   }
 
 }
