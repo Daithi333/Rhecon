@@ -15,6 +15,8 @@ import { Patient } from '../patient.model';
 export class EditPatientPage implements OnInit, OnDestroy {
   form: FormGroup;
   patient: Patient;
+  patientId: number;
+  isLoading = false;
   private patientSub: Subscription;
 
   constructor(
@@ -31,6 +33,8 @@ export class EditPatientPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/tabs/patients');
         return;
       }
+      this.patientId = +paramMap.get('patientId');
+      this.isLoading = true;
       // retrieve patient id from URL (route paramMap) and use to initialise form with patient data
       this.patientSub = this.patientsService.getPatient(+paramMap.get('patientId'))
         .subscribe(patient => {
@@ -54,6 +58,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
               updateOn: 'blur'
             })
           });
+          this.isLoading = false;
         });
     });
   }

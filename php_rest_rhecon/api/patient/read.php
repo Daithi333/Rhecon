@@ -6,11 +6,9 @@
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';
 
-  // Instantiate DB and connect
+  // Instantiate DB and Patient record objects
   $database = new Database();
   $db = $database->connect();
-
-  // Instantiate Patient data object
   $patient = new Patient($db);
 
   // get user id from URL
@@ -24,7 +22,6 @@
   // check if any patients
   if($count > 0) {
     $patientArr = array();
-    $patientArr['data'] = array();
 
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
       extract($row);
@@ -36,10 +33,10 @@
         'dob' => $dob,
         'notes' => $notes,
         'portraitUrl' => $portraitUrl,
-        'userId ' => $userId
+        'userId' => $userId
       );
 
-      array_push($patientArr['data'], $patientElement);
+      array_push($patientArr, $patientElement);
     }
 
      // output as JSON

@@ -59,6 +59,7 @@
       $this->dob = $row['dob'];
       $this->notes = $row['notes'];
       $this->portraitUrl = $row['portraitUrl'];
+     
     }
 
     /**

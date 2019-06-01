@@ -7,8 +7,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="start">
-      <ion-menu-button>
-      </ion-menu-button>
+      <ion-menu-button> </ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -16,18 +15,50 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
+      <ion-col 
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+        padding
+        *ngIf="!isLoading && patients.length <= 0"
+      > 
+        <p>No patients setup</p>
+      </ion-col>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+        padding
+        *ngIf="isLoading"
+      >
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        *ngIf="!isLoading && patients.length > 0"
+      >
         <ion-list>
           <ion-item
             *ngFor="let patient of patients"
             [routerLink]="['/', 'tabs', 'patients', patient.id]"
-            detail>
+            detail
+          >
             <ion-avatar slot="start">
               <ion-img [src]="patient.portraitUrl"></ion-img>
             </ion-avatar>
             <ion-label>
               <h3>{{ patient.firstName }} {{ patient.lastName }}</h3>
-              <p>DOB: {{ patient.dob | date: 'dd/MM/yy' }}</p>
+              <p>DOB: {{ patient.dob | date: "dd/MM/yy" }}</p>
             </ion-label>
           </ion-item>
         </ion-list>

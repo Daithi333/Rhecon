@@ -12,6 +12,7 @@ import { Patient } from './patient.model';
 })
 export class PatientsPage implements OnInit, OnDestroy {
   patients: Patient[];
+  isLoading = false;
   private patientsSub: Subscription;
 
   constructor(private patientsService: PatientsService) { }
@@ -21,6 +22,13 @@ export class PatientsPage implements OnInit, OnDestroy {
       .subscribe(patients => {
         this.patients = patients;
       });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.patientsService.fetchPatients().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   ngOnDestroy() {

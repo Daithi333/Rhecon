@@ -1,14 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="['/', 'tabs', 'patients', patient.id]"></ion-back-button>
+      <ion-back-button [defaultHref]="['/', 'tabs', 'patients', patientId]"></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Patient</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="form">
+  <div *ngIf="isLoading" text-center>
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <form [formGroup]="form" *ngIf="!isLoading">
     <ion-grid>
       <br>
       <ion-row>

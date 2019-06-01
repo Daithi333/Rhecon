@@ -26,7 +26,7 @@
     'dob' => $patient->dob,
     'notes' => $patient->notes,
     'portraitUrl' => $patient->portraitUrl,
-    'userId ' => $patient->userId
+    'userId ' => $patient->userId  
   );
 
-  print_r(json_encode($patientArr));
+  print_r(json_encode($patientArr));  
