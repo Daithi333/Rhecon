@@ -32,7 +32,7 @@ export class PatientsService {
     return this._patients.asObservable();
   }
 
-  // retrieves patients from DB and stores them in local Subject for subscription
+  // retrieves patients from DB to initialise the _patients BehaviorSubject
   fetchPatients() {
     return this.httpClient.get<{[key: number]: PatientData}>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read.php?userId=${this.authService.userId}`
@@ -55,7 +55,6 @@ export class PatientsService {
             );
           }
         }
-        console.log(patients);
         return patients;
       }),
       tap(patients => {
