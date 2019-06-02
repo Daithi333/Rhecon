@@ -42,8 +42,8 @@
      // output as JSON
     echo json_encode($patientArr);
 
-  } else {
-    echo json_encode(
-      array('message' => 'No patients found')
-    );
+  // } else {
+  //   echo json_encode(
+  //     array('message' => 'No patients found')
+  //   );
   }

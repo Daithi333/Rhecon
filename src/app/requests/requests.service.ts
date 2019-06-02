@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
+import { PatientsService } from '../patients/patients.service';
+import { ConsultantsService } from '../consultants/consultants.service';
 
 @Injectable({
   providedIn: 'root'
@@ -61,11 +63,17 @@ export class RequestsService {
 
   constructor(
     private authService: AuthService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private patientsService: PatientsService,
+    private consultantsService: ConsultantsService
   ) {}
 
   get requests() {
     return this._requests.asObservable();
+  }
+
+  getRequestsWithPatientAndConsultant() {
+
   }
 
   getRequest(id: number) {

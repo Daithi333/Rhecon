@@ -53,13 +53,18 @@
 
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      // set single patient properties
-      $this->firstName = $row['firstName'];
-      $this->lastName = $row['lastName'];
-      $this->dob = $row['dob'];
-      $this->notes = $row['notes'];
-      $this->portraitUrl = $row['portraitUrl'];
-     
+      if ($row) {
+        // set single patient properties
+        $this->firstName = $row['firstName'];
+        $this->lastName = $row['lastName'];
+        $this->dob = $row['dob'];
+        $this->notes = $row['notes'];
+        $this->portraitUrl = $row['portraitUrl'];
+
+        return true;
+      }
+
+      return false;
     }
 
     /**

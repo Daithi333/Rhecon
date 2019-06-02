@@ -17,16 +17,23 @@
   $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
   $patient->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-  $patient->readSingle();
+  if ($patient->readSingle()) {
+    $patientArr = array(
+      'id' => $patient->id,
+      'firstName' => $patient->firstName,
+      'lastName' => $patient->lastName,
+      'dob' => $patient->dob,
+      'notes' => $patient->notes,
+      'portraitUrl' => $patient->portraitUrl,
+      'userId ' => $patient->userId  
+    );
 
-  $patientArr = array(
-    'id' => $patient->id,
-    'firstName' => $patient->firstName,
-    'lastName' => $patient->lastName,
-    'dob' => $patient->dob,
-    'notes' => $patient->notes,
-    'portraitUrl' => $patient->portraitUrl,
-    'userId ' => $patient->userId  
-  );
+    print_r(json_encode($patientArr));  
 
-  print_r(json_encode($patientArr));  
+  } else {
+    // echo json_encode(
+    //   array('message' => 'No patients found')
+    // );
+  }
+
+   

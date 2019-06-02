@@ -55,6 +55,7 @@ export class PatientsService {
             );
           }
         }
+        console.log(patients);
         return patients;
       }),
       tap(patients => {
