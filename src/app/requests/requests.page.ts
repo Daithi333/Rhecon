@@ -22,10 +22,10 @@ export class RequestsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.requestSub = this.requestsService.getRequestsWithPatientAndConsultant()
       .subscribe(requestData => {
         this.requestData = requestData;
-        console.log(requestData);
 
         if (this.currentSegment === 'active') {
           this.viewableRequests = this.requestData.filter(
@@ -36,8 +36,13 @@ export class RequestsPage implements OnInit, OnDestroy {
             rd => rd.requestActive === false
           );
         }
+        this.isLoading = false;
     });
 
+  }
+
+  ionViewWillEnter() {
+    
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {

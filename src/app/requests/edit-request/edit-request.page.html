@@ -10,7 +10,10 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="requestForm">
+  <div *ngIf="isLoading" text-center padding>
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <form [formGroup]="requestForm" *ngIf="!isLoading">
     <ion-grid>
       <ion-row>
         <ion-col

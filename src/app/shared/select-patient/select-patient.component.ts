@@ -12,6 +12,7 @@ import { Patient } from '../../patients/patient.model';
 })
 export class SelectPatientComponent implements OnInit, OnDestroy {
   patients: Patient[];
+  isLoading = false;
   private patientsSub: Subscription;
 
   constructor(
@@ -21,6 +22,13 @@ export class SelectPatientComponent implements OnInit, OnDestroy {
     this.patientsSub = this.patientsService.patients
       .subscribe(patients => {
         this.patients = patients;
+    });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.patientsService.fetchPatients().subscribe(() => {
+      this.isLoading = false;
     });
   }
 

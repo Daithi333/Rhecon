@@ -7,9 +7,8 @@ import { RequestsService } from '../requests.service';
 import { Request } from '../request.model';
 import { PatientsService } from '../../patients/patients.service';
 import { ConsultantsService } from '../../consultants/consultants.service';
-import { RequestData } from '../request-data.model';
-import { Patient } from 'src/app/patients/patient.model';
-import { Consultant } from 'src/app/consultants/consultant.model';
+import { Patient } from '../../patients/patient.model';
+import { Consultant } from '../../consultants/consultant.model';
 
 @Component({
   selector: 'app-view-request',
