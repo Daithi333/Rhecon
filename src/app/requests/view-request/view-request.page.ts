@@ -5,10 +5,11 @@ import { Subscription } from 'rxjs';
 
 import { RequestsService } from '../requests.service';
 import { Request } from '../request.model';
-import { Patient } from '../../patients/patient.model';
 import { PatientsService } from '../../patients/patients.service';
 import { ConsultantsService } from '../../consultants/consultants.service';
-import { Consultant } from '../../consultants/consultant.model';
+import { RequestData } from '../request-data.model';
+import { Patient } from 'src/app/patients/patient.model';
+import { Consultant } from 'src/app/consultants/consultant.model';
 
 @Component({
   selector: 'app-view-request',
@@ -20,6 +21,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   patient: Patient;
   consultant: Consultant;
   canEdit = true;
+  isLoading = false;
   private patientSub: Subscription;
   private consultantSub: Subscription;
   private requestSub: Subscription;
@@ -38,20 +40,22 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/tabs/requests');
         return;
       }
+      this.isLoading = true;
       this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
-        .subscribe(request => {
-          this.request = request;
-        });
-      if (this.request.requestActive === false) {
-        this.canEdit = false;
-      }
-      this.patientSub = this.patientsService.getPatient(this.request.patientId)
-        .subscribe(patient => {
-          this.patient = patient;
-        });
-      this.consultantSub = this.usersService.getConsultant(this.request.consultantId)
-        .subscribe(consultant => {
-          this.consultant = consultant;
+        .subscribe(req => {
+          this.request = req;
+          if (this.request.requestActive === false) {
+            this.canEdit = false;
+          }
+          this.patientSub = this.patientsService.getPatient(this.request.patientId)
+            .subscribe(pat => {
+              this.patient = pat;
+              this.consultantSub = this.usersService.getConsultant(this.request.consultantId)
+              .subscribe(cons => {
+                this.consultant = cons;
+                this.isLoading = false;
+              });
+            });
         });
     });
   }

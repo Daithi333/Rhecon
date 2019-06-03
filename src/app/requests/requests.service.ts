@@ -75,46 +75,43 @@ export class RequestsService {
     return this._requests.asObservable();
   }
 
-  // getRequestsWithPatientAndConsultant() {
-  //   return this._requests.asObservable()
-  //     .pipe(
-  //       map(requests => {
-  //         console.log(requests);
-  //         const requestsWithPatientAndConsultant: RequestData[] = [];
-  //         for (const key in requests) {
-  //           if (requests.hasOwnProperty(key)) {
-  //             let patient: Patient;
-  //             let consultant: Consultant;
-  //             this.patientsService.getPatient(requests[key].patientId)
-  //               .subscribe(pat => {
-  //                 patient = pat;
-  //                 console.log('Patient id: ' + requests[key].patientId);
-  //                 console.log(patient);
-  //               });
-  //             this.consultantsService.getConsultant(requests[key].consultantId)
-  //               .subscribe(cons => {
-  //                 consultant = cons;
-  //               });
-  //             requestsWithPatientAndConsultant.push(
-  //               new RequestData(
-  //                 requests[key].id,
-  //                 requests[key].title,
-  //                 requests[key].requestorId,
-  //                 patient,
-  //                 consultant,
-  //                 requests[key].notes,
-  //                 requests[key].requestActive,
-  //                 requests[key].createdOn,
-  //                 requests[key].lastUpdated
-  //               )
-  //             );
-  //           }
-  //         }
-  //         console.log(requestsWithPatientAndConsultant);
-  //         return requestsWithPatientAndConsultant;
-  //       })
-  //     );
-  // }
+  getRequestsWithPatientAndConsultant() {
+    return this._requests.asObservable()
+      .pipe(
+        map(requests => {
+          const requestsWithPatientAndConsultant: RequestData[] = [];
+          for (const key in requests) {
+            if (requests.hasOwnProperty(key)) {
+              let patient: Patient;
+              let consultant: Consultant;
+              this.patientsService.getPatient(requests[key].patientId)
+                .subscribe(pat => {
+                  patient = pat;
+                  this.consultantsService.getConsultant(requests[key].consultantId)
+                    .subscribe(cons => {
+                      consultant = cons;
+                      requestsWithPatientAndConsultant.push(
+                        new RequestData(
+                          requests[key].id,
+                          requests[key].title,
+                          requests[key].requestorId,
+                          patient,
+                          consultant,
+                          requests[key].notes,
+                          requests[key].requestActive,
+                          requests[key].createdOn,
+                          requests[key].lastUpdated
+                        )
+                     );
+                    });
+                });
+            }
+          }
+          // console.log(requestsWithPatientAndConsultant);
+          return requestsWithPatientAndConsultant;
+        })
+      );
+  }
 
   getRequest(id: number) {
     return this._requests.pipe(take(1),
