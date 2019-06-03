@@ -2,7 +2,7 @@
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: POST');
+  header('Access-Control-Allow-Methods: PUT');
   header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
 
   include_once '../../config/Database.php';
@@ -16,21 +16,19 @@
   // get the raw data
   $data = json_decode(file_get_contents("php://input"));
 
-  // assign request properties from the decoded data
+  $request->id = $data->id;
   $request->title = $data->title;
-  $request->requesterId = $data->requesterId;
   $request->consultantId = $data->consultantId;
   $request->patientId = $data->patientId;
   $request->notes = $data->notes;
 
-  // Create request on db. Retrieve and return the db id if successful
-  if($request->create()) {
-    $uniqueId = $db->lastInsertId();
+  // Update request
+  if($request->update()) {
     echo json_encode(
-      array('UniqueId' => $uniqueId)
+      array('message' => 'Request Updated')
     );
   } else {
     echo json_encode(
-      array('message' => 'Request Not Added')
+      array('message' => 'Request Not Updated')
     );
   }
