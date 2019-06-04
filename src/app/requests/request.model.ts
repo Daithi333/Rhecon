@@ -2,7 +2,7 @@ export class Request {
   constructor(
     public id: number,
     public title: string,
-    public requestorId: number,
+    public requesterId: number,
     public patientId: number,
     public consultantId: number,
     public notes: string,

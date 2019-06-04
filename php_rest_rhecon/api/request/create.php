@@ -16,21 +16,24 @@
   // get the raw data
   $data = json_decode(file_get_contents("php://input"));
 
-  // assign request properties from the decoded data
-  $request->title = $data->title;
-  $request->requesterId = $data->requesterId;
-  $request->consultantId = $data->consultantId;
-  $request->patientId = $data->patientId;
-  $request->notes = $data->notes;
+  if(isset($data)) {
+    // assign request properties from the decoded data
+    $request->title = $data->title;
+    $request->requesterId = $data->requesterId;
+    $request->consultantId = $data->consultantId;
+    $request->patientId = $data->patientId;
+    $request->notes = $data->notes;
 
-  // Create request on db. Retrieve and return the db id if successful
-  if($request->create()) {
-    $uniqueId = $db->lastInsertId();
-    echo json_encode(
-      array('UniqueId' => $uniqueId)
-    );
-  } else {
-    echo json_encode(
-      array('message' => 'Request Not Added')
-    );
+    // Create request on db. Retrieve and return the db id if successful
+    if($request->create()) {
+      $uniqueId = $db->lastInsertId();
+      echo json_encode(
+        array('UniqueId' => $uniqueId)
+      );
+    } else {
+      echo json_encode(
+        array('message' => 'Request Not Added')
+      );
+    }
   }
+  

@@ -16,22 +16,24 @@
   // get the raw data
   $data = json_decode(file_get_contents("php://input"));
 
-  // assign patient properties from the decoded data
-  $patient->firstName = $data->firstName;
-  $patient->lastName = $data->lastName;
-  $patient->dob = $data->dob;
-  $patient->notes = $data->notes;
-  $patient->portraitUrl = $data->portraitUrl;
-  $patient->userId = $data->userId;
+  if (isset($data)) {
+    // assign patient properties from the decoded data
+    $patient->firstName = $data->firstName;
+    $patient->lastName = $data->lastName;
+    $patient->dob = $data->dob;
+    $patient->notes = $data->notes;
+    $patient->portraitUrl = $data->portraitUrl;
+    $patient->userId = $data->userId;
 
-  // Create patient on db. Retrieve and return the db id if successful
-  if($patient->create()) {
-    $uniqueId = $db->lastInsertId();
-    echo json_encode(
-      array('UniqueId' => $uniqueId)
-    );
-  } else {
-    echo json_encode(
-      array('message' => 'Patient Not Added')
-    );
+    // Create patient on db. Retrieve and return the db id if successful
+    if($patient->create()) {
+      $uniqueId = $db->lastInsertId();
+      echo json_encode(
+        array('UniqueId' => $uniqueId)
+      );
+    } else {
+      echo json_encode(
+        array('message' => 'Patient Not Added')
+      );
+    }
   }

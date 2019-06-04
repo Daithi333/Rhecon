@@ -31,26 +31,11 @@ export class RequestsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // this.isLoading = true;
-    // this.requestSub = this.requestsService.getRequestsWithPatientAndConsultant()
-    //   .subscribe(requestData => {
-    //     this.requestData = requestData;
-
-    //     if (this.currentSegment === 'active') {
-    //       this.viewableRequests = this.requestData.filter(
-    //         rd => rd.requestActive === true
-    //       );
-    //     } else {
-    //       this.viewableRequests = this.requestData.filter(
-    //         rd => rd.requestActive === false
-    //       );
-    //     }
-    //     this.isLoading = false;
-    // });
     let requests: Request[];
     this.requestSub = this.requestsService.requests
       .subscribe(reqs => {
         requests = reqs;
+        console.log(reqs);
         for (const key in requests) {
           if (requests.hasOwnProperty(key)) {
             let patient: Patient;
@@ -65,7 +50,7 @@ export class RequestsPage implements OnInit, OnDestroy {
                       new RequestData(
                         requests[key].id,
                         requests[key].title,
-                        requests[key].requestorId,
+                        requests[key].requesterId,
                         patient,
                         consultant,
                         requests[key].notes,
@@ -91,7 +76,10 @@ export class RequestsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    //  TODO - write logic for when request is edited and router redirects back here
+    this.isLoading = true;
+    this.requestsService.fetchRequests().subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
