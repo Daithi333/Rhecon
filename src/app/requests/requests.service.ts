@@ -76,6 +76,7 @@ export class RequestsService {
         const requests = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
+            console.log(resData[key].requestActive);
             requests.push(
               new Request(
                 resData[key].id,
@@ -86,7 +87,7 @@ export class RequestsService {
                 resData[key].notes,
                 resData[key].requestActive,
                 resData[key].createdOn,
-                resData[key].lastUpdated
+                resData[key].updatedOn
               )
             );
           }
@@ -95,7 +96,6 @@ export class RequestsService {
       }),
       tap(requests => {
         this._requests.next(requests);
-        console.log(this._requests.value);
       })
     );
   }

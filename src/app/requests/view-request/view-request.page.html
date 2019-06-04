@@ -41,7 +41,7 @@
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center>
         <p>Consultant: {{ consultant.title }}. {{ consultant.lastName }} - {{ consultant.specialism }}</p>
         <p>Request sent: {{ this.request.createdOn | date : 'dd/MM/yy' }}</p>
-        <p *ngIf="!canEdit" style="color: red;">Request closed: {{ this.request.lastUpdated | date : 'dd/MM/yy' }}</p>
+        <p *ngIf="!canEdit" style="color: red;">Request closed: {{ this.request.updatedOn | date : 'dd/MM/yy' }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>

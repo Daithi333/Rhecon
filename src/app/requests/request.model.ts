@@ -8,6 +8,6 @@ export class Request {
     public notes: string,
     public requestActive: boolean,
     public createdOn: Date,
-    public lastUpdated: Date,
+    public updatedOn: Date
   ) {}
 }

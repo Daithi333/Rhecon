@@ -32,7 +32,7 @@ export class RequestsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     let requests: Request[];
-    this.requestSub = this.requestsService.requests
+    this.requestSub = this.requestsService.fetchRequests()
       .subscribe(reqs => {
         requests = reqs;
         console.log(reqs);
@@ -56,7 +56,7 @@ export class RequestsPage implements OnInit, OnDestroy {
                         requests[key].notes,
                         requests[key].requestActive,
                         requests[key].createdOn,
-                        requests[key].lastUpdated
+                        requests[key].updatedOn
                       )
                     );
                     if (this.currentSegment === 'active') {
