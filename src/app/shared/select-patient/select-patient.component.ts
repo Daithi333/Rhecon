@@ -38,7 +38,6 @@ export class SelectPatientComponent implements OnInit, OnDestroy {
 
   onPatientSelect(selectedPatient: Patient) {
     this.modalController.dismiss(selectedPatient, 'cancel', 'patientSelect');
-    console.log(selectedPatient);
   }
 
   ngOnDestroy() {

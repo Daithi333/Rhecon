@@ -42,7 +42,6 @@ export class RequestsPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
