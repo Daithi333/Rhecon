@@ -26,8 +26,6 @@
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
       extract($row);
 
-      $bool = ($row['active'] == 1 ? true : false);
-
       $requestElement = array(
         'id' => $id,
         'title' => $title,
@@ -35,7 +33,7 @@
         'consultantId' => $consultantId,
         'patientId' => $patientId,
         'notes' => $notes,
-        'active' => $bool,
+        'active' => $active,
         'createdOn' => $createdOn,
         'updatedOn' => $updatedOn
       );

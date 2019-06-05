@@ -54,7 +54,7 @@ export class RequestsPage implements OnInit, OnDestroy {
                         patient,
                         consultant,
                         requests[key].notes,
-                        requests[key].requestActive,
+                        !!+requests[key].active,
                         requests[key].createdOn,
                         requests[key].updatedOn
                       )

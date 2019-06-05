@@ -6,7 +6,7 @@ export class Request {
     public patientId: number,
     public consultantId: number,
     public notes: string,
-    public requestActive: boolean,
+    public active: boolean,
     public createdOn: Date,
     public updatedOn: Date
   ) {}

@@ -76,7 +76,6 @@ export class RequestsService {
         const requests = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
-            console.log(resData[key].requestActive);
             requests.push(
               new Request(
                 resData[key].id,
@@ -85,7 +84,7 @@ export class RequestsService {
                 resData[key].patientId,
                 resData[key].consultantId,
                 resData[key].notes,
-                resData[key].requestActive,
+                !!+resData[key].active,
                 resData[key].createdOn,
                 resData[key].updatedOn
               )
