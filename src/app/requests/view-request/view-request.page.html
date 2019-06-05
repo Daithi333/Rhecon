@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/tabs/requests"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="primary" *ngIf="canEdit">
-      <ion-button [routerLink]="['/', 'tabs', 'requests', 'edit-request', request.id]">
+      <ion-button [routerLink]="['/', 'tabs', 'requests', 'edit-request', requestId]">
         <ion-icon name="create"></ion-icon>
       </ion-button>
     </ion-buttons>

@@ -23,9 +23,9 @@
       'consultantId' => $request->consultantId,
       'patientId' => $request->patientId,
       'notes' => $request->notes,
-      'active ' => $request->active,
-      'createdOn ' => $request->createdOn,
-      'updatedOn ' => $request->updatedOn
+      'active' => $request->active,
+      'createdOn' => $request->createdOn,
+      'updatedOn' => $request->updatedOn
     );
 
     print_r(json_encode($requestArr));  

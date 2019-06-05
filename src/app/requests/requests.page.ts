@@ -3,7 +3,7 @@ import { SegmentChangeEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
 
 import { RequestsService } from './requests.service';
-import { RequestData } from './request-data.model';
+import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
 import { Request } from './request.model';
 import { Patient } from '../patients/patient.model';
 import { Consultant } from '../consultants/consultant.model';
@@ -16,8 +16,8 @@ import { ConsultantsService } from '../consultants/consultants.service';
   styleUrls: ['./requests.page.scss'],
 })
 export class RequestsPage implements OnInit, OnDestroy {
-  requestData: RequestData[] = [];
-  viewableRequests: RequestData[] = [];
+  requestData: RequestWithPatientAndConsultant[] = [];
+  viewableRequests: RequestWithPatientAndConsultant[] = [];
   isLoading = false;
   private requestSub: Subscription;
   private patientSub: Subscription;
@@ -35,7 +35,6 @@ export class RequestsPage implements OnInit, OnDestroy {
     this.requestSub = this.requestsService.fetchRequests()
       .subscribe(reqs => {
         requests = reqs;
-        console.log(reqs);
         for (const key in requests) {
           if (requests.hasOwnProperty(key)) {
             let patient: Patient;
@@ -47,7 +46,7 @@ export class RequestsPage implements OnInit, OnDestroy {
                   .subscribe(cons => {
                     consultant = cons;
                     this.requestData.push(
-                      new RequestData(
+                      new RequestWithPatientAndConsultant(
                         requests[key].id,
                         requests[key].title,
                         requests[key].requesterId,

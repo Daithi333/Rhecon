@@ -1,57 +1,22 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { take, map, delay, tap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+import { take, map, tap, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
 
-// [
-//   new Request(
-//     1001,
-//     'Recurring migranes',
-//     this.authService.userId,
-//     2,
-//     4,
-//     'Patient Jane has visited on a number of occasions complaining of migranes',
-//     true,
-//     new Date('2019-05-20'),
-//     new Date('2019-05-22')
-//   ),
-//   new Request(
-//     1002,
-//     'Unknown skin condition',
-//     this.authService.userId,
-//     1,
-//     2,
-//     'Looks like an allergic reaction, but no obvious trigger. Would you agree?',
-//     true,
-//     new Date('2019-05-20'),
-//     new Date('2019-05-22')
-//   ),
-//   new Request(
-//     1003,
-//     'Joe Bloggs suspected Malaria',
-//     this.authService.userId,
-//     3,
-//     4,
-//     'Please confirm if these symptoms look like Malaria',
-//     false,
-//     new Date('2019-05-18'),
-//     new Date('2019-05-21')
-//   ),
-//   new Request(
-//     1004,
-//     'CT scan analysis',
-//     this.authService.userId,
-//     4,
-//     3,
-//     'We were able to take a CT scan but need some consultation on the diagnosis',
-//     false,
-//     new Date('2019-05-18'),
-//     new Date('2019-05-21')
-//   )
-// ]
+interface RequestData {
+  id: number;
+  title: string;
+  requesterId: number;
+  patientId: number;
+  consultantId: number;
+  notes: string;
+  active: boolean;
+  createdOn: string;
+  updatedOn: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +34,7 @@ export class RequestsService {
   }
 
   fetchRequests() {
-    return this.httpClient.get(
+    return this.httpClient.get<{[key: number]: RequestData}>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${this.authService.userId}`
     ).pipe(
       map(resData => {
@@ -85,8 +50,8 @@ export class RequestsService {
                 resData[key].consultantId,
                 resData[key].notes,
                 !!+resData[key].active,
-                resData[key].createdOn,
-                resData[key].updatedOn
+                new Date(resData[key].createdOn),
+                new Date(resData[key].updatedOn)
               )
             );
           }
@@ -100,9 +65,22 @@ export class RequestsService {
   }
 
   getRequest(id: number) {
-    return this._requests.pipe(take(1),
-      map(requests => {
-        return { ...requests.find(r => r.id === id) };
+    return this.httpClient.get<RequestData>(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${this.authService.userId}&id=${id}`
+    )
+    .pipe(
+      map(requestData => {
+        return new Request(
+          id,
+          requestData.title,
+          +requestData.requesterId,
+          +requestData.patientId,
+          +requestData.consultantId,
+          requestData.notes,
+          !!+requestData.active,
+          new Date(requestData.createdOn),
+          new Date(requestData.updatedOn)
+        );
       })
     );
   }
@@ -148,27 +126,61 @@ export class RequestsService {
     consultantId: number,
     notes: string
   ) {
+    let updatedRequests: Request[];
     return this.requests.pipe(
       take(1),
-      delay(1000),
-      tap(requests => {
-        const updatedRequestIndex = requests.findIndex(r => r.id === requestId);
-        const updatedRequests = [...requests];
-        const oldRequest = updatedRequests[updatedRequestIndex];
+      switchMap(requests => {
+        // fetch requests from db if user reloads app on a page where local list is not initialised.
+        if (!requests || requests.length <= 0) {
+          return this.fetchRequests();
+        } else {
+          return of(requests);
+        }
+      }),
+      switchMap(requests => {
+        const updatedRequestIndex = requests.findIndex(r => +r.id === requestId);
+        updatedRequests = [...requests];
+        const preUpdateRequest = updatedRequests[updatedRequestIndex];
         updatedRequests[updatedRequestIndex] = new Request(
-          oldRequest.id,
+          preUpdateRequest.id,
           title,
-          this.authService.userId,
+          preUpdateRequest.requesterId,
           patientId,
           consultantId,
           notes,
-          true,
-          oldRequest.createdOn,
+          preUpdateRequest.active,
+          new Date(),
           new Date()
         );
+        return this.httpClient.put(
+          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/update.php',
+          { ...updatedRequests[updatedRequestIndex] }
+        );
+      }),
+      tap(() => {
         this._requests.next(updatedRequests);
-      })
-    );
+      }));
+    // return this.requests.pipe(
+    //   take(1),
+    //   delay(1000),
+    //   tap(requests => {
+    //     const updatedRequestIndex = requests.findIndex(r => r.id === requestId);
+    //     const updatedRequests = [...requests];
+    //     const oldRequest = updatedRequests[updatedRequestIndex];
+    //     updatedRequests[updatedRequestIndex] = new Request(
+    //       oldRequest.id,
+    //       title,
+    //       this.authService.userId,
+    //       patientId,
+    //       consultantId,
+    //       notes,
+    //       true,
+    //       oldRequest.createdOn,
+    //       new Date()
+    //     );
+    //     this._requests.next(updatedRequests);
+    //   })
+    // );
   }
 
 }

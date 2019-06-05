@@ -76,7 +76,7 @@ export class PatientsService {
           new Date(patientData.dob),
           patientData.portraitUrl,
           patientData.notes,
-          patientData.userId
+          +patientData.userId
         );
       })
     );

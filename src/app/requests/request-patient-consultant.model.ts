@@ -1,7 +1,7 @@
 import { Patient } from '../patients/patient.model';
 import { Consultant } from '../consultants/consultant.model';
 
-export class RequestData {
+export class RequestWithPatientAndConsultant {
   constructor(
     public id: number,
     public title: string,
