@@ -20,6 +20,7 @@ import { PatientsService } from 'src/app/patients/patients.service';
 })
 export class EditRequestPage implements OnInit, OnDestroy {
   request: Request;
+  requestId: number;
   requestForm: FormGroup;
   isLoading = false;
   selectedPatient: Patient;
@@ -46,6 +47,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
         return;
       }
       this.isLoading = true;
+      this.requestId = +paramMap.get('requestId');
       this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
       .subscribe(req => {
         this.request = req;

@@ -45,9 +45,9 @@ export class RequestsService {
               new Request(
                 resData[key].id,
                 resData[key].title,
-                resData[key].requesterId,
-                resData[key].patientId,
-                resData[key].consultantId,
+                +resData[key].requesterId,
+                +resData[key].patientId,
+                +resData[key].consultantId,
                 resData[key].notes,
                 !!+resData[key].active,
                 new Date(resData[key].createdOn),
@@ -93,18 +93,18 @@ export class RequestsService {
   ) {
     let uniqueId: number;
     const newRequest = new Request(
-      Math.floor(Math.random() * 10000) + 1001,
+      null,
       title,
       this.authService.userId,
       patientId,
       consultantId,
       notes,
       true,
-      new Date(),
-      new Date()
+      null,
+      null
     );
     return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/create.php',
-      { ...newRequest, id: null }
+      { ...newRequest }
     )
     .pipe(
       switchMap(responseData => {
@@ -144,7 +144,7 @@ export class RequestsService {
         updatedRequests[updatedRequestIndex] = new Request(
           preUpdateRequest.id,
           title,
-          preUpdateRequest.requesterId,
+          this.authService.userId,
           patientId,
           consultantId,
           notes,
@@ -160,27 +160,22 @@ export class RequestsService {
       tap(() => {
         this._requests.next(updatedRequests);
       }));
-    // return this.requests.pipe(
-    //   take(1),
-    //   delay(1000),
-    //   tap(requests => {
-    //     const updatedRequestIndex = requests.findIndex(r => r.id === requestId);
-    //     const updatedRequests = [...requests];
-    //     const oldRequest = updatedRequests[updatedRequestIndex];
-    //     updatedRequests[updatedRequestIndex] = new Request(
-    //       oldRequest.id,
-    //       title,
-    //       this.authService.userId,
-    //       patientId,
-    //       consultantId,
-    //       notes,
-    //       true,
-    //       oldRequest.createdOn,
-    //       new Date()
-    //     );
-    //     this._requests.next(updatedRequests);
-    //   })
-    // );
+  }
+
+  closeRequest(requestId: number) {
+    console.log('Request closed');
+    return this.httpClient.delete(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/delete.php/?id=${requestId}`
+    )
+    .pipe(
+      switchMap(() => {
+        return this.requests;
+      }),
+      take(1),
+      tap(requests => {
+        this._requests.next(requests.filter(r => r.id !== requestId));
+      })
+    );
   }
 
 }

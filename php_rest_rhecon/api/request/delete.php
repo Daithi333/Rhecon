@@ -16,7 +16,7 @@
   // get the raw data
   $data = json_decode(file_get_contents("php://input"));
 
-  $request->id = $data->id;
+  $request->id = isset($_GET['id']) ? $_GET['id'] : die();
 
   // Delete request
   if($request->delete()) {

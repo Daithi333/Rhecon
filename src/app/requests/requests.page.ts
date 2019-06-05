@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
+import { IonItemSliding, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { RequestsService } from './requests.service';
 import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
@@ -27,7 +29,9 @@ export class RequestsPage implements OnInit, OnDestroy {
   constructor(
     private requestsService: RequestsService,
     private patientsService: PatientsService,
-    private consultantsService: ConsultantsService
+    private consultantsService: ConsultantsService,
+    private router: Router,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -76,7 +80,8 @@ export class RequestsPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.requestsService.fetchRequests().subscribe(() => {
+    this.requestsService.fetchRequests().subscribe(requests => {
+      // TODO - rework so new request and edits are visible after redirect
       this.isLoading = false;
     });
   }
@@ -93,6 +98,37 @@ export class RequestsPage implements OnInit, OnDestroy {
         rd => rd.requestActive === false
       );
     }
+  }
+
+  onEdit(requestId: number, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.router.navigate(['/', 'tabs', 'requests', 'edit-request', requestId]);
+    console.log('Editing request ', requestId);
+  }
+
+  onCloseRequest(requestId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm closure',
+      message: 'Are you sure you wish to close this request?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.requestsService.closeRequest(requestId).subscribe(() => {
+              slidingItem.close();
+            });
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
   ngOnDestroy() {
