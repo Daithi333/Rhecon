@@ -2,7 +2,7 @@
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: DELETE');
+  header('Access-Control-Allow-Methods: PUT');
   header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
 
   include_once '../../config/Database.php';
@@ -15,14 +15,13 @@
 
   $request->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-  // Delete request
-  if($request->delete()) {
+  // Update request
+  if($request->closeRequest()) {
     echo json_encode(
-      array('message' => 'Request Deleted')
+      array('message' => 'Request Closed')
     );
   } else {
     echo json_encode(
-      array('message' => 'Request Not Deleted')
+      array('message' => 'Request Not Closed')
     );
   }
-  

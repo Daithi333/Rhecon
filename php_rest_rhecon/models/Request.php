@@ -151,6 +151,33 @@
     }
 
     /**
+     * Function to close a single request record
+     */
+    public function closeRequest() {
+      $query = 'UPDATE ' . $this->table . '
+                SET active = 0
+                WHERE id = :id';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = $this->sanitise_input($this->id);
+
+      // Bind data
+      $stmt->bindParam(':id', $this->id);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
      * Function to delete a single request record
      */
     public function delete() {

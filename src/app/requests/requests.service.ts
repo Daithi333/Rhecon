@@ -39,6 +39,10 @@ export class RequestsService {
     return this._requests.asObservable();
   }
 
+  get requestsWithPatientAndConsultant() {
+    return this._requestsWithPatientAndConsultant.asObservable();
+  }
+
   fetchRequests() {
     return this.httpClient.get<{[key: number]: RequestData}>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${this.authService.userId}`
@@ -108,7 +112,7 @@ export class RequestsService {
             })
           );
         }),
-        tap(requests => {
+        tap(() => {
           // console.log(requests);
           this._requestsWithPatientAndConsultant.next(requestsArr);
         })
@@ -214,17 +218,32 @@ export class RequestsService {
   }
 
   closeRequest(requestId: number) {
-    console.log('Request closed');
+    return this.httpClient.put(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/close.php/?id=${requestId}`,
+      { id: requestId }
+    )
+    .pipe(
+      switchMap(() => {
+        return this.requestsWithPatientAndConsultant;
+      }),
+      take(1),
+      tap(requests => {
+        this._requestsWithPatientAndConsultant.next(requests);
+      })
+    );
+  }
+
+  deleteRequest(requestId: number) {
     return this.httpClient.delete(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/delete.php/?id=${requestId}`
     )
     .pipe(
       switchMap(() => {
-        return this.requests;
+        return this.requestsWithPatientAndConsultant;
       }),
       take(1),
       tap(requests => {
-        this._requests.next(requests.filter(r => r.id !== requestId));
+        this._requestsWithPatientAndConsultant.next(requests.filter(r => r.id !== requestId));
       })
     );
   }
