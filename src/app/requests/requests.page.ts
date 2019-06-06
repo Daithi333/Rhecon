@@ -35,6 +35,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // this.requestsService.fetchRequestsWithPatientAndConsultant().subscribe(req => {console.log(req); });
     let requests: Request[];
     this.requestSub = this.requestsService.fetchRequests()
       .subscribe(reqs => {
@@ -64,11 +65,11 @@ export class RequestsPage implements OnInit, OnDestroy {
                     );
                     if (this.currentSegment === 'active') {
                       this.viewableRequests = this.requestData.filter(
-                          rd => rd.requestActive === true
+                          rd => rd.active === true
                       );
                     } else {
                       this.viewableRequests = this.requestData.filter(
-                        rd => rd.requestActive === false
+                        rd => rd.active === false
                       );
                     }
                   });
@@ -90,12 +91,12 @@ export class RequestsPage implements OnInit, OnDestroy {
     if (event.detail.value === 'active') {
       this.currentSegment = 'active';
       this.viewableRequests = this.requestData.filter(
-        rd => rd.requestActive === true
+        rd => rd.active === true
       );
     } else {
       this.currentSegment = 'inactive';
       this.viewableRequests = this.requestData.filter(
-        rd => rd.requestActive === false
+        rd => rd.active === false
       );
     }
   }

@@ -9,8 +9,8 @@ export class RequestWithPatientAndConsultant {
     public patient: Patient,
     public consultant: Consultant,
     public notes: string,
-    public requestActive: boolean,
+    public active: boolean,
     public createdOn: Date,
-    public lastUpdated: Date,
+    public updatedOn: Date,
   ) {}
 }

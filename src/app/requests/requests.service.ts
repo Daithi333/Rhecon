@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
-import { take, map, tap, switchMap } from 'rxjs/operators';
+import { take, map, tap, switchMap, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
+import { PatientsService } from '../patients/patients.service';
+import { ConsultantsService } from '../consultants/consultants.service';
+import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
 
 interface RequestData {
   id: number;
@@ -23,10 +26,13 @@ interface RequestData {
 })
 export class RequestsService {
   private _requests = new BehaviorSubject<Request[]>([]);
+  private _requestsWithPatientAndConsultant = new BehaviorSubject<RequestWithPatientAndConsultant[]>([]);
 
   constructor(
     private authService: AuthService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private patientsService: PatientsService,
+    private consultantsService: ConsultantsService
   ) {}
 
   get requests() {
@@ -43,7 +49,7 @@ export class RequestsService {
           if (resData.hasOwnProperty(key)) {
             requests.push(
               new Request(
-                resData[key].id,
+                +resData[key].id,
                 resData[key].title,
                 +resData[key].requesterId,
                 +resData[key].patientId,
@@ -62,6 +68,51 @@ export class RequestsService {
         this._requests.next(requests);
       })
     );
+  }
+
+  fetchRequestsWithPatientAndConsultant() {
+    const requestsArr: RequestWithPatientAndConsultant[] = [];
+    return this.fetchRequests()
+      .pipe(
+        mergeMap(requests => {
+          return requests.map(request => {
+            return request;
+          });
+        }),
+        mergeMap(request => {
+          return this.patientsService.getPatient(request.patientId).pipe(
+            map(patient => {
+              request.patientId = patient;
+              return request;
+            })
+          );
+        }),
+        switchMap(request => {
+          return this.consultantsService.getConsultant(request.consultantId).pipe(
+            map(consultant => {
+              request.consultantId = consultant;
+              requestsArr.push(
+                new RequestWithPatientAndConsultant(
+                  +request.id,
+                  request.title,
+                  +request.requesterId,
+                  request.patientId,
+                  request.consultantId,
+                  request.notes,
+                  !!+request.active,
+                  new Date(request.createdOn),
+                  new Date(request.updatedOn)
+                )
+              );
+              return requestsArr;
+            })
+          );
+        }),
+        tap(requests => {
+          // console.log(requests);
+          this._requestsWithPatientAndConsultant.next(requestsArr);
+        })
+      );
   }
 
   getRequest(id: number) {
