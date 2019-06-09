@@ -12,7 +12,6 @@ import { PatientsService } from '../patients.service';
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
-  placeholderImage = 'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg';
 
   constructor(
     private patientsService: PatientsService,
@@ -37,10 +36,14 @@ export class NewPatientPage implements OnInit {
       notes: new FormControl(null, {
         updateOn: 'blur'
       }),
-      patientImage: new FormControl(this.placeholderImage, {
+      patientImage: new FormControl(null, {
         updateOn: 'blur'
       })
     });
+  }
+
+  onImageChosen(imageData: string | File) {
+
   }
 
   onAddPatient() {

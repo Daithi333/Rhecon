@@ -1,0 +1,19 @@
+<div class="selector">
+  <ion-img
+    role="button"
+    class="portrait"
+    [src]="selectedImage"
+    (click)="onSelectImage()"
+  ></ion-img>
+</div>
+<input
+  type="file"
+  accept="image/jpeg"
+  #fileSelector
+  (change)="onFileChosen($event)"
+/>
+<div class="button-holder">
+  <ion-button size="small" (click)="onSelectImage()">
+    <ion-icon role="button" name="camera"></ion-icon>
+  </ion-button>
+</div>
