@@ -16,6 +16,9 @@ export class PortraitSelectorComponent implements OnInit {
   constructor(private platform: Platform) { }
 
   ngOnInit() {
+    console.log('Mobile: ', this.platform.is('mobile'));
+    console.log('Hybrid: ', this.platform.is('hybrid'));
+    console.log('Desktop: ', this.platform.is('desktop'));
     if (
       (this.platform.is('mobile') && !this.platform.is('hybrid')) ||
       this.platform.is('desktop')
@@ -26,16 +29,16 @@ export class PortraitSelectorComponent implements OnInit {
 
   onSelectImage() {
     // open camera only if device has one
-    if (!Capacitor.isPluginAvailable('Camera')) {
+    if (!Capacitor.isPluginAvailable('Camera') || this.useFileSelector) {
+      this.fileSelector.nativeElement.click();
       return;
     }
     Plugins.Camera.getPhoto({
-      quality: 50,
+      quality: 60,
       source: CameraSource.Prompt,
       correctOrientation: true,
-      height: 320,
-      width: 200,
-      resultType: CameraResultType.DataUrl
+      width: 600,
+      resultType: CameraResultType.DataUrl,
     })
     .then(image => {
       this.selectedImage = image.dataUrl;
@@ -50,8 +53,19 @@ export class PortraitSelectorComponent implements OnInit {
     });
   }
 
-  onFileChosen() {
-
+  onFileChosen(event: Event) {
+    const chosenFile = (event.target as HTMLInputElement).files[0];
+    if (!chosenFile) {
+      // TODO - alert
+      return;
+    }
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = fr.result.toString();
+      this.selectedImage = dataUrl;
+      this.imageChoice.emit(chosenFile);
+    };
+    fr.readAsDataURL(chosenFile);
   }
 
 }

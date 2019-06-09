@@ -5,6 +5,11 @@
     [src]="selectedImage"
     (click)="onSelectImage()"
   ></ion-img>
+  <ion-fab vertical="center" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="onSelectImage()">
+      <ion-icon role="button" name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </div>
 <input
   type="file"
@@ -12,8 +17,4 @@
   #fileSelector
   (change)="onFileChosen($event)"
 />
-<div class="button-holder">
-  <ion-button size="small" (click)="onSelectImage()">
-    <ion-icon role="button" name="camera"></ion-icon>
-  </ion-button>
-</div>
+

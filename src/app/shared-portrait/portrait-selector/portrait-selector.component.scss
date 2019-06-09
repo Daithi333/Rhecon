@@ -1,13 +1,30 @@
 .selector {
-  width: 9rem;
-  max-width: 70%;
-  height: 20rem;
-  max-height: 25vh;
-  border: 1px solid var(--ion-color-primary);
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @media only screen and (max-width: 1024px) {
+      width: 200px;
+      max-width: 80%;
+      height: 300px;
+      max-height: 30vh;
+      // border: 1px solid var(--ion-color-primary);
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 5px;
+  }
+
+  @media only screen and (min-width: 1025px) {
+    width: 350px;
+    max-width: 80%;
+    height: 500px;
+    max-height: 35vh;
+    // border: 1px solid var(--ion-color-primary);
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 }
 
 .button-holder {
