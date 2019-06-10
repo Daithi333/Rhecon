@@ -11,12 +11,10 @@ import { ImageUtilService } from './image-util-service';
     IonicModule
   ],
   declarations: [
-    PortraitSelectorComponent,
-    ImageUtilService
+    PortraitSelectorComponent
   ],
   exports: [
-    PortraitSelectorComponent,
-    ImageUtilService
+    PortraitSelectorComponent
   ]
 })
 export class PortraitImageSharedModule {}
