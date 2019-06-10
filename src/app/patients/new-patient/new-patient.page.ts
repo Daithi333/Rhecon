@@ -40,7 +40,7 @@ export class NewPatientPage implements OnInit {
       notes: new FormControl(null, {
         updateOn: 'blur'
       }),
-      patientImage: new FormControl(null)
+      patientImage: new FormControl(this.imagePreview)
     });
   }
 

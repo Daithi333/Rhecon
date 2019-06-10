@@ -64,10 +64,10 @@
     $uploadOk = false;
   }
 
-  if ( (!in_array(strtolower($imageFileType), $validExt)) ) {
-    $errorMsg = 'Images must be in one of the following formats: gif, png, jpg, bmp, tiff';
-    $uploadOk = false;
-  }
+  // if ( (!in_array(strtolower($imageFileType), $validExt)) ) {
+  //   $errorMsg = 'Images must be in one of the following formats: gif, png, jpg, bmp, tiff';
+  //   $uploadOk = false;
+  // }
 
   // Check if uploadOk after the checks..
   if (!$uploadOk) {
