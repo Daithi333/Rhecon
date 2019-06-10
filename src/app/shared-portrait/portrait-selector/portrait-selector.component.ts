@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 
@@ -9,26 +9,29 @@ import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/c
 })
 export class PortraitSelectorComponent implements OnInit {
   useFileSelector = false;
+  @Input() showPreview = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() imageChoice = new EventEmitter<string | File>();
-  selectedImage = 'http://goldenayeyarwaddytravels.com/sites/default/files/default_images/default-user-icon-8.jpg';
+  selectedImage = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/img/default-user-icon.jpg';
+  // TODO - reset selectedImage if page leaves top of stack
 
   constructor(private platform: Platform) { }
 
   ngOnInit() {
-    console.log('Mobile: ', this.platform.is('mobile'));
-    console.log('Hybrid: ', this.platform.is('hybrid'));
-    console.log('Desktop: ', this.platform.is('desktop'));
+    // console.log('Mobile: ', this.platform.is('mobile'));
+    // console.log('Hybrid: ', this.platform.is('hybrid'));
+    // console.log('Desktop: ', this.platform.is('desktop'));
     if (
       (this.platform.is('mobile') && !this.platform.is('hybrid')) ||
       this.platform.is('desktop')
     ) {
+      // TODO - add action sheet to allow choice of camera or file chooser on non-mobile device with cam attached
       this.useFileSelector = true;
     }
   }
 
   onSelectImage() {
-    // open camera only if device has one
+    // check to open file selector if camera unavailable
     if (!Capacitor.isPluginAvailable('Camera') || this.useFileSelector) {
       this.fileSelector.nativeElement.click();
       return;
@@ -56,7 +59,7 @@ export class PortraitSelectorComponent implements OnInit {
   onFileChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
-      // TODO - alert
+      // TODO - add alert
       return;
     }
     const fr = new FileReader();

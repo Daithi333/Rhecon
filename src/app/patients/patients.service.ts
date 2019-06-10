@@ -82,20 +82,31 @@ export class PatientsService {
     );
   }
 
+  addImage(imageFile: File) {
+    const imageData = new FormData();
+    imageData.append('fileUpload', imageFile);
+    console.log(imageData);
+
+    return this.httpClient.post<{imageUrl: string, imagePath: string}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
+      imageData
+    );
+  }
+
   addPatient(
     firstName: string,
     lastName: string,
     dob: Date,
-    // portraitUrl: string,
+    portraitUrl: string,
     notes: string,
   ) {
     let uniqueId: number;
     const newPatient = new Patient(
-      Math.floor(Math.random() * 10000) + 1001,
+      null,
       firstName,
       lastName,
       dob,
-      'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+      portraitUrl,
       notes,
       this.authService.userId
     );
