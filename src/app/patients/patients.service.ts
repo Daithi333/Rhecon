@@ -85,7 +85,6 @@ export class PatientsService {
   addImage(imageFile: File) {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
-    console.log(imageData);
 
     return this.httpClient.post<{imageUrl: string, imagePath: string}>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
@@ -110,6 +109,7 @@ export class PatientsService {
       notes,
       this.authService.userId
     );
+    console.log(portraitUrl);
     return this.httpClient
     .post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
       { ...newPatient, id: null }

@@ -13,7 +13,7 @@
       <br>
       <ion-row>
         <ion-col size-sm="8" offset-sm="2" size-lg="6" offset-lg="3" no-padding>
-          <app-portrait-selector (imageChoice)="onImageChosen($event)"></app-portrait-selector>
+          <app-portrait-selector (imageChoice)="onImageChosen($event)" [selectedImage]="imagePreview"></app-portrait-selector>
         </ion-col>
       </ion-row>
       <ion-row>

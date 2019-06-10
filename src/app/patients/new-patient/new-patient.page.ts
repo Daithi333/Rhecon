@@ -36,6 +36,7 @@ function base64toBlob(base64Data, contentType) {
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
+  imagePreview = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/img/default-user-icon.jpg';
 
   constructor(
     private patientsService: PatientsService,
@@ -73,7 +74,7 @@ export class NewPatientPage implements OnInit {
           'image/jpeg'
         );
       } catch (error) {
-        console.log(error);
+        console.log('File conversion error: ' + error);
         // TODO - add alert if base 64 conversion to file fails
       }
     } else {
@@ -94,7 +95,9 @@ export class NewPatientPage implements OnInit {
       this.patientsService.addImage(this.form.get('patientImage').value)
         .pipe(
           switchMap(resData => {
-              return this.patientsService.addPatient(
+            // TODO - handle error from the add image function
+            console.log(resData);
+            return this.patientsService.addPatient(
               this.form.value.firstName,
               this.form.value.lastName,
               new Date(this.form.value.dob),

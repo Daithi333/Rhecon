@@ -9,11 +9,9 @@ import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/c
 })
 export class PortraitSelectorComponent implements OnInit {
   useFileSelector = false;
-  @Input() showPreview = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() imageChoice = new EventEmitter<string | File>();
-  selectedImage = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/img/default-user-icon.jpg';
-  // TODO - reset selectedImage if page leaves top of stack
+  @Input() selectedImage;
 
   constructor(private platform: Platform) { }
 
@@ -44,6 +42,7 @@ export class PortraitSelectorComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
+      console.log(image.dataUrl);
       this.selectedImage = image.dataUrl;
       this.imageChoice.emit(image.dataUrl);
     })
