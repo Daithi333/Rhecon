@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IonItemSliding } from '@ionic/angular';
+import { IonItemSliding, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { PatientsService } from './patients.service';
@@ -18,7 +18,8 @@ export class PatientsPage implements OnInit, OnDestroy {
 
   constructor(
     private patientsService: PatientsService,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -39,6 +40,31 @@ export class PatientsPage implements OnInit, OnDestroy {
     slidingItem.close();
     this.router.navigate(['/', 'tabs', 'patients', 'edit-patient', patientId]);
     console.log('Editing item', patientId);
+  }
+
+  onRemove(patientId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm closure',
+      message: 'Are you sure you wish to close this patient record?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.patientsService.removePatient(patientId).subscribe(() => {
+              slidingItem.close();
+            });
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
   ngOnDestroy() {

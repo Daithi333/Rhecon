@@ -6,29 +6,8 @@ import { Subscription } from 'rxjs';
 
 import { PatientsService } from '../patients.service';
 import { Patient } from '../patient.model';
-
-// utility function to convert base 64 string to blob
-// https://www.udemy.com/ionic-2-the-practical-guide-to-building-ios-android-apps/learn/lecture/13728230#questions/6603702
-function base64toBlob(base64Data, contentType) {
-  contentType = contentType || '';
-  const sliceSize = 1024;
-  const byteCharacters = atob(base64Data);
-  const bytesLength = byteCharacters.length;
-  const slicesCount = Math.ceil(bytesLength / sliceSize);
-  const byteArrays = new Array(slicesCount);
-
-  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
-    const begin = sliceIndex * sliceSize;
-    const end = Math.min(begin + sliceSize, bytesLength);
-
-    const bytes = new Array(end - begin);
-    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
-      bytes[i] = byteCharacters[offset].charCodeAt(0);
-    }
-    byteArrays[sliceIndex] = new Uint8Array(bytes);
-  }
-  return new Blob(byteArrays, { type: contentType });
-}
+import { switchMap } from 'rxjs/operators';
+import { ImageUtilService } from 'src/app/shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-edit-patient',
@@ -47,7 +26,8 @@ export class EditPatientPage implements OnInit, OnDestroy {
     private navController: NavController,
     private patientsService: PatientsService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private imageUtilService: ImageUtilService
   ) {}
 
   ngOnInit() {
@@ -77,9 +57,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
             notes: new FormControl(this.patient.notes, {
               updateOn: 'blur'
             }),
-            patientImage: new FormControl(this.patient.portraitUrl, {
-              updateOn: 'blur'
-            })
+            patientImage: new FormControl(null)
           });
           this.isLoading = false;
         });
@@ -90,7 +68,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
     let imageFile;
     if (typeof imageData === 'string') {
       try {
-        imageFile = base64toBlob(
+        imageFile = this.imageUtilService.base64toBlob(
           imageData.replace('data:image/jpeg;base64,', ''),
           'image/jpeg'
         );
@@ -112,17 +90,24 @@ export class EditPatientPage implements OnInit, OnDestroy {
       message: 'Updating Patient'
     }).then(loadingEl => {
       loadingEl.present();
-      this.patientsService.updatePatient(
-        this.patient.id,
-        this.form.value.firstName,
-        this.form.value.lastName,
-        new Date(this.form.value.dob),
-        this.form.value.notes
-      ).subscribe(() => {
-        loadingEl.dismiss();
-        this.form.reset();
-        this.router.navigate(['/tabs/patients']);
-      });
+      this.patientsService.addImage(this.form.get('patientImage').value)
+        .pipe(
+          switchMap(resData => {
+            // TODO - handle error from the add image function
+            return this.patientsService.updatePatient(
+              this.patient.id,
+              this.form.value.firstName,
+              this.form.value.lastName,
+              new Date(this.form.value.dob),
+              resData.imageUrl,
+              this.form.value.notes
+            );
+          })
+        ).subscribe(() => {
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/tabs/patients']);
+        });
     });
   }
 

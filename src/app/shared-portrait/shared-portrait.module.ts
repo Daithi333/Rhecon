@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
 import { PortraitSelectorComponent } from './portrait-selector/portrait-selector.component';
+import { ImageUtilService } from './image-util-service';
 
 @NgModule({
   imports: [
@@ -10,10 +11,12 @@ import { PortraitSelectorComponent } from './portrait-selector/portrait-selector
     IonicModule
   ],
   declarations: [
-    PortraitSelectorComponent
+    PortraitSelectorComponent,
+    ImageUtilService
   ],
   exports: [
-    PortraitSelectorComponent
+    PortraitSelectorComponent,
+    ImageUtilService
   ]
 })
 export class PortraitImageSharedModule {}

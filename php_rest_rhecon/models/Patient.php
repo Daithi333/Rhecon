@@ -18,12 +18,13 @@
     }
 
     /**
-     * Function to retrieve all patient records for a particular user id
+     * Function to retrieve all active patient records for a particular user id
      */
     public function read() {
       $query = 'SELECT p.id, p.firstName, p.lastName, p.dob, p.notes, p.portraitUrl, p.userId
                 FROM ' . $this->table . ' p
                 WHERE p.userId = :userId
+                AND active = 1
                 ORDER BY p.firstName DESC';
 
       $stmt = $this->conn->prepare($query);
@@ -160,6 +161,33 @@
      */
     public function delete() {
       $query = 'DELETE FROM ' . $this->table . '
+                WHERE id = :id';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = $this->sanitise_input($this->id);
+
+      // Bind data
+      $stmt->bindParam(':id', $this->id);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+     * Function to close a single patient record
+     */
+    public function closePatient() {
+      $query = 'UPDATE ' . $this->table . '
+                SET active = 0
                 WHERE id = :id';
 
       // prep statement

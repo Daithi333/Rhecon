@@ -132,7 +132,7 @@ export class PatientsService {
     firstName: string,
     lastName: string,
     dob: Date,
-    // portraitUrl: string,
+    portraitUrl: string,
     notes: string
   ) {
     let updatedPatients: Patient[];
@@ -167,6 +167,23 @@ export class PatientsService {
       tap(() => {
         this._patients.next(updatedPatients);
       }));
+  }
+
+  removePatient(patientId: number) {
+    console.log('Patient removed');
+    return this.httpClient.put(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/close.php/?id=${patientId}`,
+      { id: patientId }
+    )
+    .pipe(
+      switchMap(() => {
+        return this.patients;
+      }),
+      take(1),
+      tap(patients => {
+        this._patients.next(patients.filter(p => p.id !== patientId));
+      })
+    );
   }
 
 }
