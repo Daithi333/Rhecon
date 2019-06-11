@@ -11,7 +11,7 @@ export class PortraitSelectorComponent implements OnInit {
   useFileSelector = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() imageChoice = new EventEmitter<string | File>();
-  @Input() selectedImage;
+  @Input() selectedImage: string;
 
   constructor(private platform: Platform) { }
 

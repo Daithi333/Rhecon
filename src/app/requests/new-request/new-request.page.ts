@@ -8,6 +8,7 @@ import { SelectPatientComponent } from '../../shared/select-patient/select-patie
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
 import { Consultant } from '../../consultants/consultant.model';
+import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-new-request',
@@ -24,14 +25,15 @@ export class NewRequestPage implements OnInit {
     private requestsService: RequestsService,
     private loadingController: LoadingController,
     private router: Router,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private imageUtilService: ImageUtilService
   ) {}
 
   ngOnInit() {
     this.requestForm = new FormGroup({
       title: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
+        validators: [Validators.required, /*Validators.pattern(/^[a-zA-Z'. -]*$/)*/]
       }),
       patient: new FormControl(null, {
         updateOn: 'blur',
@@ -45,7 +47,26 @@ export class NewRequestPage implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
+      image: new FormControl(null)
     });
+  }
+
+  onImageChosen(imageData: string | File) {
+    let imageFile;
+    if (typeof imageData === 'string') {
+      try {
+        imageFile = this.imageUtilService.base64toBlob(
+          imageData.replace('data:image/jpeg;base64,', ''),
+          'image/jpeg'
+        );
+      } catch (error) {
+        console.log('File conversion error: ' + error);
+        // TODO - add alert if conversion to file fails
+      }
+    } else {
+      imageFile = imageData;
+    }
+    this.requestForm.patchValue({ image: imageFile });
   }
 
   onPatientSelect() {
@@ -116,7 +137,5 @@ export class NewRequestPage implements OnInit {
       });
     });
   }
-
-
 
 }
