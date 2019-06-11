@@ -4,6 +4,11 @@
       <ion-back-button [defaultHref]="['/', 'tabs', 'patients', patientId]"></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Patient</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button type="submit" (click)="onUpdatePatient()">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

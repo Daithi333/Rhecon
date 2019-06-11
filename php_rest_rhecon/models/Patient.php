@@ -25,7 +25,7 @@
                 FROM ' . $this->table . ' p
                 WHERE p.userId = :userId
                 AND active = 1
-                ORDER BY p.firstName DESC';
+                ORDER BY p.firstName ASC';
 
       $stmt = $this->conn->prepare($query);
 

@@ -155,7 +155,7 @@ export class PatientsService {
           firstName,
           lastName,
           new Date(dob),
-          preUpdatePatient.portraitUrl,
+          portraitUrl,
           notes,
           preUpdatePatient.userId
         );

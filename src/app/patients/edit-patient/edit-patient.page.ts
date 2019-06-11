@@ -19,6 +19,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
   patient: Patient;
   patientId: number;
   isLoading = false;
+  imageChanged = false;
   private patientSub: Subscription;
 
   constructor(
@@ -65,6 +66,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
   }
 
   onImageChosen(imageData: string | File) {
+    this.imageChanged = true;
     let imageFile;
     if (typeof imageData === 'string') {
       try {
@@ -90,24 +92,27 @@ export class EditPatientPage implements OnInit, OnDestroy {
       message: 'Updating Patient'
     }).then(loadingEl => {
       loadingEl.present();
-      this.patientsService.addImage(this.form.get('patientImage').value)
+      if (this.imageChanged) {
+        this.patientsService.addImage(this.form.get('patientImage').value)
         .pipe(
           switchMap(resData => {
-            // TODO - handle error from the add image function
-            return this.patientsService.updatePatient(
-              this.patient.id,
-              this.form.value.firstName,
-              this.form.value.lastName,
-              new Date(this.form.value.dob),
-              resData.imageUrl,
-              this.form.value.notes
-            );
+            console.log(resData);
+            // TODO - handle error from the add image function - server, size, etc
+            return this.callUpdatePatient(resData.imageUrl);
           })
         ).subscribe(() => {
           loadingEl.dismiss();
           this.form.reset();
           this.router.navigate(['/tabs/patients']);
         });
+      } else {
+        this.callUpdatePatient(this.patient.portraitUrl)
+        .subscribe(() => {
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/tabs/patients']);
+        });
+      }
     });
   }
 
@@ -115,6 +120,18 @@ export class EditPatientPage implements OnInit, OnDestroy {
     if (this.patientSub) {
       this.patientSub.unsubscribe();
     }
+  }
+
+  // call UpdatePatient method with appropiate image url
+  private callUpdatePatient(patientImage: string) {
+    return this.patientsService.updatePatient(
+      this.patient.id,
+      this.form.value.firstName,
+      this.form.value.lastName,
+      new Date(this.form.value.dob),
+      patientImage,
+      this.form.value.notes
+    );
   }
 
 }

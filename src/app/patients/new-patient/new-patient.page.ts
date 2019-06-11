@@ -70,25 +70,38 @@ export class NewPatientPage implements OnInit {
       message: 'Adding Patient'
     }).then(loadingEl => {
       loadingEl.present();
-      this.patientsService.addImage(this.form.get('patientImage').value)
+      // if user added an image use that url, or else use the placeholder
+      if (this.form.value.patientImage !== this.imagePreview) {
+        this.patientsService.addImage(this.form.get('patientImage').value)
         .pipe(
           switchMap(resData => {
             // TODO - handle error from the add image function
-            console.log(resData);
-            return this.patientsService.addPatient(
-              this.form.value.firstName,
-              this.form.value.lastName,
-              new Date(this.form.value.dob),
-              resData.imageUrl,
-              this.form.value.notes
-            );
+            return this.callAddPatient(resData.imageUrl);
           })
         ).subscribe(() => {
           loadingEl.dismiss();
           this.form.reset();
           this.router.navigate(['/tabs/patients']);
         });
+      } else {
+        this.callAddPatient(this.imagePreview)
+        .subscribe(() => {
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/tabs/patients']);
+        });
+      }
     });
+  }
+  // call AddPatient method with appropiate image url
+  private callAddPatient(patientImage: string) {
+    return this.patientsService.addPatient(
+      this.form.value.firstName,
+      this.form.value.lastName,
+      new Date(this.form.value.dob),
+      patientImage,
+      this.form.value.notes
+    );
   }
 
 }
