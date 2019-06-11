@@ -33,4 +33,4 @@ import { AttachmentSelectorComponent } from './attachment-selector/attachment-se
     SelectPatientComponent
   ]
 })
-export class PatientConsultantSelectorSharedModule {}
+export class RequestsSharedModule {}

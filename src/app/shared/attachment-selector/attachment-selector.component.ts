@@ -12,7 +12,13 @@ export class AttachmentSelectorComponent implements OnInit {
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() imageChoice = new EventEmitter<string | File>();
   selectedImage: string;
-  attachments: string[] = [];
+  attachments: string[] = [
+    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
+  ];
 
   constructor(private platform: Platform) {}
 
@@ -42,6 +48,7 @@ export class AttachmentSelectorComponent implements OnInit {
     })
     .then(image => {
       this.selectedImage = image.dataUrl;
+      this.attachments.push(image.dataUrl);
       this.imageChoice.emit(image.dataUrl);
     })
     .catch(error => {

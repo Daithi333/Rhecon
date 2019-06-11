@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NewRequestPage } from './new-request.page';
-import { PatientConsultantSelectorSharedModule } from '../../shared/patient-consultant-selector.module';
+import { RequestsSharedModule } from '../../shared/shared-requests.module';
 
 const routes: Routes = [
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    PatientConsultantSelectorSharedModule
+    RequestsSharedModule
   ],
   declarations: [NewRequestPage]
 })
