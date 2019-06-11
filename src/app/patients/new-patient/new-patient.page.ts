@@ -54,7 +54,7 @@ export class NewPatientPage implements OnInit {
         );
       } catch (error) {
         console.log('File conversion error: ' + error);
-        // TODO - add alert if base 64 conversion to file fails
+        // TODO - add alert if conversion to file fails
       }
     } else {
       imageFile = imageData;

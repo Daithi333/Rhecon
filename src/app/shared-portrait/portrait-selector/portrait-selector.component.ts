@@ -35,14 +35,15 @@ export class PortraitSelectorComponent implements OnInit {
       return;
     }
     Plugins.Camera.getPhoto({
+      allowEditing: true,
       quality: 60,
       source: CameraSource.Prompt,
-      correctOrientation: true,
+      correctOrientation: false,
       width: 600,
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
-      console.log(image.dataUrl);
+      console.log(image.exif);
       this.selectedImage = image.dataUrl;
       this.imageChoice.emit(image.dataUrl);
     })
