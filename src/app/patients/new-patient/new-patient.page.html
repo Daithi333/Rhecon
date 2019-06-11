@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="/tabs/patients"></ion-back-button>
     </ion-buttons>
     <ion-title>New Patient</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button type="submit" (click)="onAddPatient()" size="large">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

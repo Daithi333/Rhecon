@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NewRequestPage } from './new-request.page';
-import { PatientConsultantSelectorSharedModule } from 'src/app/shared/patient-consultant-selector.module';
+import { PatientConsultantSelectorSharedModule } from '../../shared/patient-consultant-selector.module';
 
 const routes: Routes = [
   {

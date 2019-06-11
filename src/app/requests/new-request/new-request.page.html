@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="/tabs/requests"></ion-back-button>
     </ion-buttons>
     <ion-title>New Request</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button type="submit" (click)="onAddRequest()" size="large">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -11,7 +16,15 @@
   <form [formGroup]="requestForm">
     <ion-grid>
       <ion-row>
-        <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
+        <ion-col
+          size="12"
+          size-md="8"
+          offset-md="2"
+          size-xl="6"
+          offset-xl="3"
+          padding
+          style="padding-bottom: 0px;"
+        >
           <ion-list>
             <ion-item>
               <ion-icon slot="start" name="paper"></ion-icon>
@@ -21,12 +34,17 @@
               <ion-input type="text" formControlName="title"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-icon slot="start" name="medkit"></ion-icon>
+              <ion-icon slot="start" name="medkit"></ion-icon>
               <ion-label position="floating">
                 <h2>Patient</h2>
               </ion-label>
               <ion-input type="search" formControlName="patient"></ion-input>
-              <ion-button slot="end" fill="clear" type="button" (click)="onPatientSelect()">
+              <ion-button
+                slot="end"
+                fill="clear"
+                type="button"
+                (click)="onPatientSelect()"
+              >
                 <ion-icon name="arrow-dropdown"></ion-icon>
               </ion-button>
             </ion-item>
@@ -36,7 +54,12 @@
                 <h2>Consultant</h2>
               </ion-label>
               <ion-input type="search" formControlName="consultant"></ion-input>
-              <ion-button slot="end" fill="clear" type="button" (click)="onConsultantSelect()">
+              <ion-button
+                slot="end"
+                fill="clear"
+                type="button"
+                (click)="onConsultantSelect()"
+              >
                 <ion-icon name="arrow-dropdown"></ion-icon>
               </ion-button>
             </ion-item>
@@ -47,22 +70,20 @@
               </ion-label>
               <ion-textarea rows="3" formControlName="notes"></ion-textarea>
             </ion-item>
-            <ion-item lines="none">
-              <ion-icon slot="start" name="attach"></ion-icon>
-              <ion-label>
-                <h2>Attach</h2>
-              </ion-label>
-                <ion-icon slot="end" name="camera"></ion-icon>
-                <ion-icon slot="end" name="videocam"></ion-icon>
-                <ion-icon slot="end" name="document"></ion-icon>
-                <ion-icon slot="end" name="mic"></ion-icon>
-            </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>
+      <app-attachment-selector></app-attachment-selector>
       <ion-row class="grow" align-items-end>
         <ion-col size-sm="8" offset-sm="2">
-          <ion-button type="submit" color="tertiary" expand="block" (click)="onAddRequest()" [disabled]="!requestForm.valid">Submit Request</ion-button>
+          <ion-button
+            type="submit"
+            color="tertiary"
+            expand="block"
+            (click)="onAddRequest()"
+            [disabled]="!requestForm.valid"
+            >Submit Request</ion-button
+          >
         </ion-col>
       </ion-row>
     </ion-grid>

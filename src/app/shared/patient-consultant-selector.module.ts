@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { SelectPatientComponent } from './select-patient/select-patient.component';
 import { SelectConsultantComponent } from './select-consultant/select-consultant.component';
+import { AttachmentSelectorComponent } from './attachment-selector/attachment-selector.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { SelectConsultantComponent } from './select-consultant/select-consultant
   declarations: [
     SelectConsultantComponent,
     SelectPatientComponent,
+    AttachmentSelectorComponent
   ],
   exports: [
     CommonModule,
@@ -24,6 +26,7 @@ import { SelectConsultantComponent } from './select-consultant/select-consultant
     IonicModule,
     SelectConsultantComponent,
     SelectPatientComponent,
+    AttachmentSelectorComponent
   ],
   entryComponents: [
     SelectConsultantComponent,
