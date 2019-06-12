@@ -13,7 +13,12 @@ interface AttachmentData {
   providedIn: 'root'
 })
 export class AttachmentsService {
-  private _attachments = new BehaviorSubject<string[]>([]);
+  private _attachments = new BehaviorSubject<string[]>(
+    [
+      'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
+      'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
+    ]
+  );
 
   constructor(private httpClient: HttpClient) { }
 
@@ -42,10 +47,6 @@ export class AttachmentsService {
         this._attachments.next(attachments);
       })
     );
-  }
-
-  getAttachment(id: number) {
-
   }
 
 }

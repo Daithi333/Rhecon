@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
+import { AttachmentsService } from 'src/app/requests/attachments.service';
 
 @Component({
   selector: 'app-attachment-selector',
@@ -10,17 +11,12 @@ import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/c
 export class AttachmentSelectorComponent implements OnInit {
   useFileSelector = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
-  @Output() imageChoice = new EventEmitter<string | File>();
-  selectedImage: string;
-  attachments: string[] = [
+  @Output() attachmentChoices = new EventEmitter<string[] | File[]>();
+  selectedAttachments: string[] = [
     'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
   ];
 
-  constructor(private platform: Platform) {}
+  constructor(private platform: Platform, private attachmentsService: AttachmentsService) {}
 
   ngOnInit() {
     if (
@@ -47,9 +43,9 @@ export class AttachmentSelectorComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
-      this.selectedImage = image.dataUrl;
-      this.attachments.push(image.dataUrl);
-      this.imageChoice.emit(image.dataUrl);
+      this.selectedAttachments.push(image.dataUrl);
+      console.log(this.selectedAttachments);
+      this.attachmentChoices.emit(this.selectedAttachments);
     })
     .catch(error => {
       console.log('Error: ' + error);
@@ -72,8 +68,8 @@ export class AttachmentSelectorComponent implements OnInit {
   onSelectAudio() {
     
   }
-
-  onFileChosen(event: Event) {
+  // Method to Extract file from the input's file selection event
+  onAttachmentChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
       // TODO - add alert
@@ -81,9 +77,11 @@ export class AttachmentSelectorComponent implements OnInit {
     }
     const fr = new FileReader();
     fr.onload = () => {
+      // convert to string to allow preview
       const dataUrl = fr.result.toString();
-      this.selectedImage = dataUrl;
-      this.imageChoice.emit(chosenFile);
+      this.selectedAttachments.push(dataUrl);
+      console.log(this.selectedAttachments);
+      this.attachmentChoices.emit(this.selectedAttachments);
     };
     fr.readAsDataURL(chosenFile);
   }

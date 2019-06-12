@@ -37,7 +37,7 @@
     offset-xl="3"
     padding
   >
-    <span class="preview" *ngFor="let attachment of attachments">
+    <span class="preview" *ngFor="let attachment of selectedAttachments">
       <ion-thumbnail>
         <ion-img [src]="attachment"></ion-img>
       </ion-thumbnail>
@@ -47,5 +47,5 @@
 <input
   type="file"
   #fileSelector
-  (change)="onFileChosen($event)"
+  (change)="onAttachmentChosen($event)"
 />

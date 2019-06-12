@@ -69,6 +69,10 @@ export class NewRequestPage implements OnInit {
     this.requestForm.patchValue({ image: imageFile });
   }
 
+  onAttachmentsChosen(filesData: string[] | File[]) {
+    console.log(filesData);
+  }
+
   onPatientSelect() {
     this.modalController.create({
       component: SelectPatientComponent,
