@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
+import { ImageUtilService } from '../image-util-service';
 
 @Component({
   selector: 'app-portrait-selector',
@@ -13,7 +14,7 @@ export class PortraitSelectorComponent implements OnInit {
   @Output() imageChoice = new EventEmitter<string | File>();
   @Input() selectedImage: string;
 
-  constructor(private platform: Platform) { }
+  constructor(private platform: Platform, private imageUtilityService: ImageUtilService) { }
 
   ngOnInit() {
     // console.log('Mobile: ', this.platform.is('mobile'));
@@ -35,7 +36,6 @@ export class PortraitSelectorComponent implements OnInit {
       return;
     }
     Plugins.Camera.getPhoto({
-      allowEditing: true,
       quality: 60,
       source: CameraSource.Prompt,
       correctOrientation: false,
@@ -57,6 +57,7 @@ export class PortraitSelectorComponent implements OnInit {
   }
 
   onFileChosen(event: Event) {
+    console.log(event);
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
       // TODO - add alert
@@ -65,6 +66,13 @@ export class PortraitSelectorComponent implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
+      let reorientatedDataUrl;
+      // this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
+      //   console.log(orientation);
+      //   this.imageUtilityService.resetOrientation(dataUrl, orientation, reorientatedImage => {
+      //     reorientatedDataUrl = reorientatedImage;
+      //   });
+      // });
       this.selectedImage = dataUrl;
       this.imageChoice.emit(chosenFile);
     };

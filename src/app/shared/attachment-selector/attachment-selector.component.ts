@@ -35,7 +35,6 @@ export class AttachmentSelectorComponent implements OnInit {
       return;
     }
     Plugins.Camera.getPhoto({
-      allowEditing: true,
       quality: 60,
       source: CameraSource.Prompt,
       correctOrientation: false,
