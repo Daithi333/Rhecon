@@ -12,6 +12,7 @@ import { ConsultantsService } from '../../consultants/consultants.service';
 })
 export class SelectConsultantComponent implements OnInit, OnDestroy {
   consultants: Consultant[];
+  isLoading = false;
   private consultantsSub: Subscription;
 
   constructor(private modalController: ModalController, private consultantsService: ConsultantsService) { }
@@ -21,6 +22,13 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
       .subscribe(consultants => {
         this.consultants = consultants;
       });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.consultantsService.consultants.subscribe(() => {
+      this.isLoading = false;
+    });
   }
 
   onClose() {

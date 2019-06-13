@@ -1,4 +1,6 @@
 <?php
+  include_once '../../utility/Utility.php';
+
   class Patient {
     private $conn;
     private $table = 'Rhecon_Patient';
@@ -85,12 +87,12 @@
       $stmt = $this->conn->prepare($query);
 
       // Sanitise data
-      $this->firstName = $this->sanitise_input($this->firstName);
-      $this->lastName = $this->sanitise_input($this->lastName);
-      $this->dob = $this->sanitise_input($this->dob);
-      $this->notes = $this->sanitise_input($this->notes);
-      $this->portraitUrl = $this->sanitise_input($this->portraitUrl);
-      $this->userId = $this->sanitise_input($this->userId);
+      $this->firstName = Utility::sanitise_input($this->firstName);
+      $this->lastName = Utility::sanitise_input($this->lastName);
+      $this->dob = Utility::sanitise_input($this->dob);
+      $this->notes = Utility::sanitise_input($this->notes);
+      $this->portraitUrl = Utility::sanitise_input($this->portraitUrl);
+      $this->userId = Utility::sanitise_input($this->userId);
 
       // bind named params
       $stmt->bindParam(':firstName', $this->firstName);
@@ -129,13 +131,13 @@
       $stmt = $this->conn->prepare($query);
 
       // Sanitise data
-      $this->id = $this->sanitise_input($this->id);
-      $this->firstName = $this->sanitise_input($this->firstName);
-      $this->lastName = $this->sanitise_input($this->lastName);
-      $this->dob = $this->sanitise_input($this->dob);
-      $this->notes = $this->sanitise_input($this->notes);
-      $this->portraitUrl = $this->sanitise_input($this->portraitUrl);
-      $this->userId = $this->sanitise_input($this->userId);
+      $this->id = Utility::sanitise_input($this->id);
+      $this->firstName = Utility::sanitise_input($this->firstName);
+      $this->lastName = Utility::sanitise_input($this->lastName);
+      $this->dob = Utility::sanitise_input($this->dob);
+      $this->notes = Utility::sanitise_input($this->notes);
+      $this->portraitUrl = Utility::sanitise_input($this->portraitUrl);
+      $this->userId = Utility::sanitise_input($this->userId);
 
       // bind data
       $stmt->bindParam(':id', $this->id);
@@ -167,7 +169,7 @@
       $stmt = $this->conn->prepare($query);
 
       // Sanitise data
-      $this->id = $this->sanitise_input($this->id);
+      $this->id = Utility::sanitise_input($this->id);
 
       // Bind data
       $stmt->bindParam(':id', $this->id);
@@ -194,7 +196,7 @@
       $stmt = $this->conn->prepare($query);
 
       // Sanitise data
-      $this->id = $this->sanitise_input($this->id);
+      $this->id = Utility::sanitise_input($this->id);
 
       // Bind data
       $stmt->bindParam(':id', $this->id);
@@ -207,16 +209,6 @@
       // output msg if error
       printf("Error: %s.\n", $stmt->error);
       return false;
-    }
-
-    /**
-     * Function to sanitise data passed in as param
-     */
-    private function sanitise_input($data) {
-      $data = trim($data);
-      $data = strip_tags($data);
-      $data = htmlspecialchars($data);
-      return $data;
     }
 
   }
