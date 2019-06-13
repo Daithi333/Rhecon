@@ -76,7 +76,7 @@ export class NewPatientPage implements OnInit {
         .pipe(
           switchMap(resData => {
             // TODO - handle error from the add image function
-            return this.callAddPatient(resData.imageUrl);
+            return this.callAddPatient(resData.fileUrl);
           })
         ).subscribe(() => {
           loadingEl.dismiss();

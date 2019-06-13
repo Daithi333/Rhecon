@@ -16,8 +16,9 @@
   header('Access-Control-Allow-Methods: GET, POST');
 
   $relativePath = "../..";
-  $targetDir = "/files/patient_img/";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
+  $targetDir = "/files/patient_img/";
+  // $targetDir = "/files/request_attachments/";
   
   // for multiple file upload
   // $url = $_SERVER['REQUEST_URI'];
@@ -38,7 +39,7 @@
   $validExt = array('gif', 'png', 'jpg', 'jpeg', 'tiff', 'bmp');
 
   $uploadOk = true;
-  $errorMsg = 'Somethng went wrong';
+  $errorMsg = 'Something went wrong';
 
   // check if actiually an image
   if (isset($_POST['submit'])) {

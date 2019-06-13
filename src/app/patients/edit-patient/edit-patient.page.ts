@@ -98,7 +98,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
           switchMap(resData => {
             console.log(resData);
             // TODO - handle error from the add image function - server, size, etc
-            return this.callUpdatePatient(resData.imageUrl);
+            return this.callUpdatePatient(resData.fileUrl);
           })
         ).subscribe(() => {
           loadingEl.dismiss();
