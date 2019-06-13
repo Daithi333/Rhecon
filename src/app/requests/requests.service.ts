@@ -206,9 +206,9 @@ export class RequestsService {
         return this.requests;
       }),
       take(1),
-      tap(patients => {
+      tap(requests => {
         newRequest.id = uniqueId;
-        this._requests.next(patients.concat(newRequest));
+        this._requests.next(requests.concat(newRequest));
       })
     );
   }

@@ -21,7 +21,7 @@
     public function read() {
       $query = 'SELECT a.id, a.requestId, a.attachmentUrl
                 FROM ' . $this->table . ' a
-                WHERE p.requestId = :requestId';
+                WHERE a.requestId = :requestId';
 
       $stmt = $this->conn->prepare($query);
 
@@ -49,8 +49,8 @@
       $this->attachmentUrl = Utility::sanitise_input($this->attachmentUrl);;
 
       // bind named params
-      $stmt->bindParam(':firstName', $this->firstName);
-      $stmt->bindParam(':lastName', $this->lastName);
+      $stmt->bindParam(':requestId', $this->requestId);
+      $stmt->bindParam(':attachmentUrl', $this->attachmentUrl);
 
       // Execute query
       if($stmt->execute()) {

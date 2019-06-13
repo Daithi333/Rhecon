@@ -86,7 +86,7 @@ export class PatientsService {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
 
-    return this.httpClient.post<{imageUrl: string, imagePath: string}>(
+    return this.httpClient.post<{fileUrl: string, filePath: string}>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
       imageData
     );

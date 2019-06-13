@@ -77,8 +77,8 @@
     if (move_uploaded_file($temp, $targetFile)) {
       echo json_encode(
         array(
-          'imageUrl' => $rootDir . $targetDir . $fileName,
-          'imagePath' => $targetDir . $fileName
+          'fileUrl' => $rootDir . $targetDir . $fileName,
+          'filePath' => $targetDir . $fileName
         )
       );
     } else {

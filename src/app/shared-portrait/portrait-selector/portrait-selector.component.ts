@@ -43,7 +43,6 @@ export class PortraitSelectorComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
-      console.log(image.exif);
       this.selectedImage = image.dataUrl;
       this.imageChoice.emit(image.dataUrl);
     })
@@ -66,7 +65,7 @@ export class PortraitSelectorComponent implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
-      let reorientatedDataUrl;
+      // let reorientatedDataUrl;
       // this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
       //   console.log(orientation);
       //   this.imageUtilityService.resetOrientation(dataUrl, orientation, reorientatedImage => {

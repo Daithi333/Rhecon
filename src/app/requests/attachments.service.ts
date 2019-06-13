@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap, take } from 'rxjs/operators';
 
-interface AttachmentData {
-  id: number;
-  requestId: number;
-  attachmentUrl: string;
-}
+import { Attachment } from './attachment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttachmentsService {
-  private _attachments = new BehaviorSubject<string[]>(
+  private _attachments = new BehaviorSubject<Attachment[]>(
     [
-      'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-      'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
+      new Attachment(
+        1,
+        1,
+        'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
+      ),
+      new Attachment(
+        2,
+        1,
+        'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
+      )
     ]
   );
 
@@ -28,7 +32,7 @@ export class AttachmentsService {
   }
 
   fetchAttachments(requestId: number) {
-    return this.httpClient.get<{[key: number]: AttachmentData}>(
+    return this.httpClient.get<{[key: number]: Attachment}>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/read.php?requestId=${requestId}`
     )
     .pipe(
@@ -46,6 +50,39 @@ export class AttachmentsService {
       tap(attachments => {
         this._attachments.next(attachments);
       })
+    );
+  }
+
+  addAttachment(requestId: number, attachmentUrl: string) {
+    let uniqueId: number;
+    const newAttachment = {
+      id: null,
+      requestId,
+      attachmentUrl
+    };
+    return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/create.php',
+      { ...newAttachment }
+    )
+    .pipe(
+      switchMap(responseData => {
+        uniqueId = responseData.dbId;
+        return this.attachments;
+      }),
+      take(1),
+      tap(attachments => {
+        newAttachment.id = uniqueId;
+        this._attachments.next(attachments.concat(newAttachment));
+      })
+    );
+  }
+
+  addAttachmentFile(attachmentFile: File) {
+    const attachmentData = new FormData();
+    attachmentData.append('fileUpload', attachmentFile);
+
+    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
+      attachmentData
     );
   }
 
