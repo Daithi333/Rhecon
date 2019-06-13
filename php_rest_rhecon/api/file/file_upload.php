@@ -16,7 +16,7 @@
   header('Access-Control-Allow-Methods: GET, POST');
 
   $relativePath = "../..";
-  $targetDir = "/img/patient_img/";
+  $targetDir = "/files/patient_img/";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
   
   // for multiple file upload
