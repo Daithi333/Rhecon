@@ -74,6 +74,27 @@ export class RequestsService {
     );
   }
 
+  getRequest(id: number) {
+    return this.httpClient.get<RequestData>(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${this.authService.userId}&id=${id}`
+    )
+    .pipe(
+      map(requestData => {
+        return new Request(
+          id,
+          requestData.title,
+          +requestData.requesterId,
+          +requestData.patientId,
+          +requestData.consultantId,
+          requestData.notes,
+          !!+requestData.active,
+          new Date(requestData.createdOn),
+          new Date(requestData.updatedOn)
+        );
+      })
+    );
+  }
+
   fetchRequestsWithPatientAndConsultant() {
     const requestsArr: RequestWithPatientAndConsultant[] = [];
     return this.fetchRequests()
@@ -119,22 +140,40 @@ export class RequestsService {
       );
   }
 
-  getRequest(id: number) {
-    return this.httpClient.get<RequestData>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${this.authService.userId}&id=${id}`
-    )
-    .pipe(
-      map(requestData => {
-        return new Request(
-          id,
-          requestData.title,
-          +requestData.requesterId,
-          +requestData.patientId,
-          +requestData.consultantId,
-          requestData.notes,
-          !!+requestData.active,
-          new Date(requestData.createdOn),
-          new Date(requestData.updatedOn)
+  getRequestWithPatientAndConsultant(id: number) {
+    return this.getRequest(id).pipe(
+      switchMap(request => {
+        return this.patientsService.getPatient(request.patientId).pipe(
+          map(patient => {
+            return {
+              id: +request.id,
+              title: request.title,
+              requesterId: +request.requesterId,
+              patientId: patient,
+              consultantId: +request.consultantId,
+              notes: request.notes,
+              active: !!+request.active,
+              createdOn: new Date(request.createdOn),
+              updatedOn: new Date(request.updatedOn)
+            };
+          })
+        );
+      }),
+      switchMap(request => {
+        return this.consultantsService.getConsultant(request.consultantId).pipe(
+          map(consultant => {
+            return new RequestWithPatientAndConsultant(
+              +request.id,
+              request.title,
+              +request.requesterId,
+              request.patientId,
+              consultant,
+              request.notes,
+              !!+request.active,
+              new Date(request.createdOn),
+              new Date(request.updatedOn)
+            );
+          })
         );
       })
     );

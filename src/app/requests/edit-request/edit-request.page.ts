@@ -4,14 +4,12 @@ import { NavController, ModalController, LoadingController } from '@ionic/angula
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { Request } from '../request.model';
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
 import { Consultant } from '../../consultants/consultant.model';
-import { ConsultantsService } from 'src/app/consultants/consultants.service';
-import { PatientsService } from 'src/app/patients/patients.service';
+import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
 
 @Component({
   selector: 'app-edit-request',
@@ -19,15 +17,13 @@ import { PatientsService } from 'src/app/patients/patients.service';
   styleUrls: ['./edit-request.page.scss'],
 })
 export class EditRequestPage implements OnInit, OnDestroy {
-  request: Request;
+  request: RequestWithPatientAndConsultant;
   requestId: number;
   requestForm: FormGroup;
   isLoading = false;
   selectedPatient: Patient;
   selectedConsultant: Consultant;
   private requestSub: Subscription;
-  private patientSub: Subscription;
-  private consultantSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,9 +31,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
     private requestsService: RequestsService,
     private modalController: ModalController,
     private loadingController: LoadingController,
-    private router: Router,
-    private usersService: ConsultantsService,
-    private patientsService: PatientsService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -48,39 +42,31 @@ export class EditRequestPage implements OnInit, OnDestroy {
       }
       this.isLoading = true;
       this.requestId = +paramMap.get('requestId');
-      this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
-      .subscribe(req => {
-        this.request = req;
-        this.patientSub = this.patientsService.getPatient(this.request.patientId)
-          .subscribe(pat => {
-            this.selectedPatient = pat;
-            this.consultantSub = this.usersService.getConsultant(this.request.consultantId)
-            .subscribe(cons => {
-              this.selectedConsultant = cons;
-              this.requestForm = new FormGroup({
-                title: new FormControl(this.request.title, {
-                  updateOn: 'blur',
-                  validators: [Validators.required]
-                }),
-                patient: new FormControl(this.request.patientId, {
-                  updateOn: 'blur',
-                  validators: [Validators.required]
-                }),
-                consultant: new FormControl(this.request.consultantId, {
-                  updateOn: 'blur',
-                  validators: [Validators.required]
-                }),
-                notes: new FormControl(this.request.notes, {
-                  updateOn: 'blur',
-                  validators: [Validators.required]
-                }),
-              });
-              this.isLoading = false;
-            });
+      this.requestSub = this.requestsService.getRequestWithPatientAndConsultant(+paramMap.get('requestId'))
+        .subscribe(request => {
+          this.request = request;
+          this.requestForm = new FormGroup({
+            title: new FormControl(this.request.title, {
+              updateOn: 'blur',
+              validators: [Validators.required]
+            }),
+            patient: new FormControl(`${this.request.patient.firstName} ${this.request.patient.lastName}`, {
+              updateOn: 'blur',
+              validators: [Validators.required]
+            }),
+            consultant: new FormControl(
+              `${this.request.consultant.title} ${this.request.consultant.firstName} ${this.request.consultant.lastName}`, {
+              updateOn: 'blur',
+              validators: [Validators.required]
+            }),
+            notes: new FormControl(this.request.notes, {
+              updateOn: 'blur',
+              validators: [Validators.required]
+            }),
           });
-      });
+          this.isLoading = false;
+        });
     });
-
   }
 
   onPatientSelect() {
@@ -159,12 +145,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.requestSub) {
       this.requestSub.unsubscribe();
-    }
-    if (this.patientSub) {
-      this.patientSub.unsubscribe();
-    }
-    if (this.consultantSub) {
-      this.consultantSub.unsubscribe();
     }
   }
 
