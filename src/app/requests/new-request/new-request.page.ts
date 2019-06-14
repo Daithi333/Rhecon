@@ -9,6 +9,9 @@ import { SelectConsultantComponent } from '../../shared/select-consultant/select
 import { Patient } from '../../patients/patient.model';
 import { Consultant } from '../../consultants/consultant.model';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
+import { AttachmentsService } from '../attachments.service';
+import { map, switchMap, mergeMap, tap, takeLast } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-new-request',
@@ -20,13 +23,15 @@ export class NewRequestPage implements OnInit {
   isLoading = false;
   selectedPatient: Patient;
   selectedConsultant: Consultant;
+  attachments: File[] = [];
 
   constructor(
     private requestsService: RequestsService,
     private loadingController: LoadingController,
     private router: Router,
     private modalController: ModalController,
-    private imageUtilService: ImageUtilService
+    private imageUtilService: ImageUtilService,
+    private attachmentsService: AttachmentsService
   ) {}
 
   ngOnInit() {
@@ -47,16 +52,16 @@ export class NewRequestPage implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
-      image: new FormControl(null)
+      attachments: new FormControl(null)
     });
   }
 
-  onImageChosen(imageData: string | File) {
-    let imageFile;
-    if (typeof imageData === 'string') {
+  onAttachmentChosen(attachmentData: string | File) {
+    let attachmentFile;
+    if (typeof attachmentData === 'string') {
       try {
-        imageFile = this.imageUtilService.base64toBlob(
-          imageData.replace('data:image/jpeg;base64,', ''),
+        attachmentFile = this.imageUtilService.base64toBlob(
+          attachmentData.replace('data:image/jpeg;base64,', ''),
           'image/jpeg'
         );
       } catch (error) {
@@ -64,13 +69,12 @@ export class NewRequestPage implements OnInit {
         // TODO - add alert if conversion to file fails
       }
     } else {
-      imageFile = imageData;
+      attachmentFile = attachmentData;
     }
-    this.requestForm.patchValue({ image: imageFile });
-  }
-
-  onAttachmentsChosen(filesData: string[] | File[]) {
-    console.log(filesData);
+    // console.log(attachmentFile);
+    this.attachments.push(attachmentFile);
+    console.log(this.attachments);
+    this.requestForm.patchValue({ attachments: this.attachments });
   }
 
   onPatientSelect() {
@@ -123,6 +127,7 @@ export class NewRequestPage implements OnInit {
     if (!this.requestForm.valid) {
       return;
     }
+    let newRequestId;
     this.loadingController.create({
       message: 'Creating Request'
     })
@@ -133,10 +138,41 @@ export class NewRequestPage implements OnInit {
         this.selectedPatient.id,
         this.selectedConsultant.id,
         this.requestForm.value.notes
+      ).pipe(
+        switchMap(requestId => {
+          console.log('Request id from new request page: ' + requestId);
+          newRequestId = requestId;
+          return of(this.attachments);
+        }),
+        mergeMap(attachments => {
+          return attachments.map(attachment => {
+            console.log(attachment);
+            return attachment;
+          });
+        }),
+        mergeMap(attachment => {
+          return this.attachmentsService.addAttachmentFile(attachment).pipe(
+            map(fileData => {
+              console.log('File data: ' + fileData);
+              return fileData;
+            })
+          );
+        }),
+        mergeMap(fileData => {
+          return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
+            map(attachments => {
+              console.log('Attachments: ' + attachments);
+              return attachments;
+            })
+          );
+        }),
+        takeLast(1)
       )
       .subscribe(() => {
+        console.log('Subscribed!');
         this.loadingController.dismiss();
         this.requestForm.reset();
+        this.attachments.splice(0, this.attachments.length);
         this.router.navigate(['/tabs/requests']);
       });
     });

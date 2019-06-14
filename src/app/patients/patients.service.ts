@@ -87,7 +87,7 @@ export class PatientsService {
     imageData.append('fileUpload', imageFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/portrait_upload.php',
       imageData
     );
   }
@@ -109,13 +109,14 @@ export class PatientsService {
       notes,
       this.authService.userId
     );
-    console.log(portraitUrl);
+    // console.log(portraitUrl);
     return this.httpClient
     .post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
       { ...newPatient, id: null }
     )
     .pipe(
       switchMap(responseData => {
+        console.log(responseData);
         uniqueId = responseData.dbId;
         return this.patients;
       }),

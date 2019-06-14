@@ -11,10 +11,8 @@ import { AttachmentsService } from 'src/app/requests/attachments.service';
 export class AttachmentSelectorComponent implements OnInit {
   useFileSelector = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
-  @Output() attachmentChoices = new EventEmitter<string[] | File[]>();
-  selectedAttachments: string[] = [
-    'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg',
-  ];
+  @Output() attachmentChoice = new EventEmitter<string | File>();
+  selectedAttachments: string[] = [];
 
   constructor(private platform: Platform, private attachmentsService: AttachmentsService) {}
 
@@ -44,7 +42,7 @@ export class AttachmentSelectorComponent implements OnInit {
     .then(image => {
       this.selectedAttachments.push(image.dataUrl);
       console.log(this.selectedAttachments);
-      this.attachmentChoices.emit(this.selectedAttachments);
+      this.attachmentChoice.emit(image.dataUrl);
     })
     .catch(error => {
       console.log('Error: ' + error);
@@ -57,15 +55,15 @@ export class AttachmentSelectorComponent implements OnInit {
   }
 
   onSelectVideo() {
-    
+
   }
 
   onSelectDoc() {
-    
+
   }
 
   onSelectAudio() {
-    
+
   }
   // Method to Extract file from the input's file selection event
   onAttachmentChosen(event: Event) {
@@ -80,7 +78,7 @@ export class AttachmentSelectorComponent implements OnInit {
       const dataUrl = fr.result.toString();
       this.selectedAttachments.push(dataUrl);
       console.log(this.selectedAttachments);
-      this.attachmentChoices.emit(this.selectedAttachments);
+      this.attachmentChoice.emit(chosenFile);
     };
     fr.readAsDataURL(chosenFile);
   }

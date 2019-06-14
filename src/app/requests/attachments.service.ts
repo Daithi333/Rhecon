@@ -9,20 +9,7 @@ import { Attachment } from './attachment.model';
   providedIn: 'root'
 })
 export class AttachmentsService {
-  private _attachments = new BehaviorSubject<Attachment[]>(
-    [
-      new Attachment(
-        1,
-        1,
-        'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
-      ),
-      new Attachment(
-        2,
-        1,
-        'https://mymodernmet.com/wp/wp-content/uploads/2018/10/Mou-Aysha-portrait-photography-3.jpg'
-      )
-    ]
-  );
+  private _attachments = new BehaviorSubject<Attachment[]>([]);
 
   constructor(private httpClient: HttpClient) { }
 
@@ -71,6 +58,7 @@ export class AttachmentsService {
       take(1),
       tap(attachments => {
         newAttachment.id = uniqueId;
+        console.log('Attachment id: ' + uniqueId);
         this._attachments.next(attachments.concat(newAttachment));
       })
     );
@@ -81,7 +69,7 @@ export class AttachmentsService {
     attachmentData.append('fileUpload', attachmentFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/file_upload.php',
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_upload.php',
       attachmentData
     );
   }

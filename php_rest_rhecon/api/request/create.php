@@ -28,7 +28,7 @@
     if($request->create()) {
       $uniqueId = $db->lastInsertId();
       echo json_encode(
-        array('UniqueId' => $uniqueId)
+        array('dbId' => $uniqueId)
       );
     } else {
       echo json_encode(

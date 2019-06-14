@@ -17,8 +17,7 @@
 
   $relativePath = "../..";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
-  $targetDir = "/files/patient_img/";
-  // $targetDir = "/files/request_attachments/";
+  $targetDir = "/files/request_attachments/";
   
   // for multiple file upload
   // $url = $_SERVER['REQUEST_URI'];
@@ -40,18 +39,6 @@
 
   $uploadOk = true;
   $errorMsg = 'Something went wrong';
-
-  // check if actiually an image
-  if (isset($_POST['submit'])) {
-    $check = getimagesize($temp);
-    if ($check !== false) {
-      echo "File is an image: " . $check['mime'];
-      $uploadOk = true;
-    } else {
-      $errorMsg = 'File is not an image';
-      $uploadOk = false;
-    }
-  }
 
   // Check if file already exists
   if (file_exists($targetFile)) {
@@ -80,6 +67,7 @@
         array(
           'fileUrl' => $rootDir . $targetDir . $fileName,
           'filePath' => $targetDir . $fileName
+
         )
       );
     } else {

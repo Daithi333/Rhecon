@@ -198,7 +198,7 @@ export class RequestsService {
       null
     );
     return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/create.php',
-      { ...newRequest }
+      { ...newRequest, id: null }
     )
     .pipe(
       switchMap(responseData => {
@@ -206,9 +206,11 @@ export class RequestsService {
         return this.requests;
       }),
       take(1),
-      tap(requests => {
+      switchMap(requests => {
         newRequest.id = uniqueId;
         this._requests.next(requests.concat(newRequest));
+        console.log('Request id: ' + uniqueId);
+        return of(uniqueId);
       })
     );
   }
