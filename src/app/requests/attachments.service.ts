@@ -24,6 +24,7 @@ export class AttachmentsService {
     )
     .pipe(
       map(resData => {
+        console.log(resData);
         const attachments = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {

@@ -39,7 +39,7 @@
   >
     <span class="preview" *ngFor="let attachment of selectedAttachments">
       <ion-thumbnail>
-        <ion-img [src]="attachment"></ion-img>
+        <ion-img [src]="attachment" role="button" (click)="onSelectFile()"></ion-img>
       </ion-thumbnail>
     </span>
   </ion-col>

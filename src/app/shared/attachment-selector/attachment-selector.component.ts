@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 import { AttachmentsService } from 'src/app/requests/attachments.service';
 
@@ -14,7 +14,11 @@ export class AttachmentSelectorComponent implements OnInit {
   @Output() attachmentChoice = new EventEmitter<string | File>();
   selectedAttachments: string[] = [];
 
-  constructor(private platform: Platform, private attachmentsService: AttachmentsService) {}
+  constructor(
+    private platform: Platform,
+    private attachmentsService: AttachmentsService,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
     if (
@@ -81,6 +85,32 @@ export class AttachmentSelectorComponent implements OnInit {
       this.attachmentChoice.emit(chosenFile);
     };
     fr.readAsDataURL(chosenFile);
+  }
+
+  onSelectFile() {
+    this.alertController.create({
+      header: 'Choose action',
+      message: 'Please select an action for this file',
+      buttons: [
+        {
+          text: 'Download',
+          handler: () => {
+            // TODO
+          }
+        },
+        {
+          text: 'Remove',
+          handler: () => {
+            // TODO
+          }
+        },
+        {
+          text: 'Cancel'
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }

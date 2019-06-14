@@ -71,9 +71,8 @@ export class NewRequestPage implements OnInit {
     } else {
       attachmentFile = attachmentData;
     }
-    // console.log(attachmentFile);
     this.attachments.push(attachmentFile);
-    console.log(this.attachments);
+    // console.log(this.attachments);
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
@@ -140,20 +139,20 @@ export class NewRequestPage implements OnInit {
         this.requestForm.value.notes
       ).pipe(
         switchMap(requestId => {
-          console.log('Request id from new request page: ' + requestId);
+          // console.log('Request id from new request page: ' + requestId);
           newRequestId = requestId;
           return of(this.attachments);
         }),
         mergeMap(attachments => {
           return attachments.map(attachment => {
-            console.log(attachment);
+            // console.log(attachment);
             return attachment;
           });
         }),
         mergeMap(attachment => {
           return this.attachmentsService.addAttachmentFile(attachment).pipe(
             map(fileData => {
-              console.log('File data: ' + fileData);
+              // console.log('File data: ' + fileData);
               return fileData;
             })
           );
@@ -161,7 +160,7 @@ export class NewRequestPage implements OnInit {
         mergeMap(fileData => {
           return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
             map(attachments => {
-              console.log('Attachments: ' + attachments);
+              // console.log('Attachments: ' + attachments);
               return attachments;
             })
           );
@@ -169,7 +168,7 @@ export class NewRequestPage implements OnInit {
         takeLast(1)
       )
       .subscribe(() => {
-        console.log('Subscribed!');
+        // console.log('Subscribed!');
         this.loadingController.dismiss();
         this.requestForm.reset();
         this.attachments.splice(0, this.attachments.length);

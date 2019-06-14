@@ -4,11 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { RequestsService } from '../requests.service';
-import { Request } from '../request.model';
-import { PatientsService } from '../../patients/patients.service';
-import { ConsultantsService } from '../../consultants/consultants.service';
-import { Patient } from '../../patients/patient.model';
-import { Consultant } from '../../consultants/consultant.model';
+import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
+import { map, mergeMap } from 'rxjs/operators';
+import { AttachmentsService } from '../attachments.service';
 
 @Component({
   selector: 'app-view-request',
@@ -16,24 +14,20 @@ import { Consultant } from '../../consultants/consultant.model';
   styleUrls: ['./view-request.page.scss'],
 })
 export class ViewRequestPage implements OnInit, OnDestroy {
-  request: Request;
+  request: RequestWithPatientAndConsultant;
   requestId: number;
-  patient: Patient;
-  consultant: Consultant;
+  attachments: string[] = [];
   canEdit = true;
   isLoading = false;
-  private patientSub: Subscription;
-  private consultantSub: Subscription;
   private requestSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private navController: NavController,
     private requestsService: RequestsService,
-    private patientsService: PatientsService,
-    private usersService: ConsultantsService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private attachmentsService: AttachmentsService
   ) { }
 
   ngOnInit() {
@@ -44,21 +38,23 @@ export class ViewRequestPage implements OnInit, OnDestroy {
       }
       this.isLoading = true;
       this.requestId = +paramMap.get('requestId');
-      this.requestSub = this.requestsService.getRequest(+paramMap.get('requestId'))
-        .subscribe(request => {
-          this.request = request;
+      this.requestSub = this.requestsService.getRequestWithPatientAndConsultant(+paramMap.get('requestId'))
+        .pipe(
+          mergeMap(request => {
+            this.request = request;
+            return this.attachmentsService.fetchAttachments(request.id)
+              .pipe(
+                map(attachments => {
+                  this.attachments = attachments;
+                })
+              );
+          })
+        )
+        .subscribe(() => {
           if (this.request.active === false) {
             this.canEdit = false;
           }
-          this.patientSub = this.patientsService.getPatient(this.request.patientId)
-            .subscribe(patient => {
-              this.patient = patient;
-              this.consultantSub = this.usersService.getConsultant(this.request.consultantId)
-              .subscribe(cons => {
-                this.consultant = cons;
-                this.isLoading = false;
-              });
-            });
+          this.isLoading = false;
         },
         error => {
           this.alertController.create({
@@ -79,13 +75,27 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     });
   }
 
+  onSelectFile() {
+    this.alertController.create({
+      header: 'Choose action',
+      message: 'Do you wish to download this attachment?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            // TODO
+          }
+        },
+        {
+          text: 'No'
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
   ngOnDestroy() {
-    if (this.patientSub) {
-      this.patientSub.unsubscribe();
-    }
-    if (this.consultantSub) {
-      this.consultantSub.unsubscribe();
-    }
     if (this.requestSub) {
       this.requestSub.unsubscribe();
     }

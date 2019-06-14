@@ -4,7 +4,9 @@
       <ion-back-button defaultHref="/tabs/requests"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="primary" *ngIf="canEdit">
-      <ion-button [routerLink]="['/', 'tabs', 'requests', 'edit-request', requestId]">
+      <ion-button
+        [routerLink]="['/', 'tabs', 'requests', 'edit-request', requestId]"
+      >
         <ion-icon name="create"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,30 +20,72 @@
   </div>
   <ion-grid *ngIf="!isLoading">
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+      >
         <h2>{{ request.title }}</h2>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
-        <ion-thumbnail>
-          <ion-img [src]="patient.portraitUrl"></ion-img>
+        <ion-thumbnail class="portrait">
+          <ion-img [src]="request.patient.portraitUrl"></ion-img>
         </ion-thumbnail>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center>
-        <h2>{{ patient.firstName }} {{ patient.lastName }}</h2>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+      >
+        <h2>{{ request.patient.firstName }} {{ request.patient.lastName }}</h2>
         <ion-label>
           <p>{{ request.notes }}</p>
         </ion-label>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center>
-        <p>Consultant: {{ consultant.title }}. {{ consultant.lastName }} - {{ consultant.specialism }}</p>
-        <p>Request sent: {{ this.request.createdOn | date : 'dd/MM/yy' }}</p>
-        <p *ngIf="!canEdit" style="color: red;">Request closed: {{ this.request.updatedOn | date : 'dd/MM/yy' }}</p>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+      >
+        <p>
+          Consultant: {{ request.consultant.title }}. {{ request.consultant.lastName }}
+          {{ request.consultant.specialism }}
+        </p>
+        <p>Request sent: {{ this.request.createdOn | date: "dd/MM/yy" }}</p>
+        <p *ngIf="!canEdit" style="color: red;">
+          Request closed: {{ this.request.updatedOn | date: "dd/MM/yy" }}
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+      >
+        <ion-label><h2>Attachments</h2></ion-label>
+        <span class="preview" *ngFor="let attachment of attachments">
+          <ion-thumbnail>
+            <ion-img [src]="attachment" role="button" (click)="onSelectFile()"></ion-img>
+          </ion-thumbnail>
+        </span>
       </ion-col>
     </ion-row>
   </ion-grid>
