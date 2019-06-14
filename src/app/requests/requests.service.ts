@@ -269,6 +269,7 @@ export class RequestsService {
       }),
       take(1),
       tap(requests => {
+        requests.find(r => r.id === requestId).active = false;
         this._requestsWithPatientAndConsultant.next(requests);
       })
     );
