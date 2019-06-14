@@ -18,15 +18,6 @@
   $relativePath = "../..";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
   $targetDir = "/files/request_attachments/";
-  
-  // for multiple file upload
-  // $url = $_SERVER['REQUEST_URI'];
-  // $parts = explode('/', $url);
-  
-  // for ($i = 0; $i < count($parts) - 1; $i++) {
-  //   $rootDir .= $parts[$i] . "/";
-  // }
-  // echo $rootDir;
 
   $fileName = basename($_FILES['fileUpload']['name']);
   $temp = $_FILES['fileUpload']['tmp_name'];

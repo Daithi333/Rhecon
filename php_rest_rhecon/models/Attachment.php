@@ -62,4 +62,30 @@
       return false;
     }
 
+    /**
+     * Function to delete a single attachment record
+     */
+    public function delete() {
+      $query = 'DELETE FROM ' . $this->table . '
+                WHERE id = :id';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+
+      // Bind data
+      $stmt->bindParam(':id', $this->id);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
   }

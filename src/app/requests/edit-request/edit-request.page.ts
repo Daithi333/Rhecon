@@ -12,6 +12,7 @@ import { Patient } from '../../patients/patient.model';
 import { Consultant } from '../../consultants/consultant.model';
 import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
 import { AttachmentsService } from '../attachments.service';
+import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-edit-request',
@@ -25,7 +26,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
   isLoading = false;
   selectedPatient: Patient;
   selectedConsultant: Consultant;
-  attachments: string[] = [];
+  attachmentUrls: string[] = [];
+  attachments: File[] = [];
   private requestSub: Subscription;
 
   constructor(
@@ -35,7 +37,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private loadingController: LoadingController,
     private router: Router,
-    private attachmentsService: AttachmentsService
+    private attachmentsService: AttachmentsService,
+    private imageUtilService: ImageUtilService
   ) {}
 
   ngOnInit() {
@@ -53,7 +56,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
           return this.attachmentsService.fetchAttachments(request.id)
             .pipe(
               map(attachments => {
-                this.attachments = attachments;
+                this.attachmentUrls = attachments;
               })
             );
         })
@@ -132,6 +135,25 @@ export class EditRequestPage implements OnInit, OnDestroy {
       });
   }
 
+  onAttachmentChosen(attachmentData: string | File) {
+    let attachmentFile;
+    if (typeof attachmentData === 'string') {
+      try {
+        attachmentFile = this.imageUtilService.base64toBlob(
+          attachmentData.replace('data:image/jpeg;base64,', ''),
+          'image/jpeg'
+        );
+      } catch (error) {
+        console.log('File conversion error: ' + error);
+        // TODO - add alert if conversion to file fails
+      }
+    } else {
+      attachmentFile = attachmentData;
+    }
+    this.attachments.push(attachmentFile);
+    this.requestForm.patchValue({ attachments: this.attachments });
+  }
+
   onUpdateRequest() {
     if (!this.requestForm.valid) {
       return;
@@ -148,11 +170,11 @@ export class EditRequestPage implements OnInit, OnDestroy {
           this.selectedConsultant.id,
           this.requestForm.value.notes
         )
-          .subscribe(() => {
-            loadingEl.dismiss();
-            this.requestForm.reset();
-            this.router.navigate(['/tabs/requests']);
-          });
+        .subscribe(() => {
+          loadingEl.dismiss();
+          this.requestForm.reset();
+          this.router.navigate(['/tabs/requests']);
+        });
       });
   }
 

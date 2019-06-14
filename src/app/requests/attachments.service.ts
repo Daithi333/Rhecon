@@ -11,9 +11,8 @@ import { Attachment } from './attachment.model';
 export class AttachmentsService {
   private _attachments = new BehaviorSubject<Attachment[]>([]);
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  // returns the locally stored list of attachments
   get attachments() {
     return this._attachments.asObservable();
   }
@@ -24,7 +23,7 @@ export class AttachmentsService {
     )
     .pipe(
       map(resData => {
-        console.log(resData);
+        // console.log(resData);
         const attachments = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
@@ -59,7 +58,6 @@ export class AttachmentsService {
       take(1),
       tap(attachments => {
         newAttachment.id = uniqueId;
-        console.log('Attachment id: ' + uniqueId);
         this._attachments.next(attachments.concat(newAttachment));
       })
     );
@@ -72,6 +70,21 @@ export class AttachmentsService {
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_upload.php',
       attachmentData
+    );
+  }
+
+  deleteAttachment(attachmentId: number) {
+    return this.httpClient.delete(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/delete.php/?id=${attachmentId}`
+    )
+    .pipe(
+      switchMap(() => {
+        return this.attachments;
+      }),
+      take(1),
+      tap(requests => {
+        this._attachments.next(requests.filter(a => a.id !== attachmentId));
+      })
     );
   }
 

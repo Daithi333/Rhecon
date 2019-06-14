@@ -87,7 +87,7 @@ export class AttachmentSelectorComponent implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  onSelectFile() {
+  onSelectFile(attachmentId: number) {
     this.alertController.create({
       header: 'Choose action',
       message: 'Please choose an action for this attachment.',
@@ -99,9 +99,25 @@ export class AttachmentSelectorComponent implements OnInit {
           }
         },
         {
-          text: 'Remove',
+          text: 'Delete',
           handler: () => {
-            // TODO
+            this.alertController.create({
+              header: 'Confirm',
+              message: 'Are you sure you wish to delete this attachment?.',
+              buttons: [
+                {
+                  text: 'Yes',
+                  handler: () => {
+                    this.attachmentsService.deleteAttachment(attachmentId).subscribe();
+                  }
+                },
+                {
+                  text: 'No'
+                }
+              ]
+            }).then(alertEl => {
+              alertEl.present();
+            });
           }
         },
         {
