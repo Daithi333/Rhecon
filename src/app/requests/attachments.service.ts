@@ -40,6 +40,22 @@ export class AttachmentsService {
     );
   }
 
+  getAttachment(requestId: number, attachmentUrl: string) {
+    return this.httpClient.get<Attachment>(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/read_single.php?
+      requestId=${requestId}&attachmentUrl=${attachmentUrl}`
+    )
+    .pipe(
+      map(attachmentData => {
+        return new Attachment(
+          +attachmentData.id,
+          requestId,
+          attachmentUrl
+        );
+      })
+    );
+  }
+
   addAttachment(requestId: number, attachmentUrl: string) {
     let uniqueId: number;
     const newAttachment = {
@@ -82,8 +98,8 @@ export class AttachmentsService {
         return this.attachments;
       }),
       take(1),
-      tap(requests => {
-        this._attachments.next(requests.filter(a => a.id !== attachmentId));
+      tap(attachments => {
+        this._attachments.next(attachments.filter(a => a.id !== attachmentId));
       })
     );
   }

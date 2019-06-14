@@ -33,6 +33,34 @@
     }
 
     /**
+     * Function to retrieve a single attachment record by request id and its Url string
+     */
+    public function readSingle() {
+      $query = 'SELECT a.id, a.requestId, a.attachmentUrl
+                FROM ' . $this->table . ' a
+                WHERE a.requestId = :requestId
+                AND a.attachmentUrl = :attachmentUrl ';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':requestId', $this->requestId);
+      $stmt->bindParam(':attachmentUrl', $this->attachmentUrl);
+
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        // set single attachment properties
+        $this->id = $row['id'];
+
+        return true;
+      }
+
+      return false;
+    }
+
+    /**
      * Function to add a new attachment records
      */
     public function create() {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
-import { AttachmentsService } from 'src/app/requests/attachments.service';
+import { AttachmentsService } from '../../requests/attachments.service';
 
 @Component({
   selector: 'app-attachment-selector',
@@ -13,6 +13,7 @@ export class AttachmentSelectorComponent implements OnInit {
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() attachmentChoice = new EventEmitter<string | File>();
   @Input() selectedAttachments: string[] = [];
+  @Input() requestId: number;
 
   constructor(
     private platform: Platform,
@@ -39,7 +40,7 @@ export class AttachmentSelectorComponent implements OnInit {
     Plugins.Camera.getPhoto({
       quality: 60,
       source: CameraSource.Prompt,
-      correctOrientation: false,
+      correctOrientation: true,
       width: 600,
       resultType: CameraResultType.DataUrl,
     })
@@ -69,7 +70,7 @@ export class AttachmentSelectorComponent implements OnInit {
   onSelectAudio() {
 
   }
-  // Method to Extract file from the input's file selection event
+  // Method to Extract file from the hidden HTML input's file selection event
   onAttachmentChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
@@ -87,7 +88,8 @@ export class AttachmentSelectorComponent implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  onSelectFile(attachmentId: number) {
+  onSelectFile(requestId: number, attachmentUrl: string) {
+    let attachmentId;
     this.alertController.create({
       header: 'Choose action',
       message: 'Please choose an action for this attachment.',
@@ -95,28 +97,34 @@ export class AttachmentSelectorComponent implements OnInit {
         {
           text: 'Download',
           handler: () => {
-            // TODO
+            // TODO - trigger file download from server
           }
         },
         {
           text: 'Delete',
           handler: () => {
-            this.alertController.create({
-              header: 'Confirm',
-              message: 'Are you sure you wish to delete this attachment?.',
-              buttons: [
-                {
-                  text: 'Yes',
-                  handler: () => {
-                    this.attachmentsService.deleteAttachment(attachmentId).subscribe();
+            this.attachmentsService.getAttachment(requestId, attachmentUrl)
+            .subscribe(attachment => {
+              console.log('Retrieved Attachment: ' + attachment);
+              attachmentId = attachment.id;
+              this.alertController.create({
+                header: 'Confirm',
+                message: 'Are you sure you wish to delete this attachment?.',
+                buttons: [
+                  {
+                    text: 'Yes',
+                    handler: () => {
+                      this.attachmentsService.deleteAttachment(attachmentId).subscribe();
+                      // TODO - refresh view so attachment preview drops off (like when one is added)
+                    }
+                  },
+                  {
+                    text: 'No'
                   }
-                },
-                {
-                  text: 'No'
-                }
-              ]
-            }).then(alertEl => {
-              alertEl.present();
+                ]
+              }).then(alertEl => {
+                alertEl.present();
+              });
             });
           }
         },

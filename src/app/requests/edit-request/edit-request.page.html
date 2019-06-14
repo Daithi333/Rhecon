@@ -27,7 +27,8 @@
           offset-md="2"
           size-xl="6"
           offset-xl="3"
-          padding>
+          padding
+        >
           <ion-list>
             <ion-item>
               <ion-icon slot="start" name="paper"></ion-icon>
@@ -42,7 +43,12 @@
                 <h2>Patient</h2>
               </ion-label>
               <ion-input type="text" formControlName="patient"></ion-input>
-              <ion-button slot="end" fill="clear" type="button" (click)="onPatientSelect()">
+              <ion-button
+                slot="end"
+                fill="clear"
+                type="button"
+                (click)="onPatientSelect()"
+              >
                 <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
               </ion-button>
             </ion-item>
@@ -52,7 +58,12 @@
                 <h2>Consultant</h2>
               </ion-label>
               <ion-input type="text" formControlName="consultant"></ion-input>
-              <ion-button slot="end" fill="clear" type="button" (click)="onConsultantSelect()">
+              <ion-button
+                slot="end"
+                fill="clear"
+                type="button"
+                (click)="onConsultantSelect()"
+              >
                 <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
               </ion-button>
             </ion-item>
@@ -66,7 +77,11 @@
           </ion-list>
         </ion-col>
       </ion-row>
-      <app-attachment-selector (attachmentChoice)="onAttachmentChosen($event)" [selectedAttachments]="attachmentUrls"></app-attachment-selector>
+      <app-attachment-selector
+        (attachmentChoice)="onAttachmentChosen($event)"
+        [selectedAttachments]="attachmentUrls"
+        [requestId]="request.id"
+      ></app-attachment-selector>
       <ion-row class="grow" align-items-end>
         <ion-col size-sm="8" offset-sm="2">
           <ion-button
@@ -75,7 +90,8 @@
             expand="block"
             (click)="onUpdateRequest()"
             [disabled]="!requestForm.valid"
-            >Update Request</ion-button>
+            >Update Request</ion-button
+          >
         </ion-col>
       </ion-row>
     </ion-grid>
