@@ -77,7 +77,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
 
   onSelectFile() {
     this.alertController.create({
-      header: 'Choose action',
+      header: 'Download',
       message: 'Do you wish to download this attachment?',
       buttons: [
         {

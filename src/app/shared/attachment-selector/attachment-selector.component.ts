@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 import { AttachmentsService } from 'src/app/requests/attachments.service';
@@ -12,7 +12,7 @@ export class AttachmentSelectorComponent implements OnInit {
   useFileSelector = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @Output() attachmentChoice = new EventEmitter<string | File>();
-  selectedAttachments: string[] = [];
+  @Input() selectedAttachments: string[] = [];
 
   constructor(
     private platform: Platform,
@@ -90,7 +90,7 @@ export class AttachmentSelectorComponent implements OnInit {
   onSelectFile() {
     this.alertController.create({
       header: 'Choose action',
-      message: 'Please select an action for this file',
+      message: 'Please choose an action for this attachment.',
       buttons: [
         {
           text: 'Download',
@@ -105,7 +105,7 @@ export class AttachmentSelectorComponent implements OnInit {
           }
         },
         {
-          text: 'Cancel'
+          text: 'Back'
         }
       ]
     }).then(alertEl => {
