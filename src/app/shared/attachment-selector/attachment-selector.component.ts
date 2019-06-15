@@ -103,6 +103,7 @@ export class AttachmentSelectorComponent implements OnInit {
         {
           text: 'Delete',
           handler: () => {
+            // add conditional for when image was only added locally
             this.attachmentsService.getAttachment(requestId, attachmentUrl)
             .subscribe(attachment => {
               console.log('Retrieved Attachment: ' + attachment);

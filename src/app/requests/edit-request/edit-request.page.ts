@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { mergeMap, map } from 'rxjs/operators';
+import { Subscription, of } from 'rxjs';
+import { mergeMap, map, switchMap, takeLast } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
@@ -53,6 +53,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
       .pipe(
         mergeMap(request => {
           this.request = request;
+          this.selectedPatient = request.patient;
+          this.selectedConsultant = request.consultant;
           return this.attachmentsService.fetchAttachments(request.id)
             .pipe(
               map(attachments => {
@@ -96,9 +98,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
         return modalEl.onDidDismiss();
       })
       .then(returnedData => {
-        this.selectedPatient = returnedData.data;
-        console.log(returnedData.data);
         if (returnedData.data != null) {
+          this.selectedPatient = returnedData.data;
           this.requestForm.patchValue(
             {
               patient: this.selectedPatient.firstName
@@ -169,10 +170,40 @@ export class EditRequestPage implements OnInit, OnDestroy {
           this.selectedPatient.id,
           this.selectedConsultant.id,
           this.requestForm.value.notes
+        ).pipe(
+          switchMap(() => {
+            return of(this.attachments);
+          }),
+          mergeMap(attachments => {
+            return attachments.map(attachment => {
+              // console.log(attachment);
+              return attachment;
+            });
+          }),
+          mergeMap(attachment => {
+            return this.attachmentsService.addAttachmentFile(attachment).pipe(
+              map(fileData => {
+                // console.log('File data: ' + fileData);
+                return fileData;
+              })
+            );
+          }),
+          mergeMap(fileData => {
+            return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
+              map(attachments => {
+                // console.log('Attachments: ' + attachments);
+                return attachments;
+              })
+            );
+          }),
+          takeLast(1)
         )
         .subscribe(() => {
+          console.log('Subscribed!');
           loadingEl.dismiss();
           this.requestForm.reset();
+          // this.attachments.splice(0, this.attachments.length);
+          // this.attachmentUrls.splice(0, this.attachments.length);
           this.router.navigate(['/tabs/requests']);
         });
       });
