@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
+
 import { AttachmentsService } from '../../requests/attachments.service';
 
 @Component({
@@ -88,8 +89,8 @@ export class AttachmentSelectorComponent implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  onSelectFile(requestId: number, attachmentUrl: string) {
-    let attachmentId;
+  // Method to allow user to download or delete a file from request upon clicking it
+  onClickFile(requestId: number, attachmentUrl: string) {
     this.alertController.create({
       header: 'Choose action',
       message: 'Please choose an action for this attachment.',
@@ -103,30 +104,11 @@ export class AttachmentSelectorComponent implements OnInit {
         {
           text: 'Delete',
           handler: () => {
-            // add conditional for when image was only added locally
-            this.attachmentsService.getAttachment(requestId, attachmentUrl)
-            .subscribe(attachment => {
-              console.log('Retrieved Attachment: ' + attachment);
-              attachmentId = attachment.id;
-              this.alertController.create({
-                header: 'Confirm',
-                message: 'Are you sure you wish to delete this attachment?.',
-                buttons: [
-                  {
-                    text: 'Yes',
-                    handler: () => {
-                      this.attachmentsService.deleteAttachment(attachmentId).subscribe();
-                      // TODO - refresh view so attachment preview drops off (like when one is added)
-                    }
-                  },
-                  {
-                    text: 'No'
-                  }
-                ]
-              }).then(alertEl => {
-                alertEl.present();
-              });
-            });
+            if (attachmentUrl.substr(0, 24) === 'http://dmcelhill01.lampt') {
+              this.deleteAttachment(requestId, attachmentUrl);
+            } else {
+              this.selectedAttachments = this.selectedAttachments.filter(a => a !== attachmentUrl);
+            }
           }
         },
         {
@@ -135,6 +117,35 @@ export class AttachmentSelectorComponent implements OnInit {
       ]
     }).then(alertEl => {
       alertEl.present();
+    });
+  }
+
+  // method to delete attachment record from server
+  private deleteAttachment(requestId: number, attachmentUrl: string) {
+    let attachmentId;
+    this.attachmentsService.getAttachment(requestId, attachmentUrl)
+    .subscribe(attachment => {
+      console.log('Retrieved Attachment: ' + attachment);
+      attachmentId = attachment.id;
+      this.alertController.create({
+        header: 'Confirm',
+        message: 'Are you sure you wish to delete this attachment?',
+        buttons: [
+          {
+            text: 'Yes',
+            handler: () => {
+              this.attachmentsService.deleteAttachment(attachmentId).subscribe(() => {
+                this.selectedAttachments = this.selectedAttachments.filter(a => a !== attachmentUrl);
+              });
+            }
+          },
+          {
+            text: 'No'
+          }
+        ]
+      }).then(alertEl => {
+        alertEl.present();
+      });
     });
   }
 

@@ -88,6 +88,12 @@ export class EditRequestPage implements OnInit, OnDestroy {
     });
   }
 
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave.. Splicing attachments!');
+    this.attachments.splice(0, this.attachments.length);
+    this.attachmentUrls.splice(0, this.attachments.length);
+  }
+
   onPatientSelect() {
     this.modalController.create({
       component: SelectPatientComponent,
@@ -162,21 +168,24 @@ export class EditRequestPage implements OnInit, OnDestroy {
     this.loadingController.create({
       message: 'Updating Request'
     })
-      .then(loadingEl => {
-        loadingEl.present();
-        this.requestsService.updateRequest(
-          this.request.id,
-          this.requestForm.value.title,
-          this.selectedPatient.id,
-          this.selectedConsultant.id,
-          this.requestForm.value.notes
-        ).pipe(
+    .then(loadingEl => {
+      loadingEl.present();
+      if (this.attachments.length <= 0) {
+        this.callUpdateRequest()
+          .subscribe(() => {
+            console.log('Subscribed without processing attachments!');
+            loadingEl.dismiss();
+            this.requestForm.reset();
+            this.router.navigate(['/tabs/requests']);
+        });
+      } else {
+        this.callUpdateRequest().pipe(
           switchMap(() => {
             return of(this.attachments);
           }),
           mergeMap(attachments => {
+            console.log(attachments);
             return attachments.map(attachment => {
-              // console.log(attachment);
               return attachment;
             });
           }),
@@ -199,20 +208,29 @@ export class EditRequestPage implements OnInit, OnDestroy {
           takeLast(1)
         )
         .subscribe(() => {
-          console.log('Subscribed!');
+          console.log('Subscribed after processing attachments!');
           loadingEl.dismiss();
           this.requestForm.reset();
-          // this.attachments.splice(0, this.attachments.length);
-          // this.attachmentUrls.splice(0, this.attachments.length);
           this.router.navigate(['/tabs/requests']);
         });
-      });
+      }
+    });
   }
 
   ngOnDestroy() {
     if (this.requestSub) {
       this.requestSub.unsubscribe();
     }
+  }
+
+  private callUpdateRequest() {
+    return this.requestsService.updateRequest(
+      this.request.id,
+      this.requestForm.value.title,
+      this.selectedPatient.id,
+      this.selectedConsultant.id,
+      this.requestForm.value.notes
+    );
   }
 
 }
