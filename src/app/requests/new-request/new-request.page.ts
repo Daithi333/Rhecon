@@ -11,7 +11,7 @@ import { Consultant } from '../../consultants/consultant.model';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
 import { AttachmentsService } from '../attachments.service';
 import { map, switchMap, mergeMap, tap, takeLast } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, defer, iif } from 'rxjs';
 
 @Component({
   selector: 'app-new-request',
@@ -122,69 +122,123 @@ export class NewRequestPage implements OnInit {
     });
   }
 
+  // onAddRequest() {
+  //   if (!this.requestForm.valid) {
+  //     return;
+  //   }
+  //   let newRequestId;
+  //   this.loadingController.create({
+  //     message: 'Creating Request'
+  //   })
+  //   .then(loadingEl => {
+  //     loadingEl.present();
+  //     if (this.attachments.length <= 0) {
+  //       this.callAddRequest()
+  //         .subscribe(() => {
+  //           // console.log('Subscribed without attachments!');
+  //           this.loadingController.dismiss();
+  //           this.requestForm.reset();
+  //           this.router.navigate(['/tabs/requests']);
+  //       });
+  //     } else {
+  //       this.requestsService.addRequest(
+  //         this.requestForm.value.title,
+  //         this.selectedPatient.id,
+  //         this.selectedConsultant.id,
+  //         this.requestForm.value.notes
+  //       ).pipe(
+  //         switchMap(requestId => {
+  //           // console.log('Request id from new request page: ' + requestId);
+  //           newRequestId = requestId;
+  //           return of(this.attachments);
+  //         }),
+  //         mergeMap(attachments => {
+  //           return attachments.map(attachment => {
+  //             // console.log(attachment);
+  //             return attachment;
+  //           });
+  //         }),
+  //         mergeMap(attachment => {
+  //           return this.attachmentsService.addAttachmentFile(attachment).pipe(
+  //             map(fileData => {
+  //               // console.log('File data: ' + fileData);
+  //               return fileData;
+  //             })
+  //           );
+  //         }),
+  //         mergeMap(fileData => {
+  //           return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
+  //             map(attachments => {
+  //               // console.log('Attachments: ' + attachments);
+  //               return attachments;
+  //             })
+  //           );
+  //         }),
+  //         takeLast(1)
+  //       )
+  //       .subscribe(() => {
+  //         // console.log('Subscribed after processing attachments!');
+  //         this.loadingController.dismiss();
+  //         this.requestForm.reset();
+  //         this.attachments.splice(0, this.attachments.length);
+  //         this.router.navigate(['/tabs/requests']);
+  //       });
+  //     }
+  //   });
+  // }
+
   onAddRequest() {
     if (!this.requestForm.valid) {
       return;
     }
-    let newRequestId;
     this.loadingController.create({
       message: 'Creating Request'
     })
     .then(loadingEl => {
       loadingEl.present();
-      if (this.attachments.length <= 0) {
-        this.callAddRequest()
-          .subscribe(() => {
-            // console.log('Subscribed without attachments!');
-            this.loadingController.dismiss();
-            this.requestForm.reset();
-            this.router.navigate(['/tabs/requests']);
-        });
-      } else {
-        this.requestsService.addRequest(
-          this.requestForm.value.title,
-          this.selectedPatient.id,
-          this.selectedConsultant.id,
-          this.requestForm.value.notes
-        ).pipe(
-          switchMap(requestId => {
-            // console.log('Request id from new request page: ' + requestId);
-            newRequestId = requestId;
-            return of(this.attachments);
-          }),
-          mergeMap(attachments => {
-            return attachments.map(attachment => {
-              // console.log(attachment);
-              return attachment;
-            });
-          }),
-          mergeMap(attachment => {
-            return this.attachmentsService.addAttachmentFile(attachment).pipe(
-              map(fileData => {
-                // console.log('File data: ' + fileData);
-                return fileData;
-              })
-            );
-          }),
-          mergeMap(fileData => {
-            return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
-              map(attachments => {
-                // console.log('Attachments: ' + attachments);
-                return attachments;
-              })
-            );
-          }),
-          takeLast(1)
-        )
-        .subscribe(() => {
-          // console.log('Subscribed after processing attachments!');
-          this.loadingController.dismiss();
-          this.requestForm.reset();
-          this.attachments.splice(0, this.attachments.length);
-          this.router.navigate(['/tabs/requests']);
-        });
-      }
+      this.getRequest(this.attachments).subscribe(() => {
+        // console.log('Subscribed!');
+        this.loadingController.dismiss();
+        this.requestForm.reset();
+        this.attachments.splice(0, this.attachments.length);
+        this.router.navigate(['/tabs/requests']);
+      });
     });
+  }
+
+  // method to call the update request method and chain on attachments requests if there are any
+  private getRequest(attachments) {
+    let newRequestId;
+    return iif (
+      () => attachments.length === 0,
+      defer(() => this.callAddRequest().pipe()),
+      defer(() => this.callAddRequest().pipe(
+        switchMap(requestId => {
+          newRequestId = requestId;
+          return of(this.attachments);
+        }),
+        mergeMap(attachmentsArr => {
+          return attachmentsArr.map(attachment => {
+            return attachment;
+          });
+        }),
+        mergeMap(attachment => {
+          return this.attachmentsService.addAttachmentFile(attachment).pipe(
+            map(fileData => {
+              return fileData;
+            })
+          );
+        }),
+        mergeMap(fileData => {
+          return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
+            map(attachmentsArr => {
+              return attachmentsArr;
+            })
+          );
+        }),
+        takeLast(1)
+      ))
+    );
   }
 
   private callAddRequest() {

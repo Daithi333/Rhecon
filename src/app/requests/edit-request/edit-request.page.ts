@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, iif, defer } from 'rxjs';
 import { mergeMap, map, switchMap, takeLast } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
@@ -161,6 +161,62 @@ export class EditRequestPage implements OnInit, OnDestroy {
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
+  // onUpdateRequest() {
+  //   if (!this.requestForm.valid) {
+  //     return;
+  //   }
+  //   this.loadingController.create({
+  //     message: 'Updating Request'
+  //   })
+  //   .then(loadingEl => {
+  //     loadingEl.present();
+  //     if (this.attachments.length <= 0) {
+  //       this.callUpdateRequest()
+  //         .subscribe(() => {
+  //           console.log('Subscribed without processing attachments!');
+  //           loadingEl.dismiss();
+  //           this.requestForm.reset();
+  //           this.router.navigate(['/tabs/requests']);
+  //       });
+  //     } else {
+  //       this.callUpdateRequest().pipe(
+  //         switchMap(() => {
+  //           return of(this.attachments);
+  //         }),
+  //         mergeMap(attachments => {
+  //           console.log(attachments);
+  //           return attachments.map(attachment => {
+  //             return attachment;
+  //           });
+  //         }),
+  //         mergeMap(attachment => {
+  //           return this.attachmentsService.addAttachmentFile(attachment).pipe(
+  //             map(fileData => {
+  //               // console.log('File data: ' + fileData);
+  //               return fileData;
+  //             })
+  //           );
+  //         }),
+  //         mergeMap(fileData => {
+  //           return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
+  //             map(attachments => {
+  //               // console.log('Attachments: ' + attachments);
+  //               return attachments;
+  //             })
+  //           );
+  //         }),
+  //         takeLast(1)
+  //       )
+  //       .subscribe(() => {
+  //         console.log('Subscribed after processing attachments!');
+  //         loadingEl.dismiss();
+  //         this.requestForm.reset();
+  //         this.router.navigate(['/tabs/requests']);
+  //       });
+  //     }
+  //   });
+  // }
+
   onUpdateRequest() {
     if (!this.requestForm.valid) {
       return;
@@ -170,50 +226,12 @@ export class EditRequestPage implements OnInit, OnDestroy {
     })
     .then(loadingEl => {
       loadingEl.present();
-      if (this.attachments.length <= 0) {
-        this.callUpdateRequest()
-          .subscribe(() => {
-            console.log('Subscribed without processing attachments!');
-            loadingEl.dismiss();
-            this.requestForm.reset();
-            this.router.navigate(['/tabs/requests']);
-        });
-      } else {
-        this.callUpdateRequest().pipe(
-          switchMap(() => {
-            return of(this.attachments);
-          }),
-          mergeMap(attachments => {
-            console.log(attachments);
-            return attachments.map(attachment => {
-              return attachment;
-            });
-          }),
-          mergeMap(attachment => {
-            return this.attachmentsService.addAttachmentFile(attachment).pipe(
-              map(fileData => {
-                // console.log('File data: ' + fileData);
-                return fileData;
-              })
-            );
-          }),
-          mergeMap(fileData => {
-            return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
-              map(attachments => {
-                // console.log('Attachments: ' + attachments);
-                return attachments;
-              })
-            );
-          }),
-          takeLast(1)
-        )
-        .subscribe(() => {
-          console.log('Subscribed after processing attachments!');
-          loadingEl.dismiss();
-          this.requestForm.reset();
-          this.router.navigate(['/tabs/requests']);
-        });
-      }
+      this.getRequest(this.attachments).subscribe(() => {
+        console.log('Subscribed');
+        loadingEl.dismiss();
+        this.requestForm.reset();
+        this.router.navigate(['/tabs/requests']);
+      });
     });
   }
 
@@ -221,6 +239,42 @@ export class EditRequestPage implements OnInit, OnDestroy {
     if (this.requestSub) {
       this.requestSub.unsubscribe();
     }
+  }
+
+  // method to call the update request method and chain on attachments requests if there are any
+  private getRequest(attachments) {
+    return iif (
+      () => attachments.length === 0,
+      defer(() => this.callUpdateRequest()),
+      defer(() => this.callUpdateRequest().pipe(
+        switchMap(() => {
+          return of(this.attachments);
+        }),
+        mergeMap(attachmentsArr => {
+          console.log(attachmentsArr);
+          return attachmentsArr.map(attachment => {
+            return attachment;
+          });
+        }),
+        mergeMap(attachment => {
+          return this.attachmentsService.addAttachmentFile(attachment).pipe(
+            map(fileData => {
+              // console.log('File data: ' + fileData);
+              return fileData;
+            })
+          );
+        }),
+        mergeMap(fileData => {
+          return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
+            map(attachmentsArr => {
+              // console.log('Attachments: ' + attachments);
+              return attachmentsArr;
+            })
+          );
+        }),
+        takeLast(1)
+      ))
+    );
   }
 
   private callUpdateRequest() {
