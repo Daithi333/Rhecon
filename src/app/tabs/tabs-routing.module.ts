@@ -39,15 +39,15 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'consultants',
+        path: 'contacts',
         children: [
           {
             path: '',
-            loadChildren: '../consultants/consultants.module#ConsultantsPageModule'
+            loadChildren: '../consultants/contacts.module#ContactsPageModule'
           },
           {
-            path: ':consultantId',
-            loadChildren: '../consultants/view-consultant/view-consultant.module#ViewConsultantPageModule'
+            path: ':contactId',
+            loadChildren: '../consultants/view-contact/view-contact.module#ViewContactPageModule'
           }
         ]
       },

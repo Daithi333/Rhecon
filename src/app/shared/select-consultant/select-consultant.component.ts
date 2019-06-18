@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
-import { Consultant } from '../../consultants/consultant.model';
-import { ConsultantsService } from '../../consultants/consultants.service';
+import { User } from '../../consultants/user.model';
+import { UsersService } from '../../consultants/users.service';
 
 @Component({
   selector: 'app-select-consultant',
@@ -11,14 +11,14 @@ import { ConsultantsService } from '../../consultants/consultants.service';
   styleUrls: ['./select-consultant.component.scss'],
 })
 export class SelectConsultantComponent implements OnInit, OnDestroy {
-  consultants: Consultant[];
+  consultants: User[];
   isLoading = false;
   private consultantsSub: Subscription;
 
-  constructor(private modalController: ModalController, private consultantsService: ConsultantsService) { }
+  constructor(private modalController: ModalController, private usersService: UsersService) { }
 
   ngOnInit() {
-    this.consultantsSub = this.consultantsService.consultants
+    this.consultantsSub = this.usersService.users
       .subscribe(consultants => {
         this.consultants = consultants;
       });
@@ -26,7 +26,7 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.consultantsService.consultants.subscribe(() => {
+    this.usersService.users.subscribe(() => {
       this.isLoading = false;
     });
   }
@@ -35,7 +35,7 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
     this.modalController.dismiss(null, 'cancel', 'consultantSelect');
   }
 
-  onConsultantSelect(selectedConsultant: Consultant) {
+  onConsultantSelect(selectedConsultant: User) {
     this.modalController.dismiss(selectedConsultant, 'cancel', 'consultantSelect');
   }
 

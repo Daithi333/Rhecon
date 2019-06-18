@@ -14,15 +14,15 @@
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
         <ion-list>
           <ion-item
-            *ngFor="let consultant of consultants"
-            [routerLink]="['/', 'tabs', 'consultants', consultant.id]"
+            *ngFor="let user of users"
+            [routerLink]="['/', 'tabs', 'contacts', user.id]"
             detail>
             <ion-avatar slot="start">
-              <ion-img [src]="consultant.portraitUrl"></ion-img>
+              <ion-img [src]="user.portraitUrl"></ion-img>
             </ion-avatar>
             <ion-label>
-              <h2>{{ consultant.title }} {{ consultant.firstName }} {{ consultant.lastName }}</h2>
-              <p>{{ consultant.specialism }}</p>
+              <h2>{{ user.title }} {{ user.firstName }} {{ user.lastName }}</h2>
+              <p>{{ user.specialism }}</p>
             </ion-label>
           </ion-item>
         </ion-list>

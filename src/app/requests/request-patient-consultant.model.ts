@@ -1,5 +1,5 @@
 import { Patient } from '../patients/patient.model';
-import { Consultant } from '../consultants/consultant.model';
+import { User } from '../consultants/user.model';
 
 export class RequestWithPatientAndConsultant {
   constructor(
@@ -7,7 +7,7 @@ export class RequestWithPatientAndConsultant {
     public title: string,
     public requestorId: number,
     public patient: Patient,
-    public consultant: Consultant,
+    public consultant: User,
     public notes: string,
     public active: boolean,
     public createdOn: Date,

@@ -1,6 +1,6 @@
 import { Specialism } from './specialism.enum';
 
-export class Consultant {
+export class User {
   constructor(
     public id: number,
     public title: string,

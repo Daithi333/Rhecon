@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
 import { PatientsService } from '../patients/patients.service';
-import { ConsultantsService } from '../consultants/consultants.service';
+import { UsersService } from '../consultants/users.service';
 import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
 
 interface RequestData {
@@ -32,7 +32,7 @@ export class RequestsService {
     private authService: AuthService,
     private httpClient: HttpClient,
     private patientsService: PatientsService,
-    private consultantsService: ConsultantsService
+    private usersService: UsersService
   ) {}
 
   get requests() {
@@ -113,7 +113,7 @@ export class RequestsService {
           );
         }),
         switchMap(request => {
-          return this.consultantsService.getConsultant(request.consultantId).pipe(
+          return this.usersService.getUser(request.consultantId).pipe(
             map(consultant => {
               request.consultantId = consultant;
               requestsArr.push(
@@ -160,7 +160,7 @@ export class RequestsService {
         );
       }),
       switchMap(request => {
-        return this.consultantsService.getConsultant(request.consultantId).pipe(
+        return this.usersService.getUser(request.consultantId).pipe(
           map(consultant => {
             return new RequestWithPatientAndConsultant(
               +request.id,

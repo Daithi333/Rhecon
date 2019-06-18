@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-import { Consultant } from './consultant.model';
-import { Specialism } from './specialism.enum';
 import { map, take } from 'rxjs/operators';
+
+import { User } from './user.model';
+import { Specialism } from './specialism.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConsultantsService {
-  private _consultants = new BehaviorSubject<Consultant[]>(
+export class UsersService {
+  private _users = new BehaviorSubject<User[]>(
     [
-      new Consultant(
+      new User(
         1,
         'Dr',
         'Li Na',
@@ -21,7 +21,7 @@ export class ConsultantsService {
         'Eager to lend my expertise to help the less fortunate. Available for live consultation if necessary.'
 
       ),
-      new Consultant(
+      new User(
         2,
         'Dr',
         'Yousef',
@@ -30,7 +30,7 @@ export class ConsultantsService {
         'https://image.freepik.com/free-photo/portrait-middle-eastern-doctor-standing-with-white-background_21730-11194.jpg',
         'Available for live consultation if necessary'
       ),
-      new Consultant(
+      new User(
         3,
         'Dr',
         'Sara',
@@ -39,7 +39,7 @@ export class ConsultantsService {
         'https://debatechamber.com/wp-content/uploads/2017/02/bigstock-Portrait-of-a-friendly-female-26984102-2-238x300.jpg',
         'App requests only.'
       ),
-      new Consultant(
+      new User(
         4,
         'Dr',
         'Marcus',
@@ -53,14 +53,14 @@ export class ConsultantsService {
 
   constructor() { }
 
-  get consultants() {
-    return this._consultants.asObservable();
+  get users() {
+    return this._users.asObservable();
   }
 
-  getConsultant(id: number) {
-    return this._consultants.pipe(take(1),
-      map(consultants => {
-        return { ...consultants.find(c => c.id === id) };
+  getUser(id: number) {
+    return this._users.pipe(take(1),
+      map(users => {
+        return { ...users.find(c => c.id === id) };
       })
     );
   }

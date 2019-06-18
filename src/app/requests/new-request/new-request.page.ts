@@ -7,7 +7,7 @@ import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
-import { Consultant } from '../../consultants/consultant.model';
+import { User } from '../../consultants/user.model';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
 import { AttachmentsService } from '../attachments.service';
 import { map, switchMap, mergeMap, tap, takeLast } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class NewRequestPage implements OnInit {
   requestForm: FormGroup;
   isLoading = false;
   selectedPatient: Patient;
-  selectedConsultant: Consultant;
+  selectedConsultant: User;
   attachments: File[] = [];
 
   constructor(
