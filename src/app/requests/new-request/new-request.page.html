@@ -38,7 +38,7 @@
               <ion-label position="floating">
                 <h2>Patient</h2>
               </ion-label>
-              <ion-input type="search" formControlName="patient"></ion-input>
+              <ion-input type="search" formControlName="patient" (click)="onPatientSelect()"></ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
@@ -53,7 +53,7 @@
               <ion-label position="floating">
                 <h2>Consultant</h2>
               </ion-label>
-              <ion-input type="search" formControlName="consultant"></ion-input>
+              <ion-input type="search" formControlName="consultant" (click)="onConsultantSelect()"></ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
