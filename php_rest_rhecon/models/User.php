@@ -14,8 +14,8 @@
     public $specialismId;
     public $email;
     public $password;
-    public $bio;
     public $portraitUrl;
+    public $bio;
 
     // Constructor with DB arg
     public function __construct($db) {
@@ -23,10 +23,10 @@
     }
 
     /**
-     * Function to retrieve all active patient records for a particular user id
+     * Function to retrieve user records
      */
-    public function login() {
-      
+    public function read() {
+
     }
 
   }
