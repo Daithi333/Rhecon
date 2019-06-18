@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
-import { User } from '../../consultants/user.model';
-import { UsersService } from '../../consultants/users.service';
+import { Contact } from '../../consultants/contact.model';
+import { ContactsService } from '../../consultants/contacts.service';
 
 @Component({
   selector: 'app-select-consultant',
@@ -11,14 +11,14 @@ import { UsersService } from '../../consultants/users.service';
   styleUrls: ['./select-consultant.component.scss'],
 })
 export class SelectConsultantComponent implements OnInit, OnDestroy {
-  consultants: User[];
+  consultants: Contact[];
   isLoading = false;
-  private consultantsSub: Subscription;
+  private contactsSub: Subscription;
 
-  constructor(private modalController: ModalController, private usersService: UsersService) { }
+  constructor(private modalController: ModalController, private contactsService: ContactsService) { }
 
   ngOnInit() {
-    this.consultantsSub = this.usersService.users
+    this.contactsSub = this.contactsService.contacts
       .subscribe(consultants => {
         this.consultants = consultants;
       });
@@ -26,7 +26,7 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.usersService.users.subscribe(() => {
+    this.contactsService.fetchContacts().subscribe(() => {
       this.isLoading = false;
     });
   }
@@ -35,13 +35,13 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
     this.modalController.dismiss(null, 'cancel', 'consultantSelect');
   }
 
-  onConsultantSelect(selectedConsultant: User) {
+  onConsultantSelect(selectedConsultant: Contact) {
     this.modalController.dismiss(selectedConsultant, 'cancel', 'consultantSelect');
   }
 
   ngOnDestroy() {
-    if (this.consultantsSub) {
-      this.consultantsSub.unsubscribe();
+    if (this.contactsSub) {
+      this.contactsSub.unsubscribe();
     }
   }
 

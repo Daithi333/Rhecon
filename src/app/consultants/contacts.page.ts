@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { User } from './user.model';
-import { UsersService } from './users.service';
+import { Contact } from './contact.model';
+import { ContactsService } from './contacts.service';
 
 @Component({
   selector: 'app-contacts',
@@ -10,20 +10,28 @@ import { UsersService } from './users.service';
   styleUrls: ['./contacts.page.scss'],
 })
 export class ContactsPage implements OnInit, OnDestroy {
-  users: User[];
-  usersSub: Subscription;
+  isLoading = false;
+  contacts: Contact[];
+  contactsSub: Subscription;
 
-  constructor(private usersService: UsersService) { }
+  constructor(private contactsService: ContactsService) { }
 
   ngOnInit() {
-    this.usersSub = this.usersService.users.subscribe(users => {
-      this.users = users;
+    this.contactsSub = this.contactsService.contacts.subscribe(contacts => {
+      this.contacts = contacts;
+    });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.contactsService.fetchContacts().subscribe(() => {
+      this.isLoading = false;
     });
   }
 
   ngOnDestroy() {
-    if (this.usersSub) {
-      this.usersSub.unsubscribe();
+    if (this.contactsSub) {
+      this.contactsSub.unsubscribe();
     }
   }
 

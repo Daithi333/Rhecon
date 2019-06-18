@@ -9,20 +9,23 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <div *ngIf="isLoading" text-center padding>
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <ion-grid *ngIf="!isLoading">
     <ion-row>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
         <ion-list>
           <ion-item
-            *ngFor="let user of users"
-            [routerLink]="['/', 'tabs', 'contacts', user.id]"
+            *ngFor="let contact of contacts"
+            [routerLink]="['/', 'tabs', 'contacts', contact.id]"
             detail>
             <ion-avatar slot="start">
-              <ion-img [src]="user.portraitUrl"></ion-img>
+              <ion-img [src]="contact.portraitUrl"></ion-img>
             </ion-avatar>
             <ion-label>
-              <h2>{{ user.title }} {{ user.firstName }} {{ user.lastName }}</h2>
-              <p>{{ user.specialism }}</p>
+              <h2>{{ contact.title }} {{ contact.firstName }} {{ contact.lastName }}</h2>
+              <p>{{ contact.specialism }}</p>
             </ion-label>
           </ion-item>
         </ion-list>

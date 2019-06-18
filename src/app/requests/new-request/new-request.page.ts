@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
+import { map, switchMap, mergeMap, takeLast } from 'rxjs/operators';
+import { of, defer, iif } from 'rxjs';
 
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
-import { User } from '../../consultants/user.model';
+import { Contact } from '../../consultants/contact.model';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
 import { AttachmentsService } from '../attachments.service';
-import { map, switchMap, mergeMap, tap, takeLast } from 'rxjs/operators';
-import { of, defer, iif } from 'rxjs';
 
 @Component({
   selector: 'app-new-request',
@@ -22,7 +22,7 @@ export class NewRequestPage implements OnInit {
   requestForm: FormGroup;
   isLoading = false;
   selectedPatient: Patient;
-  selectedConsultant: User;
+  selectedConsultant: Contact;
   attachments: File[] = [];
 
   constructor(

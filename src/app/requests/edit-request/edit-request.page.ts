@@ -9,7 +9,7 @@ import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
-import { User } from '../../consultants/user.model';
+import { Contact } from '../../consultants/contact.model';
 import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
 import { AttachmentsService } from '../attachments.service';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
@@ -25,7 +25,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
   requestForm: FormGroup;
   isLoading = false;
   selectedPatient: Patient;
-  selectedConsultant: User;
+  selectedConsultant: Contact;
   attachmentUrls: string[] = [];
   attachments: File[] = [];
   private requestSub: Subscription;

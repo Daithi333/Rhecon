@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
-import { User } from '../user.model';
-import { UsersService } from '../users.service';
+import { Contact } from '../contact.model';
+import { ContactsService } from '../contacts.service';
 
 @Component({
   selector: 'app-view-contact',
@@ -12,13 +12,16 @@ import { UsersService } from '../users.service';
   styleUrls: ['./view-contact.page.scss'],
 })
 export class ViewContactPage implements OnInit, OnDestroy {
-  consultant: User;
-  consultantSub: Subscription;
+  isLoading = false;
+  contact: Contact;
+  contactSub: Subscription;
 
-  constructor(private usersService: UsersService,
+  constructor(private contactsService: ContactsService,
               private route: ActivatedRoute,
-              private navController: NavController) {
-  }
+              private navController: NavController,
+              private alertController: AlertController,
+              private router: Router
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -26,16 +29,34 @@ export class ViewContactPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/tabs/consultants');
         return;
       }
-      this.consultantSub = this.usersService.getUser(+paramMap.get('contactId'))
-        .subscribe(consultant => {
-          this.consultant = consultant;
+      this.isLoading = true;
+      this.contactSub = this.contactsService.getContact(+paramMap.get('contactId'))
+        .subscribe(contact => {
+          this.contact = contact;
+          this.isLoading = false;
+        },
+        error => {
+          this.alertController.create({
+            header: 'Error',
+            message: 'Could not locate contact information.',
+            buttons: [
+              {
+                text: 'Okay',
+                handler: () => {
+                  this.router.navigate(['/tabs/contacts']);
+                }
+              }
+            ]
+          }).then(alertEl => {
+            alertEl.present();
+          });
         });
     });
   }
 
   ngOnDestroy() {
-    if (this.consultantSub) {
-      this.consultantSub.unsubscribe();
+    if (this.contactSub) {
+      this.contactSub.unsubscribe();
     }
   }
 }

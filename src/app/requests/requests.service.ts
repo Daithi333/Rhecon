@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
 import { PatientsService } from '../patients/patients.service';
-import { UsersService } from '../consultants/users.service';
+import { ContactsService } from '../consultants/contacts.service';
 import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
 
 interface RequestData {
@@ -32,7 +32,7 @@ export class RequestsService {
     private authService: AuthService,
     private httpClient: HttpClient,
     private patientsService: PatientsService,
-    private usersService: UsersService
+    private contactsService: ContactsService
   ) {}
 
   get requests() {
@@ -112,8 +112,8 @@ export class RequestsService {
             })
           );
         }),
-        switchMap(request => {
-          return this.usersService.getUser(request.consultantId).pipe(
+        mergeMap(request => {
+          return this.contactsService.getContact(request.consultantId).pipe(
             map(consultant => {
               request.consultantId = consultant;
               requestsArr.push(
@@ -133,9 +133,8 @@ export class RequestsService {
             })
           );
         }),
-        tap(() => {
-          // console.log(requests);
-          this._requestsWithPatientAndConsultant.next(requestsArr);
+        tap(requests => {
+          this._requestsWithPatientAndConsultant.next(requests);
         })
       );
   }
@@ -160,7 +159,7 @@ export class RequestsService {
         );
       }),
       switchMap(request => {
-        return this.usersService.getUser(request.consultantId).pipe(
+        return this.contactsService.getContact(request.consultantId).pipe(
           map(consultant => {
             return new RequestWithPatientAndConsultant(
               +request.id,

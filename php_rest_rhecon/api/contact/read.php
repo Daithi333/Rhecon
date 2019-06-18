@@ -27,14 +27,10 @@
       extract($row);
 
       $contactElement = array(
-        'groupId' => $groupId,
-        'groupName' => $groupName,
-        'userId' => $userId,
-        'titleId' => $titleId,
+        'id' => $id,
         'title' => $title,
         'firstName' => $firstName,
         'lastName' => $lastName,
-        'specialismId' => $specialismId,
         'specialism' => $specialism,
         'portraitUrl' => $portraitUrl,
         'bio' => $bio
