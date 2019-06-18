@@ -1,4 +1,5 @@
 export enum Specialism {
+  CommunityHealthcare = 'Community Healthcare',
   Anaesthesia = 'Anaesthesia',
   ClinicalOncology = 'Clinical oncology',
   Radiology = 'Clinical radiology',

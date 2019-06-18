@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { Contact } from '../../consultants/contact.model';
 import { ContactsService } from '../../consultants/contacts.service';
+import { Specialism } from 'src/app/consultants/specialism.enum';
 
 @Component({
   selector: 'app-select-consultant',
@@ -20,7 +21,7 @@ export class SelectConsultantComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.contactsSub = this.contactsService.contacts
       .subscribe(consultants => {
-        this.consultants = consultants;
+        this.consultants = consultants.filter(c => c.specialism !== Specialism.CommunityHealthcare);
       });
   }
 

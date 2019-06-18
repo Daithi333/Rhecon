@@ -16,7 +16,7 @@
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
         <ion-card>
           <ion-card-header text-center>
-            <ion-card-title>{{ contact.title }} {{ contact.firstName }} {{ contact.lastName }}</ion-card-title>
+            <ion-card-title>{{ contact.title === 'Dr' ? 'Dr' : '' }} {{ contact.firstName }} {{ contact.lastName }}</ion-card-title>
             <ion-card-subtitle>{{ contact.specialism }}</ion-card-subtitle>
           </ion-card-header>
           <ion-img [src]="contact.portraitUrl"></ion-img>

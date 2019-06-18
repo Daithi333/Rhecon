@@ -24,7 +24,7 @@
               <ion-img [src]="contact.portraitUrl"></ion-img>
             </ion-avatar>
             <ion-label>
-              <h2>{{ contact.title }} {{ contact.firstName }} {{ contact.lastName }}</h2>
+              <h2>{{ contact.title === 'Dr' ? 'Dr' : '' }} {{ contact.firstName }} {{ contact.lastName }}</h2>
               <p>{{ contact.specialism }}</p>
             </ion-label>
           </ion-item>
