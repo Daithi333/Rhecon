@@ -23,6 +23,7 @@ export class SignupComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.httpService.fetchTitles()
     .pipe(
       map(resData => {
@@ -36,7 +37,7 @@ export class SignupComponent implements OnInit {
         }
       })
     ).subscribe(() => {
-      console.log(this.titles);
+      this.isLoading = false;
     });
     this.form = new FormGroup({
       firstName: new FormControl(null, {
