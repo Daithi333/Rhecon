@@ -1,7 +1,7 @@
 <?php
   include_once '../../utility/Utility.php';
 
-  class Title {
+  class Specialism {
     private $conn;
     private $table = 'Rhecon_Specialism';
 
@@ -18,8 +18,9 @@
      * Function to retrieve titles
      */
     public function read() {
-      $query = 'SELECT s.id, s.title
-                FROM ' . $this->table . ' s';
+      $query = 'SELECT s.id, s.specialism
+                FROM ' . $this->table . ' s
+                ORDER BY s.specialism ASC';
 
       $stmt = $this->conn->prepare($query);
 

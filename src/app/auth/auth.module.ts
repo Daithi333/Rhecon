@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AuthPage } from './auth.page';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { RoleSelectionComponent } from './role-selection/role-selection.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AuthPage, LoginComponent, SignupComponent],
-  entryComponents: [LoginComponent, SignupComponent]
+  declarations: [AuthPage, LoginComponent, SignupComponent, RoleSelectionComponent],
+  entryComponents: [LoginComponent, SignupComponent, RoleSelectionComponent]
 })
 export class AuthPageModule {}

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { RoleSelectionComponent } from './role-selection/role-selection.component';
 
 @Component({
   selector: 'app-auth',
@@ -12,9 +12,7 @@ import { SignupComponent } from './signup/signup.component';
 })
 export class AuthPage implements OnInit {
 
-  constructor(private router: Router,
-              private modalController: ModalController) {
-  }
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {
   }
@@ -28,12 +26,34 @@ export class AuthPage implements OnInit {
     });
   }
 
+  // onSignup() {
+  //   this.modalController.create({
+  //     component: SignupComponent,
+  //     id: 'signup'
+  //   }).then(modalEl => {
+  //     modalEl.present();
+  //   });
+  // }
+
   onSignup() {
     this.modalController.create({
-      component: SignupComponent,
-      id: 'signup'
+      component: RoleSelectionComponent,
+      id: 'role-selection'
     }).then(modalEl => {
       modalEl.present();
+      return modalEl.onDidDismiss();
+    }).then(modalData => {
+      console.log(modalData);
+      this.modalController.create({
+        component: SignupComponent,
+        componentProps: {
+          chosenRole: modalData.data.chosenRole,
+          chosenSpecialism : modalData.data.chosenSpecialism
+        },
+        id: 'signup'
+      }).then(modalEl => {
+        modalEl.present();
+      });
     });
   }
 }

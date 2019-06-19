@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -14,6 +14,8 @@ export class SignupComponent implements OnInit {
   titles: TitleData[] = [];
   form: FormGroup;
   isLoading = false;
+  @Input() chosenRole;
+  @Input() chosenSpecialism;
 
   constructor(
     private modalController: ModalController,
@@ -59,10 +61,13 @@ export class SignupComponent implements OnInit {
           Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/)
         ]
       }),
-      role: new FormControl(null, {
+      title: new FormControl(null, {
         validators: [Validators.required]
       }),
-      title: new FormControl(null, {
+      role: new FormControl(this.chosenRole, {
+        validators: [Validators.required]
+      }),
+      specialism: new FormControl(this.chosenSpecialism, {
         validators: [Validators.required]
       }),
       // country: new FormControl(null, {
