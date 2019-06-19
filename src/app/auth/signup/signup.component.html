@@ -6,14 +6,39 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Sign up</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button size="large" (click)="onInformation()">
+        <ion-icon name="information-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <form [formGroup]="form">
     <ion-grid>
+      <ion-row>
+        <ion-col size="4" size-sm="3" offset-sm="2" class="sidePadding">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-select name="title" formControlName="title">
+              <ion-select-option *ngFor="let title of titles" value="{{ title.id }}">{{ title.title }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="8" size-sm="5" offset-sm="2" class="sidePadding">
+          <ion-item>
+            <ion-label position="floating">Role</ion-label>
+            <ion-select name="role" formControlName="role">
+              <ion-select-option value="1">Create Requests</ion-select-option>
+              <ion-select-option value="2">Provide Consultation</ion-select-option>
+              <ion-select-option value="3">Group Administration</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
        <ion-row>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" class="sidePadding">
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
@@ -51,7 +76,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <!-- <ion-row>
         <ion-col size-sm="8" offset-sm="2" class="sidePadding">
           <ion-item>
             <ion-label position="floating">Country</ion-label>
@@ -62,7 +87,7 @@
             </ion-select>
           </ion-item>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
       <ion-row class="grow" align-items-end>
         <ion-col size-sm="8" offset-sm="2" class="sidePadding">
           <ion-button type="submit" color="tertiary" expand="block" (click)="onSignup()" [disabled]="!form.valid">Sign up</ion-button>
