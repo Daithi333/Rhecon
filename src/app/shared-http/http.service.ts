@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 export interface TitleData {
   id: number;
@@ -9,6 +10,11 @@ export interface TitleData {
 export interface SpecialismData {
   id: number;
   specialism: string;
+}
+
+export interface UserTypeData {
+  id: number;
+  userType: string;
 }
 
 @Injectable({
@@ -21,12 +27,58 @@ export class HttpService {
   fetchTitles() {
     return this.httpClient.get<{[key: number]: TitleData}>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/title/read.php'
+    ).pipe(
+      map(resData => {
+        const titles: TitleData[] = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            titles.push({
+              id: +resData[key].id,
+              title: resData[key].title
+            });
+          }
+        }
+        return titles;
+      })
     );
   }
 
   fetchSpecialisms() {
     return this.httpClient.get<{[key: number]: SpecialismData}>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/specialism/read.php'
+    ).pipe(
+      map(resData => {
+        const specialisms: SpecialismData[] = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            specialisms.push({
+              id: +resData[key].id,
+              specialism: resData[key].specialism
+            });
+          }
+        }
+        return specialisms;
+      })
+    );
+  }
+
+  fetchUserTypes() {
+    return this.httpClient.get<{[key: number]: UserTypeData}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user-type/read.php'
+    )
+    .pipe(
+      map(resData => {
+        const userTypes: UserTypeData[] = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            userTypes.push({
+              id: +resData[key].id,
+              userType: resData[key].userType
+            });
+          }
+        }
+        return userTypes;
+      })
     );
   }
 }

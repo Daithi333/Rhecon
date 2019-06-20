@@ -36,6 +36,6 @@
 
     // } else {
     //   echo json_encode(
-    //     array('message' => 'No patients found')
+    //     array('message' => 'No specialisms found')
     //   );
   }

@@ -6,11 +6,6 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Sign up</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button size="large" (click)="onInformation()">
-        <ion-icon name="information-circle"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -24,7 +19,7 @@
         <ion-col size="4" size-sm="3" offset-sm="2" class="sidePadding">
           <ion-item>
             <ion-label position="floating">Title</ion-label>
-            <ion-select name="title" formControlName="title">
+            <ion-select name="title" formControlName="titleId">
               <ion-select-option *ngFor="let title of titles" value="{{ title.id }}">{{ title.title }}</ion-select-option>
             </ion-select>
           </ion-item>

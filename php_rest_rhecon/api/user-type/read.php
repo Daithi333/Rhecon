@@ -4,38 +4,38 @@
   header('Content-Type: application/json');
 
   include_once '../../config/Database.php';
-  include_once '../../models/Title.php';
+  include_once '../../models/UserType.php';
 
-  // Instantiate DB and Contact record objects
+  // Instantiate DB and User Type record objects
   $database = new Database();
   $db = $database->connect();
-  $title = new Title($db);
+  $userType = new UserType($db);
 
-  // titles lookup query
-  $result = $title->read();
+  // user type lookup query
+  $result = $userType->read();
 
   $count = $result->rowCount();
 
-  // check if any titles
+  // check if any user types
   if($count > 0) {
-    $titleArr = array();
+    $userTypeArr = array();
 
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
       extract($row);
 
-      $titleElement = array(
+      $userTypeElement = array(
         'id' => $id,
-        'title' => $title
+        'userType' => $userType
       );
 
-      array_push($titleArr, $titleElement);
+      array_push($userTypeArr, $userTypeElement);
     }
 
     // output as JSON
-    echo json_encode($titleArr);
+    echo json_encode($userTypeArr);
 
     // } else {
     //   echo json_encode(
-    //     array('message' => 'No titles found')
+    //     array('message' => 'No user types found')
     //   );
   }

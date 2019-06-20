@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, EmailValidator } from '@angular/forms';
 
 import { HttpService, TitleData } from '../../shared-http/http.service';
-import { map } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -21,24 +21,15 @@ export class SignupComponent implements OnInit {
     private modalController: ModalController,
     private loadingController: LoadingController,
     private alertController: AlertController,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.isLoading = true;
     this.httpService.fetchTitles()
-    .pipe(
-      map(resData => {
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            this.titles.push({
-              id: +resData[key].id,
-              title: resData[key].title
-            });
-          }
-        }
-      })
-    ).subscribe(() => {
+    .subscribe(titleData => {
+      this.titles = titleData;
       this.isLoading = false;
     });
     this.form = new FormGroup({
@@ -61,13 +52,13 @@ export class SignupComponent implements OnInit {
           Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/)
         ]
       }),
-      title: new FormControl(null, {
+      titleId: new FormControl(null, {
         validators: [Validators.required]
       }),
-      role: new FormControl(this.chosenRole, {
+      userTypeId: new FormControl(this.chosenRole, {
         validators: [Validators.required]
       }),
-      specialism: new FormControl(this.chosenSpecialism, {
+      specialismId: new FormControl(this.chosenSpecialism, {
         validators: [Validators.required]
       }),
       // country: new FormControl(null, {
@@ -81,10 +72,6 @@ export class SignupComponent implements OnInit {
     this.modalController.dismiss(null, 'cancel', 'signup');
   }
 
-  onInformation() {
-    // TODO - provide info on the roles within the app
-  }
-
   onSignup() {
     if (!this.form.valid) {
       return;
@@ -95,11 +82,25 @@ export class SignupComponent implements OnInit {
       .create({keyboardClose: true, message: 'Signing up...'})
       .then(loadingEl => {
         loadingEl.present();
-        setTimeout(() => {
+        // setTimeout(() => {
+        //   this.isLoading = false;
+        //   loadingEl.dismiss();
+        //   this.presentAlert();
+        // }, 2000);
+        this.authService.signUp(
+          this.form.value.titleId,
+          this.form.value.firstName,
+          this.form.value.lastName,
+          this.form.value.userTypeId,
+          this.form.value.specialismId,
+          this.form.value.email,
+          this.form.value.password
+        ).subscribe(resData => {
+          console.log(resData);
           this.isLoading = false;
           loadingEl.dismiss();
           this.presentAlert();
-        }, 2000);
+        });
     });
     this.onClose();
   }

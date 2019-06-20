@@ -16,14 +16,15 @@
         </div>
         <ion-grid *ngIf="!isLoading">
           <ion-row>
-            <ion-col size-sm="8" offset-sm="2" padding text-center>
-              <p>Explaination of the roles</p>
+            <ion-col size-sm="8" offset-sm="2" padding>
+              <h5>Requester</h5>
+              <p>Create and send requests to consultants for medical expertise.</p>
               <br>
-              <p>Explaination of create requests</p>
+              <h5>Consultant</h5>
+              <p>Recieve requests and provide medical expertise in your chosen domain.</p>
               <br>
-              <p>Explaination of consultation</p>
-              <br>
-              <p>Explaination of group admin</p>
+              <h5>Group Administration</h5>
+              <p>Setup and manage the membership for a network of Requesters and Consulatants.</p>
             </ion-col>
           </ion-row>
           <ion-row>
@@ -31,12 +32,7 @@
               <ion-item>
                 <ion-label position="floating">Role</ion-label>
                 <ion-select name="role" formControlName="role">
-                  <!-- values align with DB table for convenience.. -->
-                  <ion-select-option value="3">Requester</ion-select-option>
-                  <ion-select-option value="4">Consultatant</ion-select-option>
-                  <ion-select-option value="2">Group Admin</ion-select-option>
-                  <ion-select-option value="5">Requester & Admin</ion-select-option>
-                  <ion-select-option value="6">Consultant & Admin</ion-select-option>
+                  <ion-select-option *ngFor="let userType of userTypes"value="{{ userType.id }}">{{ userType.userType }}</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
