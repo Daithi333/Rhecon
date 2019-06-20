@@ -7,6 +7,8 @@ export class User {
     public userTypeId: number,
     public specialismId: number,
     public email: string,
-    public password: string
+    public password: string,
+    public portraitUrl: string,
+    public bio: string,
   ) {}
 }

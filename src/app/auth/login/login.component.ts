@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { AuthService } from '../auth.service';
 import { ModalController } from '@ionic/angular';
@@ -12,21 +11,15 @@ import { ModalController } from '@ionic/angular';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService,
-              private modalController: ModalController,
-              private router: Router) {
-  }
+  constructor(
+    private authService: AuthService,
+    private modalController: ModalController
+  ) {}
 
   ngOnInit() {}
 
   onClose() {
     this.modalController.dismiss(null, 'cancel', 'login');
-  }
-
-  onLogin() {
-    this.authService.login();
-    this.modalController.dismiss(null, 'cancel');
-    this.router.navigateByUrl('/tabs/home');
   }
 
   onSubmit(form: NgForm) {
@@ -35,7 +28,8 @@ export class LoginComponent implements OnInit {
     }
     const email = form.value.email;
     const password = form.value.password;
-    console.log(email, password);
+    this.authService.login(email, password);
+    form.reset();
   }
 
 }

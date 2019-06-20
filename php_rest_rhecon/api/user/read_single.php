@@ -58,6 +58,7 @@
             'message' => 'Success',
             'idToken' => $idToken,
             'email' => $user->email,
+            'UserId' => $user->id,
             'expiresAt' => $expiresAt
           )
         );
