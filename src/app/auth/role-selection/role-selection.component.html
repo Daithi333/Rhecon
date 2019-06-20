@@ -1,58 +1,82 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button size="large" (click)="onClose()">
-          <ion-icon name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-title>Select Role</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button size="large" (click)="onClose()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Select Role</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content>
-      <form [formGroup]="form">
-        <div *ngIf="isLoading" text-center padding>
-          <ion-spinner color="primary"></ion-spinner>
-        </div>
-        <ion-grid *ngIf="!isLoading">
-          <ion-row>
-            <ion-col size-sm="8" offset-sm="2" padding>
-              <h5>Requester</h5>
-              <p>Create and send requests to consultants for medical expertise.</p>
-              <br>
-              <h5>Consultant</h5>
-              <p>Recieve requests and provide medical expertise in your chosen domain.</p>
-              <br>
-              <h5>Group Administration</h5>
-              <p>Setup and manage the membership for a network of Requesters and Consulatants.</p>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-sm="8" offset-sm="2" class="sidePadding">
-              <ion-item>
-                <ion-label position="floating">Role</ion-label>
-                <ion-select name="role" formControlName="role">
-                  <ion-select-option *ngFor="let userType of userTypes"value="{{ userType.id }}">{{ userType.userType }}</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size-sm="8" offset-sm="2" class="sidePadding">
-              <ion-item>
-                <ion-label position="floating">Specialism</ion-label>
-                <ion-select name="specialism" formControlName="specialism" [disabled]="false">
-                  <ion-select-option *ngFor="let specialism of specialisms" value="{{ specialism.id }}">{{ specialism.specialism }}</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-          <ion-row class="grow" align-items-end>
-            <ion-col size-sm="8" offset-sm="2" class="sidePadding">
-              <ion-button type="submit" color="tertiary" expand="block" (click)="onProceed()" [disabled]="!form.valid">Proceed</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </form>
-    </ion-content>
-    
+<ion-content>
+  <form [formGroup]="form">
+    <div *ngIf="isLoading" text-center padding>
+      <ion-spinner color="primary"></ion-spinner>
+    </div>
+    <ion-grid *ngIf="!isLoading">
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" padding>
+          <h5>Requester</h5>
+          <p>Create and send requests to consultants for medical expertise.</p>
+          <br />
+          <h5>Consultant</h5>
+          <p>
+            Recieve requests and provide medical expertise in your chosen
+            domain.
+          </p>
+          <br />
+          <h5>Group Administration</h5>
+          <p>
+            Setup and manage the membership for a network of Requesters and
+            Consulatants.
+          </p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <ion-item>
+            <ion-label position="floating">Role</ion-label>
+            <ion-select name="role" formControlName="role" (ionChange)="onRoleChosen($event)">
+              <ion-select-option
+                *ngFor="let userType of userTypes"
+                value="{{ userType.id }}"
+                >{{ userType.userType }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <ion-item>
+            <ion-label position="floating">Specialism</ion-label>
+            <ion-select
+              name="specialism"
+              formControlName="specialism"
+              [disabled]="!isConsultant"
+            >
+              <ion-select-option
+                *ngFor="let specialism of specialisms"
+                value="{{ specialism.id }}"
+                >{{ specialism.specialism }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <ion-button
+            type="submit"
+            color="tertiary"
+            expand="block"
+            (click)="onProceed()"
+            [disabled]="!form.valid"
+            >Proceed</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

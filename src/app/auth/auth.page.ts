@@ -44,16 +44,18 @@ export class AuthPage implements OnInit {
       return modalEl.onDidDismiss();
     }).then(modalData => {
       console.log(modalData);
-      this.modalController.create({
-        component: SignupComponent,
-        componentProps: {
-          chosenRole: modalData.data.chosenRole,
-          chosenSpecialism : modalData.data.chosenSpecialism
-        },
-        id: 'signup'
-      }).then(modalEl => {
-        modalEl.present();
-      });
+      if (modalData.role !== 'cancel') {
+        this.modalController.create({
+          component: SignupComponent,
+          componentProps: {
+            chosenRole: modalData.data.chosenRole,
+            chosenSpecialism : modalData.data.chosenSpecialism
+          },
+          id: 'signup'
+        }).then(modalEl => {
+          modalEl.present();
+        });
+      }
     });
   }
 }

@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { map, mergeMap } from 'rxjs/operators';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { HttpService, SpecialismData, UserTypeData } from '../../shared-http/http.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-role-selection',
@@ -17,6 +17,8 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
   form: FormGroup;
   isLoading = true;
   specialismsSub: Subscription;
+  selectedRole: number;
+  isConsultant = false;
 
   constructor(
     private modalController: ModalController,
@@ -60,11 +62,19 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
       role: new FormControl(null, {
         validators: [Validators.required]
       }),
-      specialism: new FormControl(null, {
+      specialism: new FormControl(1, {
         validators: [Validators.required]
       })
     });
 
+  }
+
+  onRoleChosen(event: any) {
+    if (+event.detail.value === 4 || +event.detail.value === 6) {
+      this.isConsultant = true;
+    } else {
+      console.log(this.isConsultant);
+    }
   }
 
   onClose() {
