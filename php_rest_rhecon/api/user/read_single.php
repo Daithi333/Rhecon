@@ -6,7 +6,9 @@
   header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
 
   include_once '../../config/Database.php';
+  include_once '../../config/secure.php';
   include_once '../../models/User.php';
+  
 
   // Instantiate DB and User objects
   $database = new Database();
@@ -28,7 +30,8 @@
       if (password_verify($password, $user->password)) {
         
         // TODO - add proper token generation
-        $token = bin2hex(random_bytes(64));
+        // $token = bin2hex(random_bytes(64));
+
         echo json_encode(
           array(
             'message' => 'Success',
@@ -50,5 +53,4 @@
       );
     }
   }
-
   

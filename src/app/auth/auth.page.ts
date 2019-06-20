@@ -26,15 +26,6 @@ export class AuthPage implements OnInit {
     });
   }
 
-  // onSignup() {
-  //   this.modalController.create({
-  //     component: SignupComponent,
-  //     id: 'signup'
-  //   }).then(modalEl => {
-  //     modalEl.present();
-  //   });
-  // }
-
   onSignup() {
     this.modalController.create({
       component: RoleSelectionComponent,
@@ -43,7 +34,7 @@ export class AuthPage implements OnInit {
       modalEl.present();
       return modalEl.onDidDismiss();
     }).then(modalData => {
-      console.log(modalData);
+      // console.log(modalData);
       if (modalData.role !== 'cancel') {
         this.modalController.create({
           component: SignupComponent,
