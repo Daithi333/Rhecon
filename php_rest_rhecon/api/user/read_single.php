@@ -7,6 +7,7 @@
 
   include_once '../../config/Database.php';
   include_once '../../config/secure.php';
+  include_once '../../utility/JWT.php';
   include_once '../../models/User.php';
   
 
@@ -21,23 +22,43 @@
   if (isset($data)) {
     // assign user properties from the decoded data
     $user->email = $data->email;
-    $password = $data->password;
+    $enteredPassword = $data->password;
 
     // Create user on db and generate auth token
     if($user->readSingle()) {
 
       // verify entered password against hashed password from DB
-      if (password_verify($password, $user->password)) {
+      if (password_verify($enteredPassword, $user->password)) {
         
-        // TODO - add proper token generation
         // $token = bin2hex(random_bytes(64));
+        $issuer = $_SERVER['SERVER_NAME'];
+        $audience = 'Rhecon_App';
+        $issuedAt = time();
+        $delay = $issuedAt + 10;
+        $expiresAt = $issuedAt + 3600;
+        $token = array(
+          'iss' => $issuer,
+          'aud' => $$audience,
+          'ist' => $issuedAt,
+          'del' => $delay,
+          'exp' => $expiresAt,
+          'data' => array (
+            'id' => $user->id,
+            'userTypeId' => $user->userTypeId,
+            'email' => $user->email,
+          )
+        );
+
+        http_response_code(200);
+
+        $idToken = JWT::encode($token, $secret);
 
         echo json_encode(
           array(
             'message' => 'Success',
-            'idToken' => 'Bearer ' . $token,
+            'idToken' => $idToken,
             'email' => $user->email,
-            'expiresIn' => '3600000'
+            'expiresAt' => $expiresAt
           )
         );
 

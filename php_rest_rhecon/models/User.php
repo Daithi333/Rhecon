@@ -77,7 +77,7 @@
      * Function to retrieve a single user record by email address and passowrd (login)
      */
     public function readSingle() {
-      $query = 'SELECT *
+      $query = 'SELECT u.id, u.userTypeId, u.password
                 FROM ' . $this->table . ' u
                 WHERE u.email = :email';
 
@@ -92,7 +92,7 @@
       if ($row) {
         // set single user properties
         $this->id = $row['id'];
-        $this->email = $row['email'];
+        $this->userTypeId = $row['userTypeId'];
         $this->password = $row['password'];
 
         return true;
