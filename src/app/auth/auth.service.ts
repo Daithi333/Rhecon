@@ -23,11 +23,11 @@ interface LoginResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = false;
-  private _userId = 5;
+  private _isAuthenticated = false;
+  private _userId = null;
 
   get isUserAuthenticated() {
-    return this.isAuthenticated;
+    return this._isAuthenticated;
   }
 
   get userId() {
@@ -78,14 +78,14 @@ export class AuthService {
           new Date(resData.expiresAt)
         );
         this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
-        this.isAuthenticated = true;
+        this._isAuthenticated = true;
       })
     );
   }
 
   logout() {
     Plugins.Storage.remove({ key: 'userAuth' });
-    this.isAuthenticated = false;
+    this._isAuthenticated = false;
   }
 
   private storeAuthData(

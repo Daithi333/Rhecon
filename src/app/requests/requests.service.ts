@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, empty, Observable } from 'rxjs';
 import { take, map, tap, switchMap, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -100,6 +100,10 @@ export class RequestsService {
     return this.fetchRequests()
       .pipe(
         mergeMap(requests => {
+          if (!requests || !requests.length) {
+            console.log('No requests');
+            // TODO - work in iif() to chain the next steps only if requests is not empty
+          }
           return requests.map(request => {
             return request;
           });
