@@ -34,13 +34,13 @@
         $issuer = $_SERVER['SERVER_NAME'];
         $audience = 'Rhecon_App';
         $issuedAt = time();
-        $delay = $issuedAt + 10;
+        $notBefore = $issuedAt + 10;
         $expiresAt = $issuedAt + 3600;
         $token = array(
           'iss' => $issuer,
           'aud' => $$audience,
-          'ist' => $issuedAt,
-          'del' => $delay,
+          'iat' => $issuedAt,
+          'nbf' => $notBefore,
           'exp' => $expiresAt,
           'data' => array (
             'id' => $user->id,

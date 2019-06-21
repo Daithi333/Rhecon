@@ -82,12 +82,7 @@ export class SignupComponent implements OnInit {
       .create({keyboardClose: true, message: 'Signing up...'})
       .then(loadingEl => {
         loadingEl.present();
-        // setTimeout(() => {
-        //   this.isLoading = false;
-        //   loadingEl.dismiss();
-        //   this.presentAlert();
-        // }, 2000);
-        this.authService.signUp(
+        this.authService.signup(
           this.form.value.titleId,
           this.form.value.firstName,
           this.form.value.lastName,
@@ -100,6 +95,19 @@ export class SignupComponent implements OnInit {
           this.isLoading = false;
           loadingEl.dismiss();
           this.presentAlert();
+        },
+        // TODO - get error back from API instead of response payload
+        error => {
+          loadingEl.dismiss();
+          let errorMsg = 'Could not sign up, please try again shortly';
+          if (error.message === 'Email address already registered') {
+            errorMsg = 'Email address is already registered.';
+          }
+          this.alertController.create({
+            header: 'Authentication failed',
+            message: errorMsg,
+            buttons: ['Okay']
+          });
         });
     });
     this.onClose();

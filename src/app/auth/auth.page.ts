@@ -34,7 +34,7 @@ export class AuthPage implements OnInit {
       modalEl.present();
       return modalEl.onDidDismiss();
     }).then(modalData => {
-      // console.log(modalData);
+      console.log(modalData);
       if (modalData.role !== 'cancel') {
         this.modalController.create({
           component: SignupComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { map, mergeMap } from 'rxjs/operators';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -62,7 +62,7 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
       role: new FormControl(null, {
         validators: [Validators.required]
       }),
-      specialism: new FormControl(1, {
+      specialism: new FormControl('1', {
         validators: [Validators.required]
       })
     });
@@ -73,7 +73,8 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
     if (+event.detail.value === 4 || +event.detail.value === 6) {
       this.isConsultant = true;
     } else {
-      console.log(this.isConsultant);
+      this.isConsultant = false;
+      this.form.patchValue({ specialism: '1' });
     }
   }
 
@@ -87,7 +88,7 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
         chosenRole: this.form.value.role,
         chosenSpecialism: this.form.value.specialism
       },
-      'cancel',
+      'proceed',
       'role-selection'
     );
   }

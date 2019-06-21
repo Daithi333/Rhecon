@@ -36,7 +36,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-  signUp(
+  signup(
     titleId: number,
     firstName: string,
     lastName: string,
