@@ -32,10 +32,10 @@
         
         // $token = bin2hex(random_bytes(64));
         $issuer = $_SERVER['SERVER_NAME'];
-        $audience = 'Rhecon_App';
+        $audience = 'Rhecon';
         $issuedAt = time();
         $notBefore = $issuedAt + 10;
-        $expiresAt = $issuedAt + 3600;
+        $expiresAt = $issuedAt + (3600 * 24 * 7);
         $token = array(
           'iss' => $issuer,
           'aud' => $audience,
@@ -58,7 +58,7 @@
             'message' => 'Success',
             'idToken' => $idToken,
             'email' => $user->email,
-            'UserId' => $user->id,
+            'userId' => $user->id,
             'expiresAt' => $expiresAt
           )
         );

@@ -70,13 +70,14 @@ export class AuthService {
       { email: email, password: password }
     ).pipe(
       tap(resData => {
+        console.log(resData);
         const user = new UserAuth(
           +resData.userId,
           resData.email,
           resData.idToken,
           new Date(resData.expiresAt)
         );
-        this.storeAuthData(user.userId, user.email, user.token, user.expiryDate.toISOString());
+        this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
         this.isAuthenticated = true;
       })
     );

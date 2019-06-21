@@ -13,7 +13,7 @@ export class UserAuth {
     return this._token;
   }
 
-  get expiryDate() {
+  get expiresAt() {
     return this._expiresAt;
   }
 

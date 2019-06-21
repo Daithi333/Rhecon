@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
             this.onClose();
             this.router.navigateByUrl('/tabs/home');
           }, error => {
+            console.log(error);
             loadingEl.dismiss();
             this.alertController.create({
               header: 'Login Unsuccessful',
