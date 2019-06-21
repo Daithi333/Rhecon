@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Plugins } from '@capacitor/core';
 
 import { User } from './user.model';
 import { tap } from 'rxjs/operators';
 import { UserAuth } from './user-auth.model';
-import { Plugins } from '@capacitor/core';
 
 interface SignupResponseData {
   message: string;
@@ -23,7 +23,7 @@ interface LoginResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = true;
+  private isAuthenticated = false;
   private _userId = 5;
 
   get isUserAuthenticated() {
@@ -65,8 +65,8 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    this.httpClient.post<LoginResponseData>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/create.php',
+    return this.httpClient.post<LoginResponseData>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/read_single.php',
       { email: email, password: password }
     ).pipe(
       tap(resData => {
@@ -77,11 +77,13 @@ export class AuthService {
           new Date(resData.expiresAt)
         );
         this.storeAuthData(user.userId, user.email, user.token, user.expiryDate.toISOString());
+        this.isAuthenticated = true;
       })
     );
   }
 
   logout() {
+    Plugins.Storage.remove({ key: 'userAuth' });
     this.isAuthenticated = false;
   }
 

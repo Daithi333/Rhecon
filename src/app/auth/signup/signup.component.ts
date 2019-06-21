@@ -110,7 +110,7 @@ export class SignupComponent implements OnInit {
           });
         });
     });
-    this.onClose();
+    // this.onClose();
   }
 
   async presentAlert() {

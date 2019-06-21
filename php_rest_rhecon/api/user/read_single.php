@@ -38,7 +38,7 @@
         $expiresAt = $issuedAt + 3600;
         $token = array(
           'iss' => $issuer,
-          'aud' => $$audience,
+          'aud' => $audience,
           'iat' => $issuedAt,
           'nbf' => $notBefore,
           'exp' => $expiresAt,
