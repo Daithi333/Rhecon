@@ -36,7 +36,7 @@
         $issuedAt = time();
         $notBefore = $issuedAt + 10;
         $expiresAt = $issuedAt + (3600 * 24 * 7);
-        $token = array(
+        $tokenData = array(
           'iss' => $issuer,
           'aud' => $audience,
           'iat' => $issuedAt,
@@ -51,12 +51,12 @@
 
         http_response_code(200);
 
-        $idToken = JWT::encode($token, $secret);
+        $token = JWT::encode($tokenData, $secret);
 
         echo json_encode(
           array(
             'message' => 'Success',
-            'idToken' => $idToken,
+            'token' => $token,
             'email' => $user->email,
             'userId' => $user->id,
             'expiresAt' => $expiresAt

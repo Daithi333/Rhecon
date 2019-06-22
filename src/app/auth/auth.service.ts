@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
+import { tap, map } from 'rxjs/operators';
+import { BehaviorSubject, from } from 'rxjs';
 
 import { User } from './user.model';
-import { tap } from 'rxjs/operators';
 import { UserAuth } from './user-auth.model';
 
 interface SignupResponseData {
@@ -13,7 +14,7 @@ interface SignupResponseData {
 
 interface LoginResponseData {
   message: string;
-  idToken: string;
+  token: string;
   email: string;
   userId: number;
   expiresAt: number;
@@ -23,15 +24,42 @@ interface LoginResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  private _isAuthenticated = false;
-  private _userId = null;
+  private _userAuth = new BehaviorSubject<UserAuth>(null);
 
   get isUserAuthenticated() {
-    return this._isAuthenticated;
+    return this._userAuth.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return !!user.token;
+        } else {
+          return false;
+        }
+      })
+    );
   }
 
   get userId() {
-    return this._userId;
+    return this._userAuth.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return user.userId;
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
+  get token() {
+    return this._userAuth.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return user.token;
+        } else {
+          return null;
+        }
+      })
+    );
   }
 
   constructor(private httpClient: HttpClient) { }
@@ -74,32 +102,75 @@ export class AuthService {
         const user = new UserAuth(
           +resData.userId,
           resData.email,
-          resData.idToken,
-          new Date(resData.expiresAt)
+          resData.token,
+          new Date(resData.expiresAt * 1000)
         );
+        console.log(user);
+        this._userAuth.next(user);
         this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
-        this._isAuthenticated = true;
+      })
+    );
+  }
+
+  autoLogin() {
+    return from(Plugins.Storage.get({key: 'userAuth'})).pipe(
+      map(storedData => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+        const data = JSON.parse(storedData.value) as {
+          userId: string,
+          email: string
+          token: string,
+          expiresAt: string,
+        };
+        const expirationTime = new Date(data.expiresAt);
+        if (expirationTime <= new Date()) {
+          return null;
+        }
+        const user = new UserAuth(
+          +data.userId,
+          data.email,
+          data.token,
+          expirationTime);
+        return user;
+      }),
+      tap(user => {
+        if (user) {
+          this._userAuth.next(user);
+          this.logoutCheck(user.expiresAt);
+        }
+      }),
+      map(user => {
+        return !!user;
       })
     );
   }
 
   logout() {
+    this._userAuth.next(null);
     Plugins.Storage.remove({ key: 'userAuth' });
-    this._isAuthenticated = false;
+  }
+
+  private logoutCheck(expirationTime: Date) {
+    if (new Date() >= expirationTime) {
+      this.logout();
+    }
   }
 
   private storeAuthData(
     userId: number,
     email: string,
-    idToken: string,
+    token: string,
     expiresAt: string
   ) {
     const userAuthdata = JSON.stringify({
       userId: userId,
       email: email,
-      idToken: idToken,
+      token: token,
       expiresAt: expiresAt
     });
     Plugins.Storage.set({ key: 'userAuth', value: userAuthdata });
   }
+
 }

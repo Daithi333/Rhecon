@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         loadingEl.present();
         this.authService.login(email, password)
           .subscribe(resData => {
-            console.log(resData);
+            // console.log(resData);
             this.isLoading = false;
             loadingEl.dismiss();
             this.onClose();
