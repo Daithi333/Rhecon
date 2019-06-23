@@ -98,16 +98,16 @@ export class AuthService {
       { email: email, password: password }
     ).pipe(
       tap(resData => {
-        console.log(resData);
+        // console.log(resData);
         const user = new UserAuth(
           +resData.userId,
           resData.email,
           resData.token,
           new Date(resData.expiresAt * 1000)
         );
-        console.log(user);
+        // console.log(user);
         this._userAuth.next(user);
-        console.log(this._userAuth);
+        // console.log(this._userAuth);
         this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
       })
     );
@@ -127,6 +127,8 @@ export class AuthService {
         };
         const expirationTime = new Date(data.expiresAt);
         if (expirationTime <= new Date()) {
+          console.log('auto logged out');
+          this.logout();
           return null;
         }
         const user = new UserAuth(
@@ -139,7 +141,7 @@ export class AuthService {
       tap(user => {
         if (user) {
           this._userAuth.next(user);
-          this.logoutCheck(user.expiresAt);
+          console.log('auto logged in');
         }
       }),
       map(user => {
@@ -151,12 +153,6 @@ export class AuthService {
   logout() {
     this._userAuth.next(null);
     Plugins.Storage.remove({ key: 'userAuth' });
-  }
-
-  private logoutCheck(expirationTime: Date) {
-    if (new Date() >= expirationTime) {
-      this.logout();
-    }
   }
 
   private storeAuthData(

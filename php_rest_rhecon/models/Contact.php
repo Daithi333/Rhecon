@@ -18,6 +18,7 @@
     public $specialism;
     public $portraitUrl;
     public $bio;
+    public $userId;
 
     // Constructor with DB arg
     public function __construct($db) {

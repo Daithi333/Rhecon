@@ -34,7 +34,7 @@
         $audience = 'Rhecon';
         $issuedAt = time();
         $notBefore = $issuedAt + 10;
-        $expiresAt = $issuedAt + (3600 * 24 * 7);
+        $expiresAt = $issuedAt + (3600 * 24); // 24 hour token
         $tokenData = array(
           'iss' => $issuer,
           'aud' => $audience,
