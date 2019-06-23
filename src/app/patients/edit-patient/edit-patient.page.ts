@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, iif, defer } from 'rxjs';
 
 import { PatientsService } from '../patients.service';
 import { Patient } from '../patient.model';
@@ -92,27 +92,21 @@ export class EditPatientPage implements OnInit, OnDestroy {
       message: 'Updating Patient'
     }).then(loadingEl => {
       loadingEl.present();
-      if (this.imageChanged) {
-        this.patientsService.addImage(this.form.get('patientImage').value)
-        .pipe(
+      iif (
+        () => !this.imageChanged,
+        defer(() => this.callUpdatePatient(this.patient.portraitUrl)),
+        defer(() => this.patientsService.addImage(this.form.get('patientImage').value).pipe(
           switchMap(resData => {
             console.log(resData);
             // TODO - handle error from the add image function - server, size, etc
             return this.callUpdatePatient(resData.fileUrl);
           })
-        ).subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/tabs/patients']);
-        });
-      } else {
-        this.callUpdatePatient(this.patient.portraitUrl)
-        .subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/tabs/patients']);
-        });
-      }
+        ))
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        this.form.reset();
+        this.router.navigate(['/tabs/patients']);
+      });
     });
   }
 

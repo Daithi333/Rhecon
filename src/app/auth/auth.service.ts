@@ -107,6 +107,7 @@ export class AuthService {
         );
         console.log(user);
         this._userAuth.next(user);
+        console.log(this._userAuth);
         this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
       })
     );

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, empty, Observable } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { take, map, tap, switchMap, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -44,9 +44,16 @@ export class RequestsService {
   }
 
   fetchRequests() {
-    return this.httpClient.get<{[key: number]: RequestData}>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${this.authService.userId}`
-    ).pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<{[key: number]: RequestData}>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`
+        );
+      }),
       map(resData => {
         const requests = [];
         for (const key in resData) {
@@ -75,10 +82,16 @@ export class RequestsService {
   }
 
   getRequest(id: number) {
-    return this.httpClient.get<RequestData>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${this.authService.userId}&id=${id}`
-    )
-    .pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<RequestData>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`
+        );
+      }),
       map(requestData => {
         return new Request(
           id,
@@ -189,21 +202,28 @@ export class RequestsService {
     notes: string
   ) {
     let uniqueId: number;
-    const newRequest = new Request(
-      null,
-      title,
-      this.authService.userId,
-      patientId,
-      consultantId,
-      notes,
-      true,
-      null,
-      null
-    );
-    return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/create.php',
-      { ...newRequest, id: null }
-    )
-    .pipe(
+    let newRequest: Request;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        newRequest = new Request(
+          null,
+          title,
+          userId,
+          patientId,
+          consultantId,
+          notes,
+          true,
+          null,
+          null
+        );
+        return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/create.php',
+          { ...newRequest, id: null }
+        );
+      }),
       switchMap(responseData => {
         uniqueId = responseData.dbId;
         return this.requests;
@@ -243,7 +263,7 @@ export class RequestsService {
         updatedRequests[updatedRequestIndex] = new Request(
           preUpdateRequest.id,
           title,
-          this.authService.userId,
+          preUpdateRequest.requesterId,
           patientId,
           consultantId,
           notes,

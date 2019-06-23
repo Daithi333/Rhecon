@@ -122,71 +122,6 @@ export class NewRequestPage implements OnInit {
     });
   }
 
-  // onAddRequest() {
-  //   if (!this.requestForm.valid) {
-  //     return;
-  //   }
-  //   let newRequestId;
-  //   this.loadingController.create({
-  //     message: 'Creating Request'
-  //   })
-  //   .then(loadingEl => {
-  //     loadingEl.present();
-  //     if (this.attachments.length <= 0) {
-  //       this.callAddRequest()
-  //         .subscribe(() => {
-  //           // console.log('Subscribed without attachments!');
-  //           this.loadingController.dismiss();
-  //           this.requestForm.reset();
-  //           this.router.navigate(['/tabs/requests']);
-  //       });
-  //     } else {
-  //       this.requestsService.addRequest(
-  //         this.requestForm.value.title,
-  //         this.selectedPatient.id,
-  //         this.selectedConsultant.id,
-  //         this.requestForm.value.notes
-  //       ).pipe(
-  //         switchMap(requestId => {
-  //           // console.log('Request id from new request page: ' + requestId);
-  //           newRequestId = requestId;
-  //           return of(this.attachments);
-  //         }),
-  //         mergeMap(attachments => {
-  //           return attachments.map(attachment => {
-  //             // console.log(attachment);
-  //             return attachment;
-  //           });
-  //         }),
-  //         mergeMap(attachment => {
-  //           return this.attachmentsService.addAttachmentFile(attachment).pipe(
-  //             map(fileData => {
-  //               // console.log('File data: ' + fileData);
-  //               return fileData;
-  //             })
-  //           );
-  //         }),
-  //         mergeMap(fileData => {
-  //           return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
-  //             map(attachments => {
-  //               // console.log('Attachments: ' + attachments);
-  //               return attachments;
-  //             })
-  //           );
-  //         }),
-  //         takeLast(1)
-  //       )
-  //       .subscribe(() => {
-  //         // console.log('Subscribed after processing attachments!');
-  //         this.loadingController.dismiss();
-  //         this.requestForm.reset();
-  //         this.attachments.splice(0, this.attachments.length);
-  //         this.router.navigate(['/tabs/requests']);
-  //       });
-  //     }
-  //   });
-  // }
-
   onAddRequest() {
     if (!this.requestForm.valid) {
       return;
@@ -196,7 +131,7 @@ export class NewRequestPage implements OnInit {
     })
     .then(loadingEl => {
       loadingEl.present();
-      this.getRequest(this.attachments).subscribe(() => {
+      this.handleAttachments(this.attachments).subscribe(() => {
         // console.log('Subscribed!');
         this.loadingController.dismiss();
         this.requestForm.reset();
@@ -207,12 +142,18 @@ export class NewRequestPage implements OnInit {
   }
 
   // method to call the update request method and chain on attachments requests if there are any
-  private getRequest(attachments) {
+  private handleAttachments(attachments) {
     let newRequestId;
+    const addRequestObs = this.requestsService.addRequest(
+      this.requestForm.value.title,
+      this.selectedPatient.id,
+      this.selectedConsultant.id,
+      this.requestForm.value.notes
+    );
     return iif (
       () => attachments.length === 0,
-      defer(() => this.callAddRequest().pipe()),
-      defer(() => this.callAddRequest().pipe(
+      defer(() => addRequestObs),
+      defer(() => addRequestObs.pipe(
         switchMap(requestId => {
           newRequestId = requestId;
           return of(this.attachments);
@@ -240,14 +181,4 @@ export class NewRequestPage implements OnInit {
       ))
     );
   }
-
-  private callAddRequest() {
-    return this.requestsService.addRequest(
-      this.requestForm.value.title,
-      this.selectedPatient.id,
-      this.selectedConsultant.id,
-      this.requestForm.value.notes
-    );
-  }
-
 }

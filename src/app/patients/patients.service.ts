@@ -32,12 +32,18 @@ export class PatientsService {
     return this._patients.asObservable();
   }
 
-  // retrieves patients from DB to initialise the _patients BehaviorSubject
+  // retrieves patients from DB to initialise the local behavior subject
   fetchPatients() {
-    return this.httpClient.get<{[key: number]: PatientData}>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read.php?userId=${this.authService.userId}`
-    )
-    .pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<{[key: number]: PatientData}>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
+        );
+      }),
       map(resData => {
         const patients = [];
         for (const key in resData) {
@@ -64,10 +70,13 @@ export class PatientsService {
   }
 
   getPatient(id: number) {
-    return this.httpClient.get<PatientData>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${this.authService.userId}&id=${id}`
-    )
-    .pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        return this.httpClient.get<PatientData>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
+        );
+      }),
       map(patientData => {
         return new Patient(
           id,
@@ -100,21 +109,27 @@ export class PatientsService {
     notes: string,
   ) {
     let uniqueId: number;
-    const newPatient = new Patient(
-      null,
-      firstName,
-      lastName,
-      dob,
-      portraitUrl,
-      notes,
-      this.authService.userId
-    );
-    // console.log(portraitUrl);
-    return this.httpClient
-    .post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
-      { ...newPatient, id: null }
-    )
-    .pipe(
+    let newPatient: Patient;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        newPatient = new Patient(
+          null,
+          firstName,
+          lastName,
+          dob,
+          portraitUrl,
+          notes,
+          userId
+        );
+        return this.httpClient.post<{dbId: number}>(
+          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
+          { ...newPatient, id: null }
+        );
+      }),
       switchMap(responseData => {
         console.log(responseData);
         uniqueId = responseData.dbId;
@@ -140,7 +155,7 @@ export class PatientsService {
     return this.patients.pipe(
       take(1),
       switchMap(patients => {
-        // fetch patients from db if user reloads app on a page where local list is not initialised.
+        // fetch patients from db if app is reloaded on a page where local list does not get initialised.
         if (!patients || patients.length <= 0) {
           return this.fetchPatients();
         } else {
@@ -171,7 +186,6 @@ export class PatientsService {
   }
 
   removePatient(patientId: number) {
-    console.log('Patient removed');
     return this.httpClient.put(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/close.php/?id=${patientId}`,
       { id: patientId }

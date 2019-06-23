@@ -161,62 +161,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
-  // onUpdateRequest() {
-  //   if (!this.requestForm.valid) {
-  //     return;
-  //   }
-  //   this.loadingController.create({
-  //     message: 'Updating Request'
-  //   })
-  //   .then(loadingEl => {
-  //     loadingEl.present();
-  //     if (this.attachments.length <= 0) {
-  //       this.callUpdateRequest()
-  //         .subscribe(() => {
-  //           console.log('Subscribed without processing attachments!');
-  //           loadingEl.dismiss();
-  //           this.requestForm.reset();
-  //           this.router.navigate(['/tabs/requests']);
-  //       });
-  //     } else {
-  //       this.callUpdateRequest().pipe(
-  //         switchMap(() => {
-  //           return of(this.attachments);
-  //         }),
-  //         mergeMap(attachments => {
-  //           console.log(attachments);
-  //           return attachments.map(attachment => {
-  //             return attachment;
-  //           });
-  //         }),
-  //         mergeMap(attachment => {
-  //           return this.attachmentsService.addAttachmentFile(attachment).pipe(
-  //             map(fileData => {
-  //               // console.log('File data: ' + fileData);
-  //               return fileData;
-  //             })
-  //           );
-  //         }),
-  //         mergeMap(fileData => {
-  //           return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
-  //             map(attachments => {
-  //               // console.log('Attachments: ' + attachments);
-  //               return attachments;
-  //             })
-  //           );
-  //         }),
-  //         takeLast(1)
-  //       )
-  //       .subscribe(() => {
-  //         console.log('Subscribed after processing attachments!');
-  //         loadingEl.dismiss();
-  //         this.requestForm.reset();
-  //         this.router.navigate(['/tabs/requests']);
-  //       });
-  //     }
-  //   });
-  // }
-
   onUpdateRequest() {
     if (!this.requestForm.valid) {
       return;
@@ -243,10 +187,17 @@ export class EditRequestPage implements OnInit, OnDestroy {
 
   // method to call the update request method and chain on attachments requests if there are any
   private getRequest(attachments) {
+    const updateRequestObs = this.requestsService.updateRequest(
+      this.request.id,
+      this.requestForm.value.title,
+      this.selectedPatient.id,
+      this.selectedConsultant.id,
+      this.requestForm.value.notes
+    );
     return iif (
       () => attachments.length === 0,
-      defer(() => this.callUpdateRequest()),
-      defer(() => this.callUpdateRequest().pipe(
+      defer(() => updateRequestObs),
+      defer(() => updateRequestObs.pipe(
         switchMap(() => {
           return of(this.attachments);
         }),
@@ -274,16 +225,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
         }),
         takeLast(1)
       ))
-    );
-  }
-
-  private callUpdateRequest() {
-    return this.requestsService.updateRequest(
-      this.request.id,
-      this.requestForm.value.title,
-      this.selectedPatient.id,
-      this.selectedConsultant.id,
-      this.requestForm.value.notes
     );
   }
 

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { PatientsService } from '../patients.service';
 import { switchMap } from 'rxjs/operators';
 import { ImageUtilService } from 'src/app/shared-portrait/image-util-service';
+import { iif, defer } from 'rxjs';
 
 @Component({
   selector: 'app-new-patient',
@@ -70,29 +71,23 @@ export class NewPatientPage implements OnInit {
       message: 'Adding Patient'
     }).then(loadingEl => {
       loadingEl.present();
-      // if user added an image use that url, or else use the placeholder
-      if (this.form.value.patientImage !== this.imagePreview) {
-        this.patientsService.addImage(this.form.get('patientImage').value)
-        .pipe(
+      iif (
+        () => this.form.value.patientImage === this.imagePreview,
+        defer(() => this.callAddPatient(this.imagePreview)),
+        defer(() => this.patientsService.addImage(this.form.get('patientImage').value).pipe(
           switchMap(resData => {
             // TODO - handle error from the add image function
             return this.callAddPatient(resData.fileUrl);
           })
-        ).subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/tabs/patients']);
-        });
-      } else {
-        this.callAddPatient(this.imagePreview)
-        .subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/tabs/patients']);
-        });
-      }
+        ))
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        this.form.reset();
+        this.router.navigate(['/tabs/patients']);
+      });
     });
   }
+
   // call AddPatient method with appropiate image url
   private callAddPatient(patientImage: string) {
     return this.patientsService.addPatient(

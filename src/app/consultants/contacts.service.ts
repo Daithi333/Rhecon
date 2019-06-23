@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 import { Contact } from './contact.model';
@@ -31,9 +31,16 @@ export class ContactsService {
   }
 
   fetchContacts() {
-    return this.httpClient.get<{[key: number]: ContactData}>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/contact/read.php?userId=${this.authService.userId}`
-    ).pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<{[key: number]: ContactData}>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/contact/read.php?userId=${userId}`
+        );
+      }),
       map(resData => {
         const contacts = [];
         for (const key in resData) {
