@@ -30,7 +30,6 @@
       // verify entered password against hashed password from DB
       if (password_verify($enteredPassword, $user->password)) {
         
-        // $token = bin2hex(random_bytes(64));
         $issuer = $_SERVER['SERVER_NAME'];
         $audience = 'Rhecon';
         $issuedAt = time();
@@ -55,7 +54,7 @@
 
         echo json_encode(
           array(
-            'message' => 'Success',
+            'message' => 'Successful Login',
             'token' => $token,
             'email' => $user->email,
             'userId' => $user->id,
