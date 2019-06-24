@@ -12,9 +12,10 @@ import { GroupsService } from '../groups.service';
   styleUrls: ['./view-group.page.scss'],
 })
 export class ViewGroupPage implements OnInit, OnDestroy {
+  group: Group;
+  groupId: number;
   isLoading = false;
   editMode = false;
-  group: Group;
   private groupSub: Subscription;
 
   constructor(
@@ -31,6 +32,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
         this.navController.navigateBack('/groups');
         return;
       }
+      this.groupId = +paramMap.get('groupId');
       this.isLoading = true;
       this.groupSub = this.groupsService.getGroup(+paramMap.get('groupId'))
         .subscribe(group => {

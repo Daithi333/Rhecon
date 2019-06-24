@@ -140,4 +140,8 @@ export class GroupsService {
     );
   }
 
+  removeMember(memberId: number) {
+
+  }
+
 }

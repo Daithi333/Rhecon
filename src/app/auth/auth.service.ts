@@ -98,16 +98,13 @@ export class AuthService {
       { email: email, password: password }
     ).pipe(
       tap(resData => {
-        // console.log(resData);
         const user = new UserAuth(
           +resData.userId,
           resData.email,
           resData.token,
           new Date(resData.expiresAt * 1000)
         );
-        // console.log(user);
         this._userAuth.next(user);
-        // console.log(this._userAuth);
         this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
       })
     );
