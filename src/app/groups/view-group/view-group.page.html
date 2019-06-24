@@ -8,5 +8,35 @@
 </ion-header>
 
 <ion-content>
-
+  <div *ngIf="isLoading" text-center padding>
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <ion-grid *ngIf="!isLoading">
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" no-padding>
+        <ion-img [src]="group.imageUrl" class="group-image"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" text-center>
+        <h3>{{ group.groupName }}</h3>
+        <ion-note>{{ group.members.length }} members</ion-note>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
+        <ion-list>
+          <ion-item *ngFor="let member of group.members">
+            <ion-avatar slot="start">
+              <ion-img [src]="member.portraitUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h3>{{ member.title }} {{ member.firstName }} {{ member.lastName }}</h3>
+              <p>{{ member.specialism }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

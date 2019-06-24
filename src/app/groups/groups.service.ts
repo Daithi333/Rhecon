@@ -25,7 +25,58 @@ export class GroupsService {
     return this._groups.asObservable();
   }
 
-  fetchGroups() {
+  fetchGroupsWithMembers() {
+    const groupArr: Group[] = [];
+    return this.fetchGroups().pipe(
+      mergeMap(groups => {
+        return groups.map(group => {
+          return group;
+        });
+      }),
+      mergeMap(group => {
+        return this.fetchMembership(group).pipe(
+          takeLast(1),
+          map(members => {
+            group.members = members;
+            groupArr.push(group);
+            return groupArr;
+          })
+        );
+      }),
+      tap(groups => {
+        return this._groups.next(groups);
+      })
+    );
+  }
+
+  getGroup(groupId: number) {
+    let group: Group;
+    return this.httpClient.get<Group>(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_single.php?id=${groupId}`
+    ).pipe(
+      map(groupData => {
+        group = new Group (
+          groupData.id,
+          groupData.groupName,
+          groupData.imageUrl,
+          []
+        );
+        return group;
+      }),
+      mergeMap(fetchedGroup => {
+        // console.log(fetchedGroup);
+        return this.fetchMembership(fetchedGroup).pipe(
+          takeLast(1),
+          map(members => {
+            group.members = members;
+            return group;
+          })
+        );
+      })
+    );
+  }
+
+  private fetchGroups() {
     return this.authService.userId.pipe(
       take(1),
       switchMap(userId => {
@@ -58,7 +109,7 @@ export class GroupsService {
     );
   }
 
-  fetchMembership(group: Group) {
+  private fetchMembership(group: Group) {
     const members: Contact[] = [];
     return this.httpClient.get<number[]>(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_membership.php?groupId=${group.id}`
@@ -73,34 +124,7 @@ export class GroupsService {
       }),
       mergeMap(contact => {
         members.push(contact);
-        return members;
-      }),
-      takeLast(1),
-      tap(() => {
-        return members;
-      })
-    );
-  }
-
-  fetchGroupsWithMembers() {
-    const groupArr: Group[] = [];
-    return this.fetchGroups().pipe(
-      mergeMap(groups => {
-        return groups.map(group => {
-          return group;
-        });
-      }),
-      mergeMap(group => {
-        return this.fetchMembership(group).pipe(
-          map(members => {
-            console.log('level 2: ' + group);
-            groupArr.push(group);
-            return groupArr;
-          })
-        );
-      }),
-      tap(groups => {
-        return this._groups.next(groups);
+        return of(members);
       })
     );
   }

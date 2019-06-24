@@ -15,6 +15,20 @@
 <ion-content>
     <ion-grid>
       <ion-row>
+        <ion-col 
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="6"
+        offset-xl="3"
+        text-center
+        padding
+        *ngIf="!isLoading">
+          <ion-button *ngIf="!editMode">Create</ion-button>
+          <ion-button>Join</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col
           size="12"
           size-md="8"

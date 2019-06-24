@@ -15,7 +15,7 @@ import { iif, defer } from 'rxjs';
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
-  imagePreview = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/default-user-icon.jpg';
+  imagePreview = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/default-patient-icon.jpg';
 
   constructor(
     private patientsService: PatientsService,
