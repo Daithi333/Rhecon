@@ -61,13 +61,17 @@
      * Function to retrieve a single group record by id
      */
     public function readSingle() {
-      $query = 'SELECT g.groupName, g.imageUrl
+      $query = 'SELECT g.groupName, g.imageUrl, m.isAdmin
                 FROM ' . $this->table . ' g
-                WHERE id = :id';
+                LEFT JOIN ' . $this->membershipTable . ' m
+                ON g.id=m.groupId
+                WHERE g.id = :id
+                AND m.userId = :userId';
 
       $stmt = $this->conn->prepare($query);
 
       $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':userId', $this->userId);
 
       $stmt->execute();
 
@@ -77,6 +81,7 @@
         // set single group properties
         $this->groupName = $row['groupName'];
         $this->imageUrl = $row['imageUrl'];
+        $this->isAdmin = $row['isAdmin'];
 
         return true;
       }

@@ -13,6 +13,7 @@ import { GroupsService } from '../groups.service';
 })
 export class ViewGroupPage implements OnInit, OnDestroy {
   isLoading = false;
+  editMode = false;
   group: Group;
   private groupSub: Subscription;
 
@@ -34,6 +35,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
       this.groupSub = this.groupsService.getGroup(+paramMap.get('groupId'))
         .subscribe(group => {
           this.group = group;
+          this.editMode = this.group.isAdmin;
           this.isLoading = false;
         },
         error => {

@@ -29,7 +29,8 @@
       $groupElement = array(
         'id' => $id,
         'groupName' => $groupName,
-        'imageUrl' => $imageUrl
+        'imageUrl' => $imageUrl,
+        'isAdmin' => $isAdmin
       );
 
       array_push($groupArr, $groupElement);

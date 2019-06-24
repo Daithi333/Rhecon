@@ -15,12 +15,14 @@
 
   // get contact id from URL
   $group->id = isset($_GET['id']) ? $_GET['id'] : die();
+  $group->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
 
   if ($group->readSingle()) {
     $groupArr = array(
       'id' => $group->id,
       'groupName' => $group->groupName,
-      'imageUrl' => $group->imageUrl
+      'imageUrl' => $group->imageUrl,
+      'isAdmin' => $group->isAdmin,
     );
 
     http_response_code(200);

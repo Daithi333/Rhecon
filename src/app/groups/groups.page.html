@@ -4,11 +4,6 @@
       <ion-back-button defaultHref="/tabs/home"></ion-back-button>
     </ion-buttons>
     <ion-title>Your Groups</ion-title>
-    <ion-buttons slot="primary" *ngIf="editMode">
-      <ion-button routerLink="/groups/new-group">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -24,7 +19,7 @@
         text-center
         padding
         *ngIf="!isLoading">
-          <ion-button *ngIf="!editMode">Create</ion-button>
+          <ion-button>Create</ion-button>
           <ion-button>Join</ion-button>
         </ion-col>
       </ion-row>

@@ -11,7 +11,6 @@ import { GroupsService } from './groups.service';
 })
 export class GroupsPage implements OnInit, OnDestroy {
   isLoading = false;
-  editMode = false;
   groups: Group[] = [];
   private groupsSub: Subscription;
 

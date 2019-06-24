@@ -43,7 +43,9 @@ export class GroupsService {
           })
         );
       }),
+      takeLast(1),
       tap(groups => {
+        console.log(groups);
         return this._groups.next(groups);
       })
     );
@@ -51,14 +53,22 @@ export class GroupsService {
 
   getGroup(groupId: number) {
     let group: Group;
-    return this.httpClient.get<Group>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_single.php?id=${groupId}`
-    ).pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<Group>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_single.php?id=${groupId}&userId=${userId}`
+        );
+      }),
       map(groupData => {
         group = new Group (
           groupData.id,
           groupData.groupName,
           groupData.imageUrl,
+          !!+groupData.isAdmin,
           []
         );
         return group;
@@ -96,6 +106,7 @@ export class GroupsService {
                 +resData[key].id,
                 resData[key].groupName,
                 resData[key].imageUrl,
+                !!+resData[key].isAdmin,
                 []
               )
             );
