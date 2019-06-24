@@ -11,28 +11,22 @@
   $db = $database->connect();
   $group = new Group($db);
 
-  // get user id from URL
-  $group->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
+  // get group id from URL
+  $group->groupId = isset($_GET['groupId']) ? $_GET['groupId'] : die();
 
-  // group lookup query per user id
-  $result = $group->read();
+  // group membership lookup query per group id
+  $result = $group->readMembership();
 
   $count = $result->rowCount();
 
-  // check if any groups
+  // check if any membership
   if($count > 0) {
     $groupArr = array();
 
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
       extract($row);
 
-      $groupElement = array(
-        'id' => $id,
-        'groupName' => $groupName,
-        'imageUrl' => $imageUrl
-      );
-
-      array_push($groupArr, $groupElement);
+      array_push($groupArr, $userId);
     }
 
     // output as JSON
@@ -40,6 +34,6 @@
 
     // } else {
     //   echo json_encode(
-    //     array('message' => 'No groups found')
+    //     array('message' => 'No members found')
     //   );
   }

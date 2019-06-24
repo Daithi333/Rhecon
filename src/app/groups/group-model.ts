@@ -1,9 +1,10 @@
-import { User } from '../auth/user.model';
+import { Contact } from '../consultants/contact.model';
 
 export class Group {
   constructor(
     public id: number,
-    public name: number,
-    public members: User[]
+    public groupName: string,
+    public imageUrl: string,
+    public members: Contact[]
   ) {}
 }
