@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 import { Group } from '../group-model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, AlertController, IonItemSliding } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { NavController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { GroupsService } from '../groups.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -69,35 +69,9 @@ export class EditGroupPage implements OnInit, OnDestroy {
     };
     fr.readAsDataURL(chosenFile);
   }
-  
 
   onUpdateGroup() {
 
-  }
-
-  onRemove(memberId: number, slidingItem: IonItemSliding) {
-    this.alertController.create({
-      header: 'Confirm removal',
-      message: `Are you sure you wish to remove this member from ${this.group.groupName}?`,
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-            this.groupsService.removeMember(memberId).subscribe(() => {
-              slidingItem.close();
-            });
-          }
-        },
-        {
-          text: 'No',
-          handler: () => {
-            slidingItem.close();
-        }
-      }
-      ]
-    }).then(alertEl => {
-      alertEl.present();
-    });
   }
 
   ngOnDestroy() {

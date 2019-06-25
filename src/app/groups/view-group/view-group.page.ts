@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, IonItemSliding, ActionSheetController, ModalController } from '@ionic/angular';
 
 import { Group } from '../group-model';
 import { GroupsService } from '../groups.service';
+import { EmailInvitationComponent } from './email-invitation/email-invitation.component';
 
 @Component({
   selector: 'app-view-group',
@@ -23,7 +24,9 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     private navController: NavController,
     private alertController: AlertController,
     private groupsService: GroupsService,
-    private router: Router
+    private router: Router,
+    private actionSheetController: ActionSheetController,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -56,6 +59,66 @@ export class ViewGroupPage implements OnInit, OnDestroy {
             alertEl.present();
           });
         });
+    });
+  }
+
+  onInviteMember() {
+    this.actionSheetController.create({
+      header: 'Choose an Action',
+      buttons: [
+        {
+          text: 'Invite by email',
+          handler: () => {
+            this.openEmailModal();
+          }
+        },
+        {
+          text: 'Invite by text',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    }).then(actionSheetEl => {
+      actionSheetEl.present();
+    });
+  }
+
+  openEmailModal() {
+    this.modalController.create({
+      component: EmailInvitationComponent,
+      id: 'emailInvitation'
+    })
+    .then(modalEl => {
+      modalEl.present();
+    });
+  }
+
+  onRemove(memberId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm removal',
+      message: `Are you sure you wish to remove this member from ${this.group.groupName}?`,
+      buttons: [
+        {
+          text: 'Yes',
+          // handler: () => {
+          //   this.groupsService.removeMember(memberId).subscribe(() => {
+          //     slidingItem.close();
+          //   });
+          // }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
   }
 
