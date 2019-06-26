@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { Group } from './group-model';
 import { GroupsService } from './groups.service';
+import { JoinGroupComponent } from './join-group/join-group.component';
 
 @Component({
   selector: 'app-groups',
@@ -19,7 +20,8 @@ export class GroupsPage implements OnInit, OnDestroy {
   constructor(
     private groupsService: GroupsService,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -38,7 +40,7 @@ export class GroupsPage implements OnInit, OnDestroy {
   onCreate() {
     this.alertController.create({
       header: 'Managing a group',
-      message: 'If you choose to setup a new group, you will be responsible for adding and removing its members.',
+      message: 'If you setup a new group, you will be responsible for adding and removing members.',
       buttons: [
         {
           text: 'Okay',
@@ -52,6 +54,16 @@ export class GroupsPage implements OnInit, OnDestroy {
       ]
     }).then(alertEl => {
       alertEl.present();
+    });
+  }
+
+  onJoin() {
+    this.modalController.create({
+      component: JoinGroupComponent,
+      id: 'joinGroup'
+    })
+    .then(modalEl => {
+      modalEl.present();
     });
   }
 
