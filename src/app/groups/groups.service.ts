@@ -45,8 +45,8 @@ export class GroupsService {
       }),
       takeLast(1),
       tap(groups => {
-        console.log(groups);
-        return this._groups.next(groups);
+        // console.log(groups);
+        this._groups.next(groups);
       })
     );
   }
@@ -84,6 +84,62 @@ export class GroupsService {
         );
       })
     );
+  }
+
+  addGroup(groupName: string, imageUrl: string) {
+    let uniqueId: number;
+    let newGroup;
+    return this.httpClient.post<{dbId: number, dbId2: number}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create.php',
+      { ...newGroup, id: null }
+    );
+  }
+
+  addImage(imageFile: File) {
+    const imageData = new FormData();
+    imageData.append('fileUpload', imageFile);
+
+    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/group_image_upload.php',
+      imageData
+    );
+  }
+
+  updateGroup(groupId: number, groupName: string, imageUrl: string) {
+    let updatedGroups: Group[];
+    return this.groups.pipe(
+      take(1),
+      switchMap(groups => {
+        // fetch groups from db if app is reloaded on a page where local list does not get initialised.
+        if (!groups || groups.length <= 0) {
+          return this.fetchGroupsWithMembers();
+        } else {
+          return of(groups);
+        }
+      }),
+      switchMap(groups => {
+        const updatedGroupIndex = groups.findIndex(g => +g.id === +groupId);
+        updatedGroups = [...groups];
+        const preUpdateGroup = updatedGroups[updatedGroupIndex];
+        updatedGroups[updatedGroupIndex] = new Group(
+          preUpdateGroup.id,
+          groupName,
+          imageUrl,
+          preUpdateGroup.isAdmin,
+          preUpdateGroup.members
+        );
+        return this.httpClient.put(
+          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/update.php',
+          { ...updatedGroups[updatedGroupIndex] }
+        );
+      }),
+      tap(() => {
+        this._groups.next(updatedGroups);
+      }));
+  }
+
+  removeMember(memberId: number) {
+
   }
 
   private fetchGroups() {
@@ -138,10 +194,6 @@ export class GroupsService {
         return of(members);
       })
     );
-  }
-
-  removeMember(memberId: number) {
-
   }
 
 }

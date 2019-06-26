@@ -1,32 +1,25 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, LoadingController } from '@ionic/angular';
-import { Subscription, iif, defer } from 'rxjs';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { Group } from '../group-model';
+import { LoadingController } from '@ionic/angular';
 import { GroupsService } from '../groups.service';
+import { Router } from '@angular/router';
+import { ImageUtilService } from 'src/app/shared-portrait/image-util-service';
+import { iif, defer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
-  selector: 'app-edit-group',
-  templateUrl: './edit-group.page.html',
-  styleUrls: ['./edit-group.page.scss'],
+  selector: 'app-new-group',
+  templateUrl: './new-group.page.html',
+  styleUrls: ['./new-group.page.scss'],
 })
-export class EditGroupPage implements OnInit, OnDestroy {
+export class NewGroupPage implements OnInit {
   form: FormGroup;
-  group: Group;
-  groupId: number;
   isLoading = false;
-  selectedImage: string;
-  private groupSub: Subscription;
+  selectedImage = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/default-group-icon.jpg';
   private imageChanged = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
 
   constructor(
-    private route: ActivatedRoute,
-    private navController: NavController,
     private groupsService: GroupsService,
     private loadingController: LoadingController,
     private router: Router,
@@ -34,26 +27,12 @@ export class EditGroupPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => {
-      if (!paramMap.has('groupId')) {
-        this.navController.navigateBack('/groups');
-        return;
-      }
-      this.groupId = +paramMap.get('groupId');
-      this.isLoading = true;
-      this.groupSub = this.groupsService.getGroup(+paramMap.get('groupId'))
-        .subscribe(group => {
-          this.group = group;
-          this.selectedImage = group.imageUrl;
-          this.form = new FormGroup({
-            groupName: new FormControl(this.group.groupName, {
-              updateOn: 'blur',
-              validators: [Validators.required]
-            }),
-            imageUrl: new FormControl(this.group.imageUrl)
-          });
-          this.isLoading = false;
-        });
+    this.form = new FormGroup({
+      groupName: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [Validators.required]
+      }),
+        imageUrl: new FormControl(this.selectedImage)
     });
   }
 
@@ -91,21 +70,21 @@ export class EditGroupPage implements OnInit, OnDestroy {
     fr.readAsDataURL(chosenFile);
   }
 
-  onUpdateGroup() {
+  onAddGroup() {
     if (!this.form.valid) {
       return;
     }
     this.loadingController.create({
-      message: 'Updating Group'
+      message: 'Adding Group'
     }).then(loadingEl => {
       loadingEl.present();
       iif (
         () => !this.imageChanged,
-        defer(() => this.callUpdateGroup(this.group.imageUrl)),
+        defer(() => this.callAddGroup(this.selectedImage)),
         defer(() => this.groupsService.addImage(this.form.get('imageUrl').value).pipe(
           switchMap(resData => {
             // TODO - handle error from the add image function - server, size, etc
-            return this.callUpdateGroup(resData.fileUrl);
+            return this.callAddGroup(resData.fileUrl);
           })
         ))
       ).subscribe(() => {
@@ -114,21 +93,15 @@ export class EditGroupPage implements OnInit, OnDestroy {
         this.router.navigate(['/groups']);
       });
     });
-
   }
 
-  ngOnDestroy() {
-    if (this.groupSub) {
-      this.groupSub.unsubscribe();
-    }
-  }
-
-  // call UpdateGroup method with appropiate image url
-  private callUpdateGroup(imageUrl: string) {
-    return this.groupsService.updateGroup(
-      this.group.id,
+  // call AddGroup method with appropiate image url
+  private callAddGroup(imageUrl: string) {
+    return this.groupsService.addGroup(
       this.form.value.groupName,
       imageUrl
     );
   }
+
+
 }

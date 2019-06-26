@@ -89,4 +89,96 @@
       return false;
     }
 
+    /**
+     * Function to add a new group record
+     */
+    public function create() {
+      $query = 'INSERT INTO ' . $this->table . '
+                SET
+                groupName = :groupName,
+                imageUrl = :imageUrl';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->groupName = Utility::sanitise_input($this->groupName);
+      $this->imageUrl = Utility::sanitise_input($this->imageUrl);
+
+      // bind named params
+      $stmt->bindParam(':groupName', $this->groupName);
+      $stmt->bindParam(':imageUrl', $this->imageUrl);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    public function createMembership() {
+      $query = 'INSERT INTO ' . $this->membershipTable . '
+                SET
+                userId = :userId,
+                groupId = :groupId,
+                isAdmin = 1';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->userId = Utility::sanitise_input($this->userId);
+      $this->groupId = Utility::sanitise_input($this->groupId);
+
+      // bind named params
+      $stmt->bindParam(':userId', $this->userId);
+      $stmt->bindParam(':groupId', $this->groupId);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+     * Function to update a single group record
+     */
+    public function update() {
+      $query = 'UPDATE ' . $this->table . '
+                SET
+                  groupName = :groupName,
+                  imageUrl = :imageUrl
+                WHERE
+                  id = :id';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+      $this->groupName = Utility::sanitise_input($this->groupName);
+      $this->imageUrl = Utility::sanitise_input($this->imageUrl);
+
+      // bind data
+      $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':groupName', $this->groupName);
+      $stmt->bindParam(':imageUrl', $this->imageUrl);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
   }

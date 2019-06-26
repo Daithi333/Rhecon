@@ -8,10 +8,14 @@ const routes: Routes = [
   { path: 'auth', loadChildren: './auth/auth.module#AuthPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule', canLoad: [AuthGuard] },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule', canLoad: [AuthGuard] },
-  { path: 'groups', children: [
+  { path: 'groups', children: [ // TODO - outsource groups routing to groups module
     {
       path: '',
       loadChildren: './groups/groups.module#GroupsPageModule', canLoad: [AuthGuard]
+    },
+    {
+      path: 'new-group',
+      loadChildren: './groups/new-group/new-group.module#NewGroupPageModule', canLoad: [AuthGuard]
     },
     {
       path: ':groupId',

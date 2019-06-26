@@ -43,71 +43,6 @@ export class RequestsService {
     return this._requestsWithPatientAndConsultant.asObservable();
   }
 
-  fetchRequests() {
-    return this.authService.userId.pipe(
-      take(1),
-      switchMap(userId => {
-        if (!userId) {
-          throw new Error('User not found!');
-        }
-        return this.httpClient.get<{[key: number]: RequestData}>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`
-        );
-      }),
-      map(resData => {
-        const requests = [];
-        for (const key in resData) {
-          if (resData.hasOwnProperty(key)) {
-            requests.push(
-              new Request(
-                +resData[key].id,
-                resData[key].title,
-                +resData[key].requesterId,
-                +resData[key].patientId,
-                +resData[key].consultantId,
-                resData[key].notes,
-                !!+resData[key].active,
-                new Date(resData[key].createdOn),
-                new Date(resData[key].updatedOn)
-              )
-            );
-          }
-        }
-        return requests;
-      }),
-      tap(requests => {
-        this._requests.next(requests);
-      })
-    );
-  }
-
-  getRequest(id: number) {
-    return this.authService.userId.pipe(
-      take(1),
-      switchMap(userId => {
-        if (!userId) {
-          throw new Error('User not found!');
-        }
-        return this.httpClient.get<RequestData>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`
-        );
-      }),
-      map(requestData => {
-        return new Request(
-          id,
-          requestData.title,
-          +requestData.requesterId,
-          +requestData.patientId,
-          +requestData.consultantId,
-          requestData.notes,
-          !!+requestData.active,
-          new Date(requestData.createdOn),
-          new Date(requestData.updatedOn)
-        );
-      })
-    );
-  }
-
   fetchRequestsWithPatientAndConsultant() {
     const requestsArr: RequestWithPatientAndConsultant[] = [];
     return this.fetchRequests()
@@ -309,6 +244,71 @@ export class RequestsService {
       take(1),
       tap(requests => {
         this._requestsWithPatientAndConsultant.next(requests.filter(r => r.id !== requestId));
+      })
+    );
+  }
+
+  private fetchRequests() {
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<{[key: number]: RequestData}>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`
+        );
+      }),
+      map(resData => {
+        const requests = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            requests.push(
+              new Request(
+                +resData[key].id,
+                resData[key].title,
+                +resData[key].requesterId,
+                +resData[key].patientId,
+                +resData[key].consultantId,
+                resData[key].notes,
+                !!+resData[key].active,
+                new Date(resData[key].createdOn),
+                new Date(resData[key].updatedOn)
+              )
+            );
+          }
+        }
+        return requests;
+      }),
+      tap(requests => {
+        this._requests.next(requests);
+      })
+    );
+  }
+
+  private getRequest(id: number) {
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<RequestData>(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`
+        );
+      }),
+      map(requestData => {
+        return new Request(
+          id,
+          requestData.title,
+          +requestData.requesterId,
+          +requestData.patientId,
+          +requestData.consultantId,
+          requestData.notes,
+          !!+requestData.active,
+          new Date(requestData.createdOn),
+          new Date(requestData.updatedOn)
+        );
       })
     );
   }

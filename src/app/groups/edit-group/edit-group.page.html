@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [routerLink]="['/', 'groups', groupId]"></ion-back-button>
+      <ion-back-button defaultHref="['/', 'groups', groupId]"></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Group</ion-title>
     <ion-buttons slot="primary">
@@ -16,9 +16,19 @@
   <div *ngIf="isLoading" text-center padding>
     <ion-spinner color="primary"></ion-spinner>
   </div>
-
-  <ion-grid *ngIf="!isLoading">
-    <form [formGroup]="form">
+  <form [formGroup]="form" *ngIf="!isLoading">
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          size="12"
+          size-md="8"
+          offset-md="2"
+          size-xl="6"
+          offset-xl="3"
+        >
+          <ion-img [src]="selectedImage" role="button" class="group-image" (click)="onSelectImage()"></ion-img>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col
           size="12"
@@ -27,8 +37,11 @@
           size-xl="6"
           offset-xl="3"
           no-padding
+          text-center
         >
-          <ion-img [src]="group.imageUrl" role="button" class="group-image" (click)="onSelectImage()"></ion-img>
+          <ion-button size="small" (click)="onSelectImage()">
+            <ion-icon role="button" name="image"></ion-icon>
+          </ion-button>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -38,14 +51,22 @@
           offset-md="2"
           size-xl="6"
           offset-xl="3"
+          padding
           text-center
         >
-          <h3>{{ group.groupName }}</h3>
-          <ion-note>{{ group.members.length }} members</ion-note>
+          <ion-item>
+            <ion-label position="floating">Group Name</ion-label>
+            <ion-input type="text" formControlName="groupName"></ion-input>
+          </ion-item>
         </ion-col>
       </ion-row>
-    </form>
-  </ion-grid>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-button type="submit" color="tertiary" expand="block" (click)="onUpdateGroup()" [disabled]="!form.valid">Update</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
 
 <input
