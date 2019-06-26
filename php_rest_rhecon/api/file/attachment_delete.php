@@ -1,14 +1,5 @@
 <?php
-  // create error with custom message
-  function apiError($message) {
-        
-    $error = array(
-      'type' => 'error',
-      'error' => true,
-      'message' => $message
-    );
-    echo json_encode($error);
-  }
+  include_once '../../utility/Utility.php';
 
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');

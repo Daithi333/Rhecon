@@ -89,9 +89,34 @@ export class GroupsService {
   addGroup(groupName: string, imageUrl: string) {
     let uniqueId: number;
     let newGroup;
-    return this.httpClient.post<{dbId: number, dbId2: number}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create.php',
-      { ...newGroup, id: null }
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        newGroup = new Group(
+          null,
+          groupName,
+          imageUrl,
+          null,
+          []
+        );
+        return this.httpClient.post<{dbId: number, dbId2: number}>(
+          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create.php',
+          { ...newGroup, id: null, userId: userId }
+        );
+      }),
+      switchMap(responseData => {
+        uniqueId = responseData.dbId;
+        return this.groups;
+      }),
+      take(1),
+      switchMap(groups => {
+        newGroup.id = uniqueId;
+        this._groups.next(groups.concat(newGroup));
+        return of(uniqueId);
+      })
     );
   }
 

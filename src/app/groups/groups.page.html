@@ -43,7 +43,6 @@
           size-xl="6"
           offset-xl="3"
           text-center
-          padding
           *ngIf="isLoading"
         >
           <ion-spinner color="primary"></ion-spinner>
@@ -57,7 +56,7 @@
           class="sidePadding"
           *ngIf="!isLoading && groups.length > 0"
         >
-          <ion-list>
+          <ion-list no-padding>
             <ion-item [routerLink]="" type="button" (click)="onCreate()">
               <ion-thumbnail slot="start">
                   <ion-img src="http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/add-group-icon.png"></ion-img>
@@ -84,11 +83,10 @@
           offset-md="2"
           size-xl="6"
           offset-xl="3"
-          padding
           *ngIf="!isLoading && groups.length > 0"
         >
-        <h4>Your Groups</h4>
-          <ion-list>
+        <h4 style="margin-left: 10px;">Your Groups</h4>
+          <ion-list no-padding>
             <ion-item
               [routerLink]="['/', 'groups', group.id]"
               *ngFor="let group of groups">

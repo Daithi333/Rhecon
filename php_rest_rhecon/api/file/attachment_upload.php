@@ -1,15 +1,5 @@
 <?php
-
-  // create error with custom message
-  function apiError($message) {
-      
-    $error = array(
-      'type' => 'error',
-      'error' => true,
-      'message' => $message
-    );
-    echo json_encode($error);
-  }
+  include_once '../../utility/Utility.php';
 
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
@@ -50,7 +40,7 @@
 
   // Check if uploadOk after the checks..
   if (!$uploadOk) {
-    apiError($errorMsg);
+    Utility::api_error($errorMsg);
 
   } else {  
     if (move_uploaded_file($temp, $targetFile)) {
@@ -62,7 +52,7 @@
         )
       );
     } else {
-      apiError('Problem uploading file');
+      Utility::api_error('Problem uploading file');
     }
 
   }

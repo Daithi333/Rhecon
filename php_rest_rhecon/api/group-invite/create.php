@@ -1,13 +1,32 @@
 <?php
-  include_once '../../utility/Utility.php';
-
+  // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: GET, POST');
+  header('Access-Control-Allow-Methods: POST');
+  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
+
+  include_once '../../config/Database.php';
+  include_once '../../models/Invite.php';
+
+  // Instantiate DB and Group Invite objects
+  $database = new Database();
+  $db = $database->connect();
+  $invite = new Invite($db);
+
+  // get the raw data
+  $data = json_decode(file_get_contents("php://input"));
+
+  if (isset($data)) {
+    // assign Group properties from the decoded data
+    $invite->id = $data->id;
+    $invite->groupName = $data->groupName;
+    $invite->imageUrl = $data->imageUrl;
+    $invite-> = $data->email;
+  }
 
   $relativePath = "../..";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
-  $targetDir = "/files/group_img/";
+  $targetDir = "/files/patient_img/";
 
   $fileName = basename($_FILES['fileUpload']['name']);
   $temp = $_FILES['fileUpload']['tmp_name'];
@@ -48,6 +67,7 @@
         array(
           'fileUrl' => $rootDir . $targetDir . $fileName,
           'filePath' => $targetDir . $fileName
+
         )
       );
     } else {
