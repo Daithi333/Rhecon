@@ -181,26 +181,26 @@ export class GroupsService {
         if (!userIdData) {
           throw new Error('User not found!');
         }
-        console.log(userIdData);
+        // console.log(userIdData);
         userId = +userIdData;
         return this.verifyInvitation(inviteCode);
       }),
       switchMap(resData => {
-        console.log(resData);
+        // console.log(resData);
         invitationId = +resData.id;
         groupId = +resData.groupId;
         return this.addMember(userId, groupId);
       }),
       switchMap(memberIdData => {
-        console.log(memberIdData);
+        // console.log(memberIdData);
         return this.invalidateInvitation(invitationId);
       }),
       switchMap(() => {
-        console.log('invite invalidated');
+        // console.log('invite invalidated');
         return this.getGroup(groupId);
       }),
       switchMap(group => {
-        console.log(group);
+        // console.log(group);
         joinedGroup = group;
         return this.groups;
       }),
