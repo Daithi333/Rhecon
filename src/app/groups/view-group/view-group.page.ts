@@ -91,6 +91,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     this.modalController.create({
       component: EmailInvitationComponent,
       componentProps: {
+        groupName: this.group.groupName,
         groupId: this.group.id
       },
       id: 'emailInvitation'

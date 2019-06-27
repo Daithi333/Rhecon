@@ -11,6 +11,9 @@
     public $inviteCode;
     public $expiresOn;
     public $recipient;
+
+    // for the email invitataion
+    public $groupName;
     
     // Constructor with DB arg
     public function __construct($db) {

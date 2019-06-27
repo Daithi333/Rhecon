@@ -25,29 +25,33 @@
     $invitation->groupId = $data->groupId;
     $invitation->inviteCode = $token;
     $invitation->expiresOn = $expiry;
-    $invitation->recipient = $data->email;
+    $invitation->recipient = $data->recipient;
+    $invitation->groupName = $data->groupName;
 
-    // $message = 'Hello,\n\n
-    // You have recieved an invitation from the Rhecon app to join the following group:\n\n
-    // ' . $invitation->groupName . '\n\n
-    // Please signup and use the following code when requested during group joining:\n\n
-    // ' . $invitation->token . '\n\n
-    // This token will be valid for 72 hours from when this email was sent.\n\n
-    // Regards,\n
-    // The Rhecon Team';
+    $body = "Hello,\n\n
+    You have recieved an invitation from the Rhecon app to join the following group:\n\n
+    " . $invitation->groupName . "\n\n\n
+    Please register on the app and use the following code when requested to join the group:\n\n
+    " . $invitation->inviteCode . "\n\n
+    This code will be valid for 72 hours from when this email was sent, after which a new invitation will need to be sent.\n\n\n
+    Regards,\n
+    The Rhecon Team";
+    
+    $headers = "From: Rhecon" . "\r\n";
 
     // Create Invite on db. Retrieve and return the db id if successful
     if($invitation->create()) {
       $uniqueId = $db->lastInsertId();
 
       // send email
-      // mail($invitation->recipient,"Rhecon (Remote Healthcare Consultation) Group Invitation", $msg);
+      mail($invitation->recipient,"Remote Healthcare Consultation Group Invitation", $body, $headers);
 
       echo json_encode(
         array(
+          'message' => 'Email invitation sent',
           'dbId' => $uniqueId,
-          'token' => $token,
-          'expiresOn' => $expiry
+          // 'token' => $token,
+          // 'expiresOn' => $expiry
         )
       );
       

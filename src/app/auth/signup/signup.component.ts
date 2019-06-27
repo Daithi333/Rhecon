@@ -116,7 +116,7 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  async presentAlert() {
+  private async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Success!',
       message: 'How have successfully signed up! Please proceed to login.',

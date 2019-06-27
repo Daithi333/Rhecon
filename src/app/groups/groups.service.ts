@@ -163,10 +163,10 @@ export class GroupsService {
       }));
   }
 
-  addInvitation(groupId: number, recipient: string) {
-    return this.httpClient.post<{ dbId: number, token: string, expiresOn: number }>(
+  addInvitation(groupName: string, groupId: number, recipient: string) {
+    return this.httpClient.post<{ message: string, dbId: number }>(
       'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/create.php',
-      { groupId: groupId, recipient: recipient }
+      { groupName: groupName, groupId: groupId, recipient: recipient }
     );
   }
 

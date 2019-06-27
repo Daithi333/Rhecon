@@ -12,9 +12,7 @@ import { GroupsService } from '../../groups.service';
 export class EmailInvitationComponent implements OnInit {
   form: FormGroup;
   @Input() groupId;
-  subject = '';
-  body = '';
-  recipient = '';
+  @Input() groupName;
 
   constructor(
     private modalController: ModalController,
@@ -38,14 +36,16 @@ export class EmailInvitationComponent implements OnInit {
       return;
     }
     this.loadingController.create({
-      message: 'Preparing email'
+      message: 'Sending email...'
     }).then(loadingEl => {
       loadingEl.present();
       this.groupsService.addInvitation(
+        this.groupName,
         this.groupId,
         this.form.value.email
       ).subscribe(() => {
         loadingEl.dismiss();
+        this.presentAlert();
         this.onClose();
       },
       error => {
@@ -60,6 +60,15 @@ export class EmailInvitationComponent implements OnInit {
         });
       });
     });
+  }
+
+  private async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Email Sent',
+      message: `Invitation has been sent to ${this.form.value.email}.`,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
 }
