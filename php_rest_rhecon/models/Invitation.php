@@ -1,21 +1,16 @@
 <?php
   include_once '../../utility/Utility.php';
 
-  class Invite {
+  class Invitation {
     private $conn;
     private $table = 'Rhecon_Invitation';
-    private $groupTable = 'Rhecon_Group';
 
     // Invite properties
     public $id;
     public $groupId;
     public $inviteCode;
-    public $createdOn;
     public $expiresOn;
-
-    // for the email invitataion
-    public $email;
-    public $groupName;
+    public $recipient;
     
     // Constructor with DB arg
     public function __construct($db) {
@@ -30,7 +25,8 @@
                 SET
                 groupId = :groupId,
                 inviteCode = :inviteCode,
-                expiresOn = :expiresOn';
+                expiresOn = FROM_UNIXTIME(:expiresOn),
+                recipient = :recipient';
       
       // Prepare statement
       $stmt = $this->conn->prepare($query);
@@ -39,11 +35,13 @@
       $this->groupId = Utility::sanitise_input($this->groupId);
       $this->inviteCode = Utility::sanitise_input($this->inviteCode);
       $this->expiresOn = Utility::sanitise_input($this->expiresOn);
+      $this->recipient = Utility::sanitise_input($this->recipient);
 
       // bind named params
       $stmt->bindParam(':groupId', $this->groupId);
       $stmt->bindParam(':inviteCode', $this->inviteCode);
       $stmt->bindParam(':expiresOn', $this->expiresOn);
+      $stmt->bindParam(':recipient', $this->recipient);
 
       // Execute query
       if($stmt->execute()) {

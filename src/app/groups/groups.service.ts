@@ -163,6 +163,13 @@ export class GroupsService {
       }));
   }
 
+  addInvitation(groupId: number, recipient: string) {
+    return this.httpClient.post<{ dbId: number, token: string, expiresOn: number }>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/create.php',
+      { groupId: groupId, recipient: recipient }
+    );
+  }
+
   removeMember(memberId: number) {
 
   }

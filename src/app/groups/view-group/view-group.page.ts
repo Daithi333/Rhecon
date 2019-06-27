@@ -90,6 +90,9 @@ export class ViewGroupPage implements OnInit, OnDestroy {
   openEmailModal() {
     this.modalController.create({
       component: EmailInvitationComponent,
+      componentProps: {
+        groupId: this.group.id
+      },
       id: 'emailInvitation'
     })
     .then(modalEl => {
