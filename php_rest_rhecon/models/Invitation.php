@@ -11,6 +11,7 @@
     public $inviteCode;
     public $expiresOn;
     public $recipient;
+    public $isRedeemed;
 
     // for the email invitataion
     public $groupName;
@@ -45,6 +46,63 @@
       $stmt->bindParam(':inviteCode', $this->inviteCode);
       $stmt->bindParam(':expiresOn', $this->expiresOn);
       $stmt->bindParam(':recipient', $this->recipient);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+     * Function to retrieve a single Invitation record by the invitation code
+     */
+    public function readSingle() {
+      $query = 'SELECT i.id, i.groupId, i.expiresOn, i.recipient, i.isValid
+                FROM ' . $this->table . ' i
+                WHERE i.inviteCode = :inviteCode';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':inviteCode', $this->inviteCode);
+
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        // set single invitation properties
+        $this->id = $row['id'];
+        $this->groupId = $row['groupId'];
+        $this->expiresOn = $row['expiresOn'];
+        $this->recipient = $row['recipient'];
+        $this->isValid = $row['isValid'];
+
+        return true;
+      }
+
+      return false;
+    }
+
+    /**
+     * Function to invalidate a single invitation record after expiry or single usage
+     */
+    public function invalidate() {
+      $query = 'UPDATE ' . $this->table . '
+                SET isValid = 0
+                WHERE id = :id';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+
+      // Bind data
+      $stmt->bindParam(':id', $this->id);
 
       // Execute query
       if($stmt->execute()) {

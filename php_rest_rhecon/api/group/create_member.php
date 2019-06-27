@@ -18,34 +18,22 @@
 
   if (isset($data)) {
     // assign Group properties from the decoded data
-    $group->groupName = $data->groupName;
-    $group->imageUrl = $data->imageUrl;
     $group->userId = $data->userId;
+    $group->groupId = $data->groupId;
 
-    // Create Group on db. Retrieve and return the db id if successful
-    if($group->create()) {
+    if($group->createMembership(0)) {
       $uniqueId = $db->lastInsertId();
-      $group->groupId = $uniqueId;
 
-      if($group->createMembership(1)) {
-        $uniqueId2 = $db->lastInsertId();
+      echo json_encode(
+        array(
+          'dbId' => $uniqueId
+        )
+      );
 
-        echo json_encode(
-          array(
-            'dbId' => $uniqueId,
-            'dbId2' => $uniqueId2
-          )
-        );
-
-      } else {
-        echo json_encode(
-          array('message' => 'Membership Not Added')
-        );
-      }
-      
     } else {
       echo json_encode(
-        array('message' => 'Group Not Added')
+        array('message' => 'Member not Added')
       );
     }
+
   }

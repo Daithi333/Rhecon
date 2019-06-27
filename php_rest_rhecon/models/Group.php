@@ -119,12 +119,15 @@
       return false;
     }
 
-    public function createMembership() {
+    /**
+     * Creates Admin membership record
+     */
+    public function createMembership($tinyInt) {
       $query = 'INSERT INTO ' . $this->membershipTable . '
                 SET
                 userId = :userId,
                 groupId = :groupId,
-                isAdmin = 1';
+                isAdmin = ' . $tinyInt . ' ';
       
       // Prepare statement
       $stmt = $this->conn->prepare($query);
