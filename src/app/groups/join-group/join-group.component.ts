@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 
-import { switchMap, take } from 'rxjs/operators';
 import { GroupsService } from '../groups.service';
 
 @Component({
@@ -34,24 +33,13 @@ export class JoinGroupComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    let invitationId;
     this.loadingController.create({
       message: 'Verifying code...'
     }).then(loadingEl => {
       loadingEl.present();
-      this.groupsService.verifyInvitation(
+      console.log(this.form.value.inviteCode);
+      return this.groupsService.joinWithCode(
         this.form.value.inviteCode
-      ).pipe(
-        take(1),
-        switchMap(resData => {
-          invitationId = +resData.id;
-          return this.groupsService.addMembership(+resData.groupId);
-        }),
-        take(1),
-        switchMap(memberData => {
-          return this.groupsService.invalidateInvitation(invitationId);
-        }),
-        take(1),
       )
       .subscribe(() => {
         loadingEl.dismiss();
@@ -59,11 +47,34 @@ export class JoinGroupComponent implements OnInit {
         this.onClose();
       },
       error => {
-        console.log(error);
+        let $errorMsg = 'There was a problem verifying the code';
+        let $header = 'Error';
+        switch (error.error.message) {
+          case 'Code not found':
+            $errorMsg = 'Invalid Code';
+            break;
+          case 'Code is no longer valid':
+            $errorMsg = 'Code is no longer valid';
+            break;
+          case 'Code has expired':
+            $errorMsg = 'Code has expired';
+            break;
+          case 'Member not Added':
+            $errorMsg = 'Could not add you to the group, please try again later.';
+            break;
+          case 'Invalidation unsuccessful':
+            $header = 'Success!';
+            $errorMsg = 'You have successfully joined the group';
+            // TODO - joining code failed to be invalidated in DB.
+            break;
+          default:
+            break;
+        }
+        // console.log(error);
         loadingEl.dismiss();
         this.alertController.create({
-          header: 'Error',
-          message: 'There was a problem verifying the request, please try again later',
+          header: $header,
+          message: $errorMsg,
           buttons: ['Okay']
         }).then(alertEl => {
           alertEl.present();

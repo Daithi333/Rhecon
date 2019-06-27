@@ -21,7 +21,10 @@
 
     if ($invitation->readSingle()) {
 
-      if ($invitation->isValid == 1 && mktime($invitation->expiresOn) > time()) {
+      $expiry = strtotime($invitation->expiresOn);
+      $time = time();
+
+      if ( ($invitation->isValid == 1) && ($expiry > $time) ) {
 
         $invitationArr = array(
           'id' => $invitation->id,
@@ -31,7 +34,7 @@
         http_response_code(200);
         print_r(json_encode($invitationArr));
 
-      } else if ($invitation->isValid == 1 && mktime($invitation->expiresOn) < time()) {
+      } else if ( ($invitation->isValid == 1) && ($expiry < $time) ) {
 
         $invitation->invalidate();
 
@@ -50,7 +53,7 @@
     } else {
       http_response_code(404);
       echo json_encode(
-        array('message' => 'User not found')
+        array('message' => 'Code not found')
       );
     }
 

@@ -170,32 +170,51 @@ export class GroupsService {
     );
   }
 
-  verifyInvitation(inviteCode: string) {
-    return this.httpClient.post<{ id: number, groupId: number }>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/read_single.php',
-      { inviteCode: inviteCode }
-    );
-  }
-
-  addMembership(groupId: number) {
+  joinWithCode(inviteCode: string) {
+    let userId;
+    let invitationId;
+    let groupId;
+    let joinedGroup;
     return this.authService.userId.pipe(
       take(1),
-      switchMap(userId => {
-        if (!userId) {
+      switchMap(userIdData => {
+        if (!userIdData) {
           throw new Error('User not found!');
         }
-        return this.httpClient.post<{ id: number }>(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/read_single.php',
-          { userId: userId, groupId: groupId }
-        );
+        console.log(userIdData);
+        userId = +userIdData;
+        return this.verifyInvitation(inviteCode);
+      }),
+      switchMap(resData => {
+        console.log(resData);
+        invitationId = +resData.id;
+        groupId = +resData.groupId;
+        return this.addMember(userId, groupId);
+      }),
+      switchMap(memberIdData => {
+        console.log(memberIdData);
+        return this.invalidateInvitation(invitationId);
+      }),
+      switchMap(() => {
+        console.log('invite invalidated');
+        return this.getGroup(groupId);
+      }),
+      switchMap(group => {
+        console.log(group);
+        joinedGroup = group;
+        return this.groups;
+      }),
+      take(1),
+      tap(groups => {
+        this._groups.next(groups.concat(joinedGroup));
       })
     );
   }
 
-  invalidateInvitation(invitationId: number) {
-    return this.httpClient.post(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/invalidate.php',
-      { invitationId: invitationId }
+  addMember(userId: number, groupId: number) {
+    return this.httpClient.post<{ id: number }>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create_member.php',
+      { userId: userId, groupId: groupId }
     );
   }
 
@@ -254,6 +273,20 @@ export class GroupsService {
         members.push(contact);
         return of(members);
       })
+    );
+  }
+
+  private verifyInvitation(inviteCode: string) {
+    return this.httpClient.post<{ id: number, groupId: number }>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/read_single.php',
+      { inviteCode: inviteCode }
+    );
+  }
+
+  private invalidateInvitation(invitationId: number) {
+    return this.httpClient.post(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/invalidate.php',
+      { id: invitationId }
     );
   }
 
