@@ -39,8 +39,8 @@ export class GroupsPage implements OnInit, OnDestroy {
 
   onCreate() {
     this.alertController.create({
-      header: 'Managing a group',
-      message: 'If you setup a new group, you will be responsible for adding and removing members.',
+      header: 'Group Membership',
+      message: 'By setting up a group, you will be responsible for inviting and removing members.',
       buttons: [
         {
           text: 'Okay',
@@ -79,6 +79,31 @@ export class GroupsPage implements OnInit, OnDestroy {
               slidingItem.close();
             });
           }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
+  onDisbandGroup(groupId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm action',
+      message: 'Are you sure you wish to disband this group?',
+      buttons: [
+        {
+          text: 'Yes',
+          // handler: () => {
+          //   this.groupsService.disbandGroup(groupId).subscribe(() => {
+          //     slidingItem.close();
+          //   });
+          // }
         },
         {
           text: 'No',

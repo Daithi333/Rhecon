@@ -229,7 +229,17 @@ export class GroupsService {
   }
 
   removeMember(groupId: number, memberId: number) {
-
+    return this.httpClient.delete(
+      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${memberId}`
+    ).pipe(
+      switchMap(() => {
+        return this.groups;
+      }),
+      take(1),
+      tap(groups => {
+        this._groups.next(groups.filter(g => g.id !== groupId));
+      })
+    );
   }
 
   leaveGroup(groupId: number) {
@@ -240,7 +250,7 @@ export class GroupsService {
           throw new Error('User not found!');
         }
         return this.httpClient.delete(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete.php/?groupId=${groupId}&userId=${userId}`
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${userId}`
         );
       }),
       switchMap(() => {
@@ -251,6 +261,10 @@ export class GroupsService {
         this._groups.next(groups.filter(g => g.id !== groupId));
       })
     );
+  }
+
+  disbandGroup(groupId: number) {
+
   }
 
   private fetchGroups() {
