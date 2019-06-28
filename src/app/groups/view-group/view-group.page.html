@@ -9,6 +9,11 @@
         <ion-icon name="create"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="primary" *ngIf="!editMode">
+      <ion-button (click)="onLeaveGroup()">
+        <ion-icon name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -82,7 +87,7 @@
             <ion-item-options side="end">
               <ion-item-option
                 color="danger"
-                (click)="onRemove(member.id, slidingItem)">
+                (click)="onRemoveMember(member.id, slidingItem)">
                 <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
               </ion-item-option>
             </ion-item-options>

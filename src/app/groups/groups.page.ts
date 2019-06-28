@@ -69,7 +69,7 @@ export class GroupsPage implements OnInit, OnDestroy {
 
   onLeaveGroup(groupId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
-      header: 'Confirm closure',
+      header: 'Confirm action',
       message: 'Are you sure you wish to leave this group?',
       buttons: [
         {

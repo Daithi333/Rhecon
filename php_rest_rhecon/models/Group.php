@@ -188,7 +188,7 @@
      * Function to delete a single group membership record
      */
     public function delete() {
-      $query = 'DELETE FROM ' . $this->table . '
+      $query = 'DELETE FROM ' . $this->membershipTable . '
                 WHERE userId = :userId
                 AND groupId = :groupId';
 

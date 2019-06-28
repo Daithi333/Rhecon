@@ -101,7 +101,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     });
   }
 
-  onRemove(memberId: number, slidingItem: IonItemSliding) {
+  onRemoveMember(memberId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm removal',
       message: `Are you sure you wish to remove this member from ${this.group.groupName}?`,
@@ -119,6 +119,28 @@ export class ViewGroupPage implements OnInit, OnDestroy {
           handler: () => {
             slidingItem.close();
         }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
+  onLeaveGroup(slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm action',
+      message: 'Are you sure you wish to leave this group?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.groupsService.leaveGroup(this.group.id).subscribe(() => {
+              this.router.navigateByUrl('/groups');
+            });
+          }
+        },
+        {
+          text: 'No'
       }
       ]
     }).then(alertEl => {

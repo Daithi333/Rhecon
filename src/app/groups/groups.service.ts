@@ -240,7 +240,7 @@ export class GroupsService {
           throw new Error('User not found!');
         }
         return this.httpClient.delete(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete.php/?id=${groupId}&userId=${userId}`
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete.php/?groupId=${groupId}&userId=${userId}`
         );
       }),
       switchMap(() => {
