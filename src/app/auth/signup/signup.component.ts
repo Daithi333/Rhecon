@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { FormGroup, FormControl, Validators, EmailValidator } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { HttpService, TitleData } from '../../shared-http/http.service';
 import { AuthService } from '../auth.service';
@@ -10,12 +11,13 @@ import { AuthService } from '../auth.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
   titles: TitleData[] = [];
   form: FormGroup;
   isLoading = false;
   @Input() chosenRole;
   @Input() chosenSpecialism;
+  titlesSub: Subscription;
 
   constructor(
     private modalController: ModalController,
@@ -76,7 +78,6 @@ export class SignupComponent implements OnInit {
     if (!this.form.valid) {
       return;
     }
-    // console.log(this.form);
     this.isLoading = true;
     this.loadingController
       .create({keyboardClose: true, message: 'Signing up...'})
@@ -123,6 +124,12 @@ export class SignupComponent implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  ngOnDestroy() {
+    if (this.titlesSub) {
+      this.titlesSub.unsubscribe();
+    }
   }
 
 }
