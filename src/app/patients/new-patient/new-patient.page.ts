@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { iif, defer } from 'rxjs';
 
 import { PatientsService } from '../patients.service';
-import { switchMap } from 'rxjs/operators';
-import { ImageUtilService } from 'src/app/shared-portrait/image-util-service';
-import { iif, defer } from 'rxjs';
+import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-new-patient',
@@ -15,7 +15,7 @@ import { iif, defer } from 'rxjs';
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
-  imagePreview = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/default-patient-icon.jpg';
+  imagePreview = 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/default-patient-icon.png';
 
   constructor(
     private patientsService: PatientsService,

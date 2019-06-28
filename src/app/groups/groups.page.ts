@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, IonItemSliding } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { Group } from './group-model';
@@ -64,6 +64,31 @@ export class GroupsPage implements OnInit, OnDestroy {
     })
     .then(modalEl => {
       modalEl.present();
+    });
+  }
+
+  onLeaveGroup(groupId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm closure',
+      message: 'Are you sure you wish to leave this group?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.groupsService.leaveGroup(groupId).subscribe(() => {
+              slidingItem.close();
+            });
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
   }
 

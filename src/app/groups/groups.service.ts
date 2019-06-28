@@ -25,15 +25,24 @@ export class GroupsService {
     return this._groups.asObservable();
   }
 
+  /**
+   * Fetch a list of groups and their members for the local list.
+   */
   fetchGroupsWithMembers() {
     const groupArr: Group[] = [];
     return this.fetchGroups().pipe(
       mergeMap(groups => {
+        if (!groups || !groups.length) {
+          return of(null);
+        }
         return groups.map(group => {
           return group;
         });
       }),
       mergeMap(group => {
+        if (!group) {
+          return of(null);
+        }
         return this.fetchMembership(group).pipe(
           takeLast(1),
           map(members => {
@@ -45,8 +54,9 @@ export class GroupsService {
       }),
       takeLast(1),
       tap(groups => {
-        // console.log(groups);
-        this._groups.next(groups);
+        if (groups) {
+          this._groups.next(groups);
+        }
       })
     );
   }
@@ -170,6 +180,11 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Method chains together http calls associated with joining a group with code.
+   * Verify the code, add the membership, invalidate the code, fetch the group data and adds to users view
+   * @param inviteCode
+   */
   joinWithCode(inviteCode: string) {
     let userId;
     let invitationId;
@@ -181,26 +196,21 @@ export class GroupsService {
         if (!userIdData) {
           throw new Error('User not found!');
         }
-        // console.log(userIdData);
         userId = +userIdData;
         return this.verifyInvitation(inviteCode);
       }),
       switchMap(resData => {
-        // console.log(resData);
         invitationId = +resData.id;
         groupId = +resData.groupId;
         return this.addMember(userId, groupId);
       }),
       switchMap(memberIdData => {
-        // console.log(memberIdData);
         return this.invalidateInvitation(invitationId);
       }),
       switchMap(() => {
-        // console.log('invite invalidated');
         return this.getGroup(groupId);
       }),
       switchMap(group => {
-        // console.log(group);
         joinedGroup = group;
         return this.groups;
       }),
@@ -218,8 +228,29 @@ export class GroupsService {
     );
   }
 
-  removeMember(memberId: number) {
+  removeMember(groupId: number, memberId: number) {
 
+  }
+
+  leaveGroup(groupId: number) {
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.delete(
+          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete.php/?id=${groupId}&userId=${userId}`
+        );
+      }),
+      switchMap(() => {
+        return this.groups;
+      }),
+      take(1),
+      tap(groups => {
+        this._groups.next(groups.filter(g => g.id !== groupId));
+      })
+    );
   }
 
   private fetchGroups() {

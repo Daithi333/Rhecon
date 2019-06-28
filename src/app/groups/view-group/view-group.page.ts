@@ -109,7 +109,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           // handler: () => {
-          //   this.groupsService.removeMember(memberId).subscribe(() => {
+          //   this.groupsService.removeMember(this.group.id, memberId).subscribe(() => {
           //     slidingItem.close();
           //   });
           // }

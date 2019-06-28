@@ -184,4 +184,33 @@
       return false;
     }
 
+    /**
+     * Function to delete a single group membership record
+     */
+    public function delete() {
+      $query = 'DELETE FROM ' . $this->table . '
+                WHERE userId = :userId
+                AND groupId = :groupId';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->userId = Utility::sanitise_input($this->userId);
+      $this->groupId = Utility::sanitise_input($this->groupId);
+
+      // Bind data
+      $stmt->bindParam(':userId', $this->userId);
+      $stmt->bindParam(':groupId', $this->groupId);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
   }

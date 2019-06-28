@@ -45,50 +45,60 @@ export class RequestsService {
 
   fetchRequestsWithPatientAndConsultant() {
     const requestsArr: RequestWithPatientAndConsultant[] = [];
-    return this.fetchRequests()
-      .pipe(
-        mergeMap(requests => {
-          if (!requests || !requests.length) {
-            console.log('No requests');
-            // TODO - work in iif() to chain the next steps only if requests is not empty
-          }
-          return requests.map(request => {
+    return this.fetchRequests().pipe(
+      mergeMap(requests => {
+        if (!requests || !requests.length) {
+          console.log('No requests');
+          return of(null);
+        }
+        return requests.map(request => {
+          return request;
+        });
+      }),
+      mergeMap(request => {
+        if (!request) {
+          return of(null);
+        }
+        return this.patientsService.getPatient(request.patientId).pipe(
+          map(patient => {
+            if (!patient) {
+              return of(null);
+            }
+            request.patientId = patient;
             return request;
-          });
-        }),
-        mergeMap(request => {
-          return this.patientsService.getPatient(request.patientId).pipe(
-            map(patient => {
-              request.patientId = patient;
-              return request;
-            })
-          );
-        }),
-        mergeMap(request => {
-          return this.contactsService.getContact(request.consultantId).pipe(
-            map(consultant => {
-              request.consultantId = consultant;
-              requestsArr.push(
-                new RequestWithPatientAndConsultant(
-                  +request.id,
-                  request.title,
-                  +request.requesterId,
-                  request.patientId,
-                  request.consultantId,
-                  request.notes,
-                  !!+request.active,
-                  new Date(request.createdOn),
-                  new Date(request.updatedOn)
-                )
-              );
-              return requestsArr;
-            })
-          );
-        }),
-        tap(requests => {
+          })
+        );
+      }),
+      mergeMap(request => {
+        if (!request) {
+          return of(null);
+        }
+        return this.contactsService.getContact(request.consultantId).pipe(
+          map(consultant => {
+            request.consultantId = consultant;
+            requestsArr.push(
+              new RequestWithPatientAndConsultant(
+                +request.id,
+                request.title,
+                +request.requesterId,
+                request.patientId,
+                request.consultantId,
+                request.notes,
+                !!+request.active,
+                new Date(request.createdOn),
+                new Date(request.updatedOn)
+              )
+            );
+            return requestsArr;
+          })
+        );
+      }),
+      tap(requests => {
+        if (requests) {
           this._requestsWithPatientAndConsultant.next(requests);
-        })
-      );
+        }
+      })
+    );
   }
 
   getRequestWithPatientAndConsultant(id: number) {
