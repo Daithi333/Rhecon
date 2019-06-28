@@ -101,4 +101,36 @@
       return false;
     }
 
+    /**
+     * Function to retrieve a single contact record by id for a particular user id
+     */
+    public function readProfile() {
+      $query = 'SELECT u.id, u.titleId, u.firstName, u.lastName,
+                u.specialismId, u.portraitUrl, u.bio
+                FROM ' . $this->table . ' u
+                WHERE u.id = :id';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':id', $this->id);
+
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        // set contact properties
+        $this->titleId = $row['titleId'];
+        $this->firstName = $row['firstName'];
+        $this->lastName = $row['lastName'];
+        $this->specialismId = $row['specialismId'];
+        $this->portraitUrl = $row['portraitUrl'];
+        $this->bio = $row['bio'];
+
+        return true;
+      }
+
+      return false;
+    }
+
   }

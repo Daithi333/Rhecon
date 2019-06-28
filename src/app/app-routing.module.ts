@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'auth', loadChildren: './auth/auth.module#AuthPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule', canLoad: [AuthGuard] },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule', canLoad: [AuthGuard] },
+  { path: 'profile', loadChildren: './profile/profile.module#ProfilePageModule', canLoad: [AuthGuard] },
   { path: 'groups', children: [ // TODO - outsource groups routing to groups module
     {
       path: '',
@@ -25,7 +26,6 @@ const routes: Routes = [
       path: 'edit-group/:groupId',
       loadChildren: './groups/edit-group/edit-group.module#EditGroupPageModule', canLoad: [AuthGuard]
     },
-
   ] }
 ];
 
