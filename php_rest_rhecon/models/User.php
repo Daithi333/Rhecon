@@ -133,4 +133,50 @@
       return false;
     }
 
+    /**
+     * Function to update a single user profile
+     */
+    public function update() {
+      $query = 'UPDATE ' . $this->table . '
+                SET
+                  titleId = :titleId,
+                  firstName = :firstName,
+                  lastName = :lastName,
+                  specialismId = :specialismId,
+                  portraitUrl = :portraitUrl,
+                  bio = :bio
+                WHERE
+                  id = :id';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+      $this->titleId = Utility::sanitise_input($this->titleId);
+      $this->firstName = Utility::sanitise_input($this->firstName);
+      $this->lastName = Utility::sanitise_input($this->lastName);
+      $this->specialismId = Utility::sanitise_input($this->specialismId);
+      $this->portraitUrl = Utility::sanitise_input($this->portraitUrl);
+      $this->bio = Utility::sanitise_input($this->bio);
+
+      // bind data
+      $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':titleId', $this->titleId);
+      $stmt->bindParam(':firstName', $this->firstName);
+      $stmt->bindParam(':lastName', $this->lastName);
+      $stmt->bindParam(':specialismId', $this->specialismId);
+      $stmt->bindParam(':portraitUrl', $this->portraitUrl);
+      $stmt->bindParam(':bio', $this->bio);
+      
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
   }

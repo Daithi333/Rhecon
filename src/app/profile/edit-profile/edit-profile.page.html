@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button type="submit" (click)="onUpdateProfile()">
+        <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="isLoading" text-center>
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <form [formGroup]="form" *ngIf="!isLoading">
+    <ion-grid no-padding>
+      <br>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <app-portrait-selector
+            (imageChoice)="onImageChosen($event)"
+            [selectedImage]="profile.portraitUrl"
+          ></app-portrait-selector>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6" size-sm="4" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-select name="title" formControlName="title">
+              <ion-select-option
+                *ngFor="let title of titles"
+                [value]="title"
+                >{{ title.title }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6" size-sm="4" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">First Name</ion-label>
+            <ion-input type="text" formControlName="firstName"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6" size-sm="4" >
+          <ion-item>
+            <ion-label position="floating">Last Name</ion-label>
+            <ion-input type="text" formControlName="lastName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="isConsultant && !isLoading">
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Specialism</ion-label>
+            <ion-select name="specialism" formControlName="specialism">
+              <ion-select-option
+                *ngFor="let specialism of specialisms"
+                [value]="specialism"
+                >{{ specialism.specialism }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row *ngIf="!isConsultant && !isLoading">
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item>
+            <ion-label position="floating">Country of Operation</ion-label>
+            <ion-select name="country" formControlName="country">
+              <ion-select-option value="1">Ethiopia</ion-select-option>
+              <ion-select-option value="2">Nigeria</ion-select-option>
+              <ion-select-option value="3">Botswana</ion-select-option>
+              <ion-select-option value="4">Indonesia</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row> -->
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-item lines="none">
+            <ion-label position="floating">Bio</ion-label>
+            <ion-textarea rows="3" formControlName="bio"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2">
+          <ion-button
+            type="submit"
+            color="tertiary"
+            expand="block"
+            (click)="onUpdateProfile()"
+            [disabled]="!form.valid"
+            >Update Profile</ion-button
+          >
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

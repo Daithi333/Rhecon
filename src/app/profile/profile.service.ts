@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { take, switchMap, map } from 'rxjs/operators';
+import { take, switchMap, map, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { Profile } from './profile.model';
@@ -19,13 +20,18 @@ interface ProfileData {
   providedIn: 'root'
 })
 export class ProfileService {
+  private _profile = new BehaviorSubject<Profile>(null);
 
   constructor(
     private authService: AuthService,
     private httpClient: HttpClient
   ) {}
 
-  getProfile() {
+  get profile() {
+    return this._profile.asObservable();
+  }
+
+  fetchProfile() {
     return this.authService.userId.pipe(
       take(1),
       switchMap(userId => {
@@ -46,12 +52,25 @@ export class ProfileService {
           profileData.portraitUrl,
           profileData.bio
         );
+      }),
+      tap(profile => {
+        this._profile.next(profile);
       })
     );
   }
 
-  updateUserProfile(
-    userId: number,
+  addImage(imageFile: File) {
+    const imageData = new FormData();
+    imageData.append('fileUpload', imageFile);
+
+    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/user_image_upload.php',
+      imageData
+    );
+  }
+
+  updateProfile(
+    id: number,
     titleId: number,
     firstName: string,
     lastName: string,
@@ -60,7 +79,7 @@ export class ProfileService {
     bio: string
   ) {
     const updatedProfile = new Profile(
-      userId,
+      id,
       titleId,
       firstName,
       lastName,
@@ -68,9 +87,14 @@ export class ProfileService {
       portraitUrl,
       bio
     );
+    console.log(updatedProfile);
     return this.httpClient.put(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/contact/update.php',
-      { updatedProfile }
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/update_profile.php',
+      updatedProfile
+    ).pipe(
+      tap(() => {
+        this._profile.next(updatedProfile);
+      })
     );
   }
 

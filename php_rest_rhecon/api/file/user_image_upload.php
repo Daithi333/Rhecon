@@ -7,30 +7,7 @@
 
   $relativePath = "../..";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';
-  $targetDir = "/files/patient_img/";
-
-  // $imageType = "";
-  
-  // $data = json_decode(file_get_contents("php://input"));
-
-  // if (isset($data)) {
-  //   $imageType = $data->imageType;
-  // }
-
-  // switch ($imageType) {
-  //   case "user":
-  //     $targetDir = "/files/user_img/";
-  //     break;
-  //   case "patient":
-  //     $targetDir = "/files/patient_img/";
-  //     break;
-  //   case "group":
-  //     $targetDir = "/files/group_img/";
-  //     break;
-  //   default:
-  //     $targetDir = "/files/unknown_img/";
-  //     break;
-  // }
+  $targetDir = "/files/user_img/";
 
   $fileName = basename($_FILES['fileUpload']['name']);
   $temp = $_FILES['fileUpload']['tmp_name'];

@@ -62,11 +62,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       }),
       specialismId: new FormControl(this.chosenSpecialism, {
         validators: [Validators.required]
-      }),
-      // country: new FormControl(null, {
-      //   updateOn: 'blur',
-      //   validators: [Validators.required]
-      // })
+      })
     });
   }
 
