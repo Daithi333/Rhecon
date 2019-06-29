@@ -53,13 +53,16 @@ export class EditProfilePage implements OnInit, OnDestroy {
     )
     .subscribe(() => {
       console.log(this.profile);
+      let selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
+      const selectedTitle = this.titles.find(t => t.id === this.profile.titleId);
+
       if (this.profile.specialismId === 1) {
         this.isConsultant = false;
+        // api doesnt return this 'fake' specialsim. TODO - find better approach..
+        selectedSpecialism = { id: 1, specialism: 'Community Healthcare'};
       }
-      const selectedTitleId = this.titles.findIndex(t => t.id === this.profile.titleId);
-      const selectedSpecialismId = this.specialisms.findIndex(s => s.id === this.profile.specialismId);
       this.form = new FormGroup({
-        title: new FormControl(this.titles[selectedTitleId], {
+        title: new FormControl(selectedTitle, {
           updateOn: 'blur',
           validators: [Validators.required]
         }),
@@ -71,7 +74,7 @@ export class EditProfilePage implements OnInit, OnDestroy {
           updateOn: 'blur',
           validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
         }),
-        specialism: new FormControl(this.specialisms[selectedSpecialismId], {
+        specialism: new FormControl(selectedSpecialism, {
           updateOn: 'blur'
         }),
         bio: new FormControl(this.profile.bio, {
@@ -126,7 +129,7 @@ export class EditProfilePage implements OnInit, OnDestroy {
       return;
     }
     this.loadingController.create({
-      message: 'Updating Patient'
+      message: 'Updating Profile'
     }).then(loadingEl => {
       loadingEl.present();
       iif (
@@ -159,7 +162,7 @@ export class EditProfilePage implements OnInit, OnDestroy {
       this.form.value.title.id,
       this.form.value.firstName,
       this.form.value.lastName,
-      this.form.value.specialism.id ,
+      this.form.value.specialism.id,
       userImage,
       this.form.value.bio
     );

@@ -15,7 +15,7 @@
   <ion-grid *ngIf="!isLoading">
     <ion-row>
         <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding text-center *ngIf="contacts.length === 0">
-          <p>You must be a member of a group with members to view contacts.</p>
+          <h5>No contacts to view</h5>
         </ion-col>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" *ngIf="contacts.length > 0">
         <ion-list>

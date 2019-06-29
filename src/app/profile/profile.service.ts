@@ -79,11 +79,11 @@ export class ProfileService {
     bio: string
   ) {
     const updatedProfile = new Profile(
-      id,
-      titleId,
+      +id,
+      +titleId,
       firstName,
       lastName,
-      specialismId,
+      +specialismId,
       portraitUrl,
       bio
     );
