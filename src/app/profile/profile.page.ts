@@ -30,7 +30,6 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.profileSub = this.profileService.fetchProfile().pipe(
       switchMap(profile => {
-        console.log(this.profile);
         this.profile = profile;
         return this.httpService.fetchSpecialisms();
       }),

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+      <ion-back-button defaultHref="/profile"></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Profile</ion-title>
     <ion-buttons slot="primary">
@@ -20,7 +20,7 @@
     <ion-grid no-padding>
       <br>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
           <app-portrait-selector
             (imageChoice)="onImageChosen($event)"
             [selectedImage]="profile.portraitUrl"
@@ -28,7 +28,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="6" size-sm="4" offset-sm="2">
+        <ion-col size="6" size-sm="4" offset-sm="2" size-md="3" offset-md="3">
           <ion-item>
             <ion-label position="floating">Title</ion-label>
             <ion-select name="title" formControlName="title">
@@ -42,13 +42,13 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size="6" size-sm="4" offset-sm="2">
+        <ion-col size="6" size-sm="4" offset-sm="2" size-md="3" offset-md="3">
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
           </ion-item>
         </ion-col>
-        <ion-col size="6" size-sm="4" >
+        <ion-col size="6" size-sm="4" size-md="3">
           <ion-item>
             <ion-label position="floating">Last Name</ion-label>
             <ion-input type="text" formControlName="lastName"></ion-input>
@@ -56,7 +56,7 @@
         </ion-col>
       </ion-row>
       <ion-row *ngIf="isConsultant && !isLoading">
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
           <ion-item>
             <ion-label position="floating">Specialism</ion-label>
             <ion-select name="specialism" formControlName="specialism">
@@ -70,7 +70,7 @@
         </ion-col>
       </ion-row>
       <!-- <ion-row *ngIf="!isConsultant && !isLoading">
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" size-lg="6" offset-lg="3">
           <ion-item>
             <ion-label position="floating">Country of Operation</ion-label>
             <ion-select name="country" formControlName="country">
@@ -83,7 +83,7 @@
         </ion-col>
       </ion-row> -->
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
           <ion-item lines="none">
             <ion-label position="floating">Bio</ion-label>
             <ion-textarea rows="3" formControlName="bio"></ion-textarea>
@@ -91,7 +91,7 @@
         </ion-col>
       </ion-row>
       <ion-row class="grow" align-items-end>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3">
           <ion-button
             type="submit"
             color="tertiary"
