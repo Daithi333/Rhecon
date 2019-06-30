@@ -1,6 +1,7 @@
 export class UserAuth {
   constructor(
     public userId: number,
+    public userTypeId: number,
     public email: string,
     private _token: string,
     private _expiresAt: Date

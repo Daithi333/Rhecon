@@ -58,6 +58,7 @@
             'token' => $token,
             'email' => $user->email,
             'userId' => $user->id,
+            'userTypeId' => $user->userTypeId,
             'expiresAt' => $expiresAt
           )
         );

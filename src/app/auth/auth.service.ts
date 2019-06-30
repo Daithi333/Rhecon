@@ -16,7 +16,8 @@ interface LoginResponseData {
   message: string;
   token: string;
   email: string;
-  userId: number;
+  userId: string;
+  userTypeId: string;
   expiresAt: number;
 }
 
@@ -100,12 +101,13 @@ export class AuthService {
       tap(resData => {
         const user = new UserAuth(
           +resData.userId,
+          +resData.userTypeId,
           resData.email,
           resData.token,
           new Date(resData.expiresAt * 1000)
         );
         this._userAuth.next(user);
-        this.storeAuthData(user.userId, user.email, user.token, user.expiresAt.toISOString());
+        this.storeAuthData(user.userId, user.userTypeId, user.email, user.token, user.expiresAt.toISOString());
       })
     );
   }
@@ -118,6 +120,7 @@ export class AuthService {
         }
         const data = JSON.parse(storedData.value) as {
           userId: string,
+          userTypeId: string,
           email: string
           token: string,
           expiresAt: string,
@@ -130,6 +133,7 @@ export class AuthService {
         }
         const user = new UserAuth(
           +data.userId,
+          +data.userTypeId,
           data.email,
           data.token,
           expirationTime);
@@ -154,12 +158,14 @@ export class AuthService {
 
   private storeAuthData(
     userId: number,
+    userTypeId: number,
     email: string,
     token: string,
     expiresAt: string
   ) {
     const userAuthdata = JSON.stringify({
       userId: userId,
+      userTypeId: userTypeId,
       email: email,
       token: token,
       expiresAt: expiresAt
