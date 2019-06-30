@@ -70,7 +70,7 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
   }
 
   onRoleChosen(event: any) {
-    if (+event.detail.value === 4 || +event.detail.value === 6) {
+    if (+event.detail.value === 3) {
       this.isConsultant = true;
     } else {
       this.isConsultant = false;
