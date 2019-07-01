@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, iif, defer } from 'rxjs';
 import { take, map, tap, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -69,10 +69,25 @@ export class PatientsService {
     );
   }
 
-  getPatient(id: number) {
-    return this.authService.userId.pipe(
+  /**
+   * Fetch patient record from DB. Also requires requester id when fetched to populate a
+   * request object, (the consultant is not part of the parient record)
+   * @param id - the patient record id
+   * @param requesterId - initiator of a request object and owner of the patient record
+   */
+  getPatient(id: number, requesterId?: number) {
+    let userId = requesterId;
+    return iif(
+      () => !userId,
+      defer(() => this.authService.userId),
+      defer(() => of(null)),
+    ).pipe(
       take(1),
-      switchMap(userId => {
+      switchMap(userIdData => {
+        if (!userIdData) {
+          userId = requesterId;
+        }
+        console.log('getPatient userId:' + userId);
         return this.httpClient.get<PatientData>(
           `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
         );

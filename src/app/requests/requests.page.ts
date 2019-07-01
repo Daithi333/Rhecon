@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 
 import { RequestsService } from './requests.service';
 import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
+import { AuthService } from '../auth/auth.service';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-requests',
@@ -18,29 +20,36 @@ export class RequestsPage implements OnInit, OnDestroy {
   isLoading = false;
   currentSegment = 'active';
   private requestSub: Subscription;
+  private userType: string;
 
   constructor(
     private requestsService: RequestsService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
-    this.requestSub = this.requestsService.requestsWithPatientAndConsultant
-      .subscribe(requests => {
-        this.requests = requests;
-        // console.log(requests);
-        if (this.currentSegment === 'active') {
-          this.viewableRequests = this.requests.filter(
-            r => r.active === true
-           );
-        } else {
-          this.viewableRequests = this.requests.filter(
-            r => r.active === false
-          );
-        }
+    this.requestSub = this.authService.userType.pipe(
+      take(1),
+      switchMap(userType => {
+        this.userType = userType;
+        return this.requestsService.requestsWithPatientAndConsultant;
+      })
+    )
+    .subscribe(requests => {
+      this.requests = requests;
+      console.log(this.userType);
+      if (this.currentSegment === 'active') {
+        this.viewableRequests = this.requests.filter(
+          r => r.active === true
+        );
+      } else {
+        this.viewableRequests = this.requests.filter(
+          r => r.active === false
+        );
       }
-    );
+    });
   }
 
   ionViewWillEnter() {
@@ -127,45 +136,3 @@ export class RequestsPage implements OnInit, OnDestroy {
   }
 
 }
-
-    // let requests: Request[];
-    // this.requestSub = this.requestsService.fetchRequests()
-    //   .subscribe(reqs => {
-    //     requests = reqs;
-    //     for (const key in requests) {
-    //       if (requests.hasOwnProperty(key)) {
-    //         let patient: Patient;
-    //         let consultant: Consultant;
-    //         this.patientSub = this.patientsService.getPatient(requests[key].patientId)
-    //           .subscribe(pat => {
-    //             patient = pat;
-    //             this.consultantSub = this.consultantsService.getConsultant(requests[key].consultantId)
-    //               .subscribe(cons => {
-    //                 consultant = cons;
-    //                 this.requestData.push(
-    //                   new RequestWithPatientAndConsultant(
-    //                     requests[key].id,
-    //                     requests[key].title,
-    //                     requests[key].requesterId,
-    //                     patient,
-    //                     consultant,
-    //                     requests[key].notes,
-    //                     !!+requests[key].active,
-    //                     requests[key].createdOn,
-    //                     requests[key].updatedOn
-    //                   )
-    //                 );
-    //                 if (this.currentSegment === 'active') {
-    //                   this.viewableRequests = this.requestData.filter(
-    //                       rd => rd.active === true
-    //                   );
-    //                 } else {
-    //                   this.viewableRequests = this.requestData.filter(
-    //                     rd => rd.active === false
-    //                   );
-    //                 }
-    //               });
-    //           });
-    //       }
-    //     }
-    //   });

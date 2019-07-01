@@ -181,7 +181,7 @@ export class GroupsService {
   }
 
   /**
-   * Method chains together http calls associated with joining a group with code.
+   * Method chains together http calls associated with joining a group with a code.
    * Verify the code, add the membership, invalidate the code, fetch the group data and adds to users view
    * @param inviteCode
    */
@@ -264,7 +264,7 @@ export class GroupsService {
   }
 
   disbandGroup(groupId: number) {
-
+    // TODO
   }
 
   private fetchGroups() {

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-
-import { AuthService } from '../auth.service';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
+
+import { AuthService } from '../auth.service';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,15 @@ export class LoginComponent implements OnInit {
 
   onClose() {
     this.modalController.dismiss(null, 'cancel', 'login');
+  }
+
+  onForgotPassword() {
+    this.modalController.create({
+      component: ForgotPasswordComponent,
+      id: 'forgot-password'
+    }).then(modalEl => {
+      modalEl.present();
+    });
   }
 
   onSubmit(form: NgForm) {

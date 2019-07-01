@@ -8,6 +8,7 @@ import { AuthPage } from './auth.page';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { RoleSelectionComponent } from './role-selection/role-selection.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AuthPage, LoginComponent, SignupComponent, RoleSelectionComponent],
-  entryComponents: [LoginComponent, SignupComponent, RoleSelectionComponent]
+  declarations: [AuthPage, LoginComponent, SignupComponent, RoleSelectionComponent, ForgotPasswordComponent],
+  entryComponents: [LoginComponent, SignupComponent, RoleSelectionComponent, ForgotPasswordComponent]
 })
 export class AuthPageModule {}

@@ -49,7 +49,7 @@
       <ion-row class="grow" align-items-end>
         <ion-col size-sm="8" offset-sm="2" padding>
           <ion-button color="tertiary" type="submit" expand="block" [disabled]="!f.valid">Login</ion-button>
-          <ion-button fill="clear" expand="block">Forgot password?</ion-button>
+          <ion-button fill="clear" expand="block" (click)="onForgotPassword()">Forgot password?</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

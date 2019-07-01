@@ -11,7 +11,26 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
-
+        <ion-list no-padding>
+          <ion-item [routerLink]="">
+            <ion-label>
+              <h2>Manage account</h2>
+            </ion-label>
+            <ion-icon name="key" slot="start"></ion-icon>
+          </ion-item>
+          <ion-item [routerLink]="">
+            <ion-label>
+              <h2>Notifications</h2>
+            </ion-label>
+            <ion-icon name="notifications" slot="start"></ion-icon>
+          </ion-item>
+          <ion-item [routerLink]="">
+            <ion-label>
+              <h2>Help</h2>
+            </ion-label>
+            <ion-icon name="information-circle" slot="start"></ion-icon>
+          </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>

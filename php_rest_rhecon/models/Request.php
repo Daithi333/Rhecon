@@ -40,6 +40,24 @@
     }
 
     /**
+     * Function to retrieve all requests for a particular consultant
+     */
+    public function readConsultant() {
+      $query = 'SELECT r.id, r.title, r.requesterId, r.consultantId, r.patientId, r.notes, r.active, r.createdOn, r.updatedOn
+                FROM ' . $this->table . ' r
+                WHERE r.consultantId = :consultantId
+                ORDER BY r.updatedOn DESC';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':consultantId', $this->consultantId);
+
+      $stmt->execute();
+
+      return $stmt;
+    }
+
+    /**
      * Function to retrieve a single request record by id for a particular user
      */
     public function readSingle() {
@@ -61,6 +79,40 @@
         // set single request properties
         $this->title = $row['title'];
         $this->consultantId = $row['consultantId'];
+        $this->patientId = $row['patientId'];
+        $this->notes = $row['notes'];
+        $this->active = $row['active'];
+        $this->createdOn = $row['createdOn'];
+        $this->updatedOn = $row['updatedOn'];
+
+        return true;
+      }
+
+      return false;
+    }
+
+        /**
+     * Function to retrieve a single request record by id for a particular consultant
+     */
+    public function readSingleConsultant() {
+      $query = 'SELECT r.id, r.title, r.requesterId, r.consultantId, r.patientId, r.notes, r.active, r.createdOn, r.updatedOn
+                FROM ' . $this->table . ' r
+                WHERE r.id = :id
+                AND r.consultantId = :consultantId';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':consultantId', $this->consultantId);
+      $stmt->bindParam(':id', $this->id);
+
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        // set single request properties
+        $this->title = $row['title'];
+        $this->requesterId = $row['requesterId'];
         $this->patientId = $row['patientId'];
         $this->notes = $row['notes'];
         $this->active = $row['active'];

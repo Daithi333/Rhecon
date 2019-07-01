@@ -12,10 +12,22 @@
   $request = new Request($db);
 
   // get request id from URL
-  $request->requesterId = isset($_GET['requesterId']) ? $_GET['requesterId'] : die();
   $request->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-  if ($request->readSingle()) {
+  // get requester or consultant id from Url, depending on which was sent
+  if (isset($_GET['requesterId'])) {
+    $request->requesterId = $_GET['requesterId'];
+    $result = $request->readSingle();
+
+  } else if (isset($_GET['consultantId'])) {
+    $request->consultantId = $_GET['consultantId'];
+    $result = $request->readSingleConsultant();
+
+  } else {
+    die();
+  }
+
+  if ($result) {
     $requestArr = array(
       'id' => $request->id,
       'title' => $request->title,

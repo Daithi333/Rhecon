@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, iif, defer } from 'rxjs';
 import { take, map, tap, switchMap, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -59,7 +59,7 @@ export class RequestsService {
         if (!request) {
           return of(null);
         }
-        return this.patientsService.getPatient(request.patientId).pipe(
+        return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
           map(patient => {
             if (!patient) {
               return of(null);
@@ -104,7 +104,7 @@ export class RequestsService {
   getRequestWithPatientAndConsultant(id: number) {
     return this.getRequest(id).pipe(
       switchMap(request => {
-        return this.patientsService.getPatient(request.patientId).pipe(
+        return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
           map(patient => {
             return {
               id: +request.id,
@@ -259,18 +259,31 @@ export class RequestsService {
   }
 
   private fetchRequests() {
-    return this.authService.userId.pipe(
+    let userType;
+    return this.authService.userType.pipe(
+      take(1),
+      switchMap(userTypeData => {
+        userType = userTypeData;
+        return this.authService.userId;
+      }),
       take(1),
       switchMap(userId => {
         if (!userId) {
           throw new Error('User not found!');
         }
-        return this.httpClient.get<{[key: number]: RequestData}>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`
+        return iif(
+          () => userType === 'requester',
+          defer(() => this.httpClient.get<{[key: number]: RequestData}>(
+            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`)
+          ),
+          defer(() => this.httpClient.get<{[key: number]: RequestData}>(
+            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?consultantId=${userId}`)
+          )
         );
       }),
       map(resData => {
-        const requests = [];
+        console.log(resData);
+        const requests: Request[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
             requests.push(
@@ -297,14 +310,26 @@ export class RequestsService {
   }
 
   private getRequest(id: number) {
-    return this.authService.userId.pipe(
+    let userType;
+    return this.authService.userType.pipe(
+      take(1),
+      switchMap(userTypeData => {
+        userType = userTypeData;
+        return this.authService.userId;
+      }),
       take(1),
       switchMap(userId => {
         if (!userId) {
           throw new Error('User not found!');
         }
-        return this.httpClient.get<RequestData>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`
+        return iif(
+          () => userType === 'requester',
+          defer(() => this.httpClient.get<RequestData>(
+            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`)
+          ),
+          defer(() => this.httpClient.get<RequestData>(
+            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?consultantId=${userId}&id=${id}`)
+          )
         );
       }),
       map(requestData => {

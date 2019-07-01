@@ -51,6 +51,18 @@ export class AuthService {
     );
   }
 
+  get userType() {
+    return this._userAuth.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return user.userType;
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
   get token() {
     return this._userAuth.asObservable().pipe(
       map(user => {
@@ -99,15 +111,22 @@ export class AuthService {
       { email: email, password: password }
     ).pipe(
       tap(resData => {
+        // store userType as string instead of number, for better readability
+        let userType: string;
+        if (+resData.userTypeId === 2) {
+          userType = 'requester';
+        } else if (+resData.userTypeId === 3) {
+          userType = 'consultant';
+        }
         const user = new UserAuth(
           +resData.userId,
-          +resData.userTypeId,
+          userType,
           resData.email,
           resData.token,
           new Date(resData.expiresAt * 1000)
         );
         this._userAuth.next(user);
-        this.storeAuthData(user.userId, user.userTypeId, user.email, user.token, user.expiresAt.toISOString());
+        this.storeAuthData(user.userId, userType, user.email, user.token, user.expiresAt.toISOString());
       })
     );
   }
@@ -120,7 +139,7 @@ export class AuthService {
         }
         const data = JSON.parse(storedData.value) as {
           userId: string,
-          userTypeId: string,
+          userType: string,
           email: string
           token: string,
           expiresAt: string,
@@ -133,7 +152,7 @@ export class AuthService {
         }
         const user = new UserAuth(
           +data.userId,
-          +data.userTypeId,
+          data.userType,
           data.email,
           data.token,
           expirationTime);
@@ -151,6 +170,13 @@ export class AuthService {
     );
   }
 
+  resetPasswordEmail(email: string) {
+    return this.httpClient.post<{ message: string, dbId: number }>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/reset_password.php',
+      { email: email }
+    );
+  }
+
   logout() {
     this._userAuth.next(null);
     Plugins.Storage.remove({ key: 'userAuth' });
@@ -158,14 +184,14 @@ export class AuthService {
 
   private storeAuthData(
     userId: number,
-    userTypeId: number,
+    userType: string,
     email: string,
     token: string,
     expiresAt: string
   ) {
     const userAuthdata = JSON.stringify({
       userId: userId,
-      userTypeId: userTypeId,
+      userType: userType,
       email: email,
       token: token,
       expiresAt: expiresAt
