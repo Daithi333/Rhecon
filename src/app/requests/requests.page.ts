@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
-import { IonItemSliding, AlertController } from '@ionic/angular';
+import { IonItemSliding, AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { RequestsService } from './requests.service';
@@ -26,7 +26,8 @@ export class RequestsPage implements OnInit, OnDestroy {
     private requestsService: RequestsService,
     private router: Router,
     private alertController: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -54,9 +55,16 @@ export class RequestsPage implements OnInit, OnDestroy {
 
   ionViewWillEnter() {
     this.isLoading = true;
-    this.requestsService.fetchRequestsWithPatientAndConsultant().subscribe(() => {
-      this.isLoading = false;
-    });
+    this.loadingController
+      .create({keyboardClose: true, message: 'Retrieving your requests...'})
+      .then(loadingEl => {
+        loadingEl.present();
+        this.requestsService.fetchRequestsWithPatientAndConsultant()
+          .subscribe(() => {
+            this.isLoading = false;
+            loadingEl.dismiss();
+          });
+      });
   }
 
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
