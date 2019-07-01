@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { IonItemSliding, AlertController, LoadingController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 
 import { RequestsService } from './requests.service';
@@ -19,7 +19,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   viewableRequests: RequestWithObjects[] = [];
   isLoading = false;
   currentSegment = 'active';
-  private userType: string;
+  userType: string;
   private requestSub: Subscription;
 
   constructor(

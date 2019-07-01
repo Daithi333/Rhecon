@@ -5,7 +5,7 @@ export class RequestWithObjects {
   constructor(
     public id: number,
     public title: string,
-    public requestorId: number,
+    public requester: Contact,
     public patient: Patient,
     public consultant: Contact,
     public notes: string,

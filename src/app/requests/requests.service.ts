@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, iif, defer } from 'rxjs';
-import { take, map, tap, switchMap, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, of, iif, defer } from 'rxjs';
+import { take, map, tap, switchMap, mergeMap, takeLast } from 'rxjs/operators';
 
 import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
@@ -73,6 +73,20 @@ export class RequestsService {
         if (!request) {
           return of(null);
         }
+        return this.contactsService.getContact(request.requesterId).pipe(
+          map(requester => {
+            if (!requester) {
+              return of(null);
+            }
+            request.requesterId = requester;
+            return request;
+          })
+        );
+      }),
+      mergeMap(request => {
+        if (!request) {
+          return of(null);
+        }
         return this.contactsService.getContact(request.consultantId).pipe(
           map(consultant => {
             request.consultantId = consultant;
@@ -80,7 +94,7 @@ export class RequestsService {
               new RequestWithObjects(
                 +request.id,
                 request.title,
-                +request.requesterId,
+                request.requesterId,
                 request.patientId,
                 request.consultantId,
                 request.notes,
@@ -93,7 +107,9 @@ export class RequestsService {
           })
         );
       }),
+      takeLast(1),
       tap(requests => {
+        console.log(requests);
         if (requests) {
           this._requestsWithObjects.next(requests);
         }
@@ -102,41 +118,42 @@ export class RequestsService {
   }
 
   getRequestWithObjects(id: number) {
+    let requestWithObjects: RequestWithObjects;
     return this.getRequest(id).pipe(
       switchMap(request => {
         return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
           map(patient => {
-            return {
-              id: +request.id,
-              title: request.title,
-              requesterId: +request.requesterId,
-              patientId: patient,
-              consultantId: +request.consultantId,
-              notes: request.notes,
-              active: !!+request.active,
-              createdOn: new Date(request.createdOn),
-              updatedOn: new Date(request.updatedOn)
-            };
+            requestWithObjects = new RequestWithObjects(
+              +request.id,
+              request.title,
+              null,
+              patient,
+              null,
+              request.notes,
+              !!+request.active,
+              new Date(request.createdOn),
+              new Date(request.updatedOn)
+            );
+            return request;
+          })
+        );
+      }),
+      switchMap(request => {
+        return this.contactsService.getContact(request.requesterId).pipe(
+          map(requester => {
+            requestWithObjects.requester = requester;
+            return request;
           })
         );
       }),
       switchMap(request => {
         return this.contactsService.getContact(request.consultantId).pipe(
           map(consultant => {
-            return new RequestWithObjects(
-              +request.id,
-              request.title,
-              +request.requesterId,
-              request.patientId,
-              consultant,
-              request.notes,
-              !!+request.active,
-              new Date(request.createdOn),
-              new Date(request.updatedOn)
-            );
+            requestWithObjects.consultant = consultant;
+            return requestWithObjects;
           })
         );
-      })
+      }),
     );
   }
 
