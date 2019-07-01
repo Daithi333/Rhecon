@@ -62,7 +62,11 @@
         offset-xl="3"
         text-center
       >
-        <p>
+        <p *ngIf="userType==='requester'">
+          Consultant: {{ request.consultant.title }}. {{ request.consultant.lastName }}
+          {{ request.consultant.specialism }}
+        </p>
+        <p *ngIf="userType==='consultant'">
           Consultant: {{ request.consultant.title }}. {{ request.consultant.lastName }}
           {{ request.consultant.specialism }}
         </p>

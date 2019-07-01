@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SegmentChangeEventDetail } from '@ionic/core';
-import { Subscription } from 'rxjs';
 import { IonItemSliding, AlertController, LoadingController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { switchMap, take } from 'rxjs/operators';
 
 import { RequestsService } from './requests.service';
 import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-requests',
@@ -19,8 +19,8 @@ export class RequestsPage implements OnInit, OnDestroy {
   viewableRequests: RequestWithPatientAndConsultant[] = [];
   isLoading = false;
   currentSegment = 'active';
-  private requestSub: Subscription;
   private userType: string;
+  private requestSub: Subscription;
 
   constructor(
     private requestsService: RequestsService,
@@ -40,7 +40,6 @@ export class RequestsPage implements OnInit, OnDestroy {
     )
     .subscribe(requests => {
       this.requests = requests;
-      console.log(this.userType);
       if (this.currentSegment === 'active') {
         this.viewableRequests = this.requests.filter(
           r => r.active === true

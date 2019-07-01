@@ -282,7 +282,6 @@ export class RequestsService {
         );
       }),
       map(resData => {
-        console.log(resData);
         const requests: Request[] = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
