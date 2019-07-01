@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { map, mergeMap, take, switchMap } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
-import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
+import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
 import { AuthService } from '../../auth/auth.service';
 
@@ -15,7 +15,7 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./view-request.page.scss'],
 })
 export class ViewRequestPage implements OnInit, OnDestroy {
-  request: RequestWithPatientAndConsultant;
+  request: RequestWithObjects;
   requestId: number;
   attachments: string[] = [];
   canEdit = true;
@@ -45,7 +45,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         take(1),
         switchMap(userType => {
           this.userType = userType;
-          return this.requestsService.getRequestWithPatientAndConsultant(+paramMap.get('requestId'));
+          return this.requestsService.getRequestWithObjects(+paramMap.get('requestId'));
         }),
         mergeMap(request => {
             this.request = request;

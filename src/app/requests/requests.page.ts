@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { switchMap, take } from 'rxjs/operators';
 
 import { RequestsService } from './requests.service';
-import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
+import { RequestWithObjects } from './request-with-objects.model';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -15,8 +15,8 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./requests.page.scss'],
 })
 export class RequestsPage implements OnInit, OnDestroy {
-  requests: RequestWithPatientAndConsultant[] = [];
-  viewableRequests: RequestWithPatientAndConsultant[] = [];
+  requests: RequestWithObjects[] = [];
+  viewableRequests: RequestWithObjects[] = [];
   isLoading = false;
   currentSegment = 'active';
   private userType: string;
@@ -35,7 +35,7 @@ export class RequestsPage implements OnInit, OnDestroy {
       take(1),
       switchMap(userType => {
         this.userType = userType;
-        return this.requestsService.requestsWithPatientAndConsultant;
+        return this.requestsService.requestsWithObjects;
       })
     )
     .subscribe(requests => {
@@ -58,7 +58,7 @@ export class RequestsPage implements OnInit, OnDestroy {
       .create({keyboardClose: true, message: 'Retrieving your requests...'})
       .then(loadingEl => {
         loadingEl.present();
-        this.requestsService.fetchRequestsWithPatientAndConsultant()
+        this.requestsService.fetchRequestsWithObjects()
           .subscribe(() => {
             this.isLoading = false;
             loadingEl.dismiss();

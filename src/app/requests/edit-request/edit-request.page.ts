@@ -10,7 +10,7 @@ import { SelectPatientComponent } from '../../shared/select-patient/select-patie
 import { SelectConsultantComponent } from '../../shared/select-consultant/select-consultant.component';
 import { Patient } from '../../patients/patient.model';
 import { Contact } from '../../consultants/contact.model';
-import { RequestWithPatientAndConsultant } from '../request-patient-consultant.model';
+import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
@@ -20,7 +20,7 @@ import { ImageUtilService } from '../../shared-portrait/image-util-service';
   styleUrls: ['./edit-request.page.scss'],
 })
 export class EditRequestPage implements OnInit, OnDestroy {
-  request: RequestWithPatientAndConsultant;
+  request: RequestWithObjects;
   requestId: number;
   requestForm: FormGroup;
   isLoading = false;
@@ -49,7 +49,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
       }
       this.isLoading = true;
       this.requestId = +paramMap.get('requestId');
-      this.requestSub = this.requestsService.getRequestWithPatientAndConsultant(+paramMap.get('requestId'))
+      this.requestSub = this.requestsService.getRequestWithObjects(+paramMap.get('requestId'))
       .pipe(
         mergeMap(request => {
           this.request = request;

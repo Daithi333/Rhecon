@@ -7,7 +7,7 @@ import { Request } from './request.model';
 import { AuthService } from '../auth/auth.service';
 import { PatientsService } from '../patients/patients.service';
 import { ContactsService } from '../consultants/contacts.service';
-import { RequestWithPatientAndConsultant } from './request-patient-consultant.model';
+import { RequestWithObjects } from './request-with-objects.model';
 
 interface RequestData {
   id: number;
@@ -26,7 +26,7 @@ interface RequestData {
 })
 export class RequestsService {
   private _requests = new BehaviorSubject<Request[]>([]);
-  private _requestsWithPatientAndConsultant = new BehaviorSubject<RequestWithPatientAndConsultant[]>([]);
+  private _requestsWithObjects = new BehaviorSubject<RequestWithObjects[]>([]);
 
   constructor(
     private authService: AuthService,
@@ -39,12 +39,12 @@ export class RequestsService {
     return this._requests.asObservable();
   }
 
-  get requestsWithPatientAndConsultant() {
-    return this._requestsWithPatientAndConsultant.asObservable();
+  get requestsWithObjects() {
+    return this._requestsWithObjects.asObservable();
   }
 
-  fetchRequestsWithPatientAndConsultant() {
-    const requestsArr: RequestWithPatientAndConsultant[] = [];
+  fetchRequestsWithObjects() {
+    const requestsArr: RequestWithObjects[] = [];
     return this.fetchRequests().pipe(
       mergeMap(requests => {
         if (!requests || !requests.length) {
@@ -77,7 +77,7 @@ export class RequestsService {
           map(consultant => {
             request.consultantId = consultant;
             requestsArr.push(
-              new RequestWithPatientAndConsultant(
+              new RequestWithObjects(
                 +request.id,
                 request.title,
                 +request.requesterId,
@@ -95,13 +95,13 @@ export class RequestsService {
       }),
       tap(requests => {
         if (requests) {
-          this._requestsWithPatientAndConsultant.next(requests);
+          this._requestsWithObjects.next(requests);
         }
       })
     );
   }
 
-  getRequestWithPatientAndConsultant(id: number) {
+  getRequestWithObjects(id: number) {
     return this.getRequest(id).pipe(
       switchMap(request => {
         return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
@@ -123,7 +123,7 @@ export class RequestsService {
       switchMap(request => {
         return this.contactsService.getContact(request.consultantId).pipe(
           map(consultant => {
-            return new RequestWithPatientAndConsultant(
+            return new RequestWithObjects(
               +request.id,
               request.title,
               +request.requesterId,
@@ -233,12 +233,12 @@ export class RequestsService {
     )
     .pipe(
       switchMap(() => {
-        return this.requestsWithPatientAndConsultant;
+        return this.requestsWithObjects;
       }),
       take(1),
       tap(requests => {
         requests.find(r => r.id === requestId).active = false;
-        this._requestsWithPatientAndConsultant.next(requests);
+        this._requestsWithObjects.next(requests);
       })
     );
   }
@@ -249,11 +249,11 @@ export class RequestsService {
     )
     .pipe(
       switchMap(() => {
-        return this.requestsWithPatientAndConsultant;
+        return this.requestsWithObjects;
       }),
       take(1),
       tap(requests => {
-        this._requestsWithPatientAndConsultant.next(requests.filter(r => r.id !== requestId));
+        this._requestsWithObjects.next(requests.filter(r => r.id !== requestId));
       })
     );
   }
