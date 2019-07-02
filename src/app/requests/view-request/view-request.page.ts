@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map, mergeMap, take, switchMap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
 import { AuthService } from '../../auth/auth.service';
+import { AddCommentComponent } from './add-comment/add-comment.component';
 
 @Component({
   selector: 'app-view-request',
@@ -18,6 +19,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   request: RequestWithObjects;
   requestId: number;
   attachments: string[] = [];
+  comments: string[] = [];
   canEdit = true;
   isLoading = false;
   userType: string;
@@ -30,7 +32,8 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     private router: Router,
     private alertController: AlertController,
     private attachmentsService: AttachmentsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -99,6 +102,16 @@ export class ViewRequestPage implements OnInit, OnDestroy {
       ]
     }).then(alertEl => {
       alertEl.present();
+    });
+  }
+
+  openCommentModal() {
+    this.modalController.create({
+      component: AddCommentComponent,
+      id: 'addComment'
+    })
+    .then(modalEl => {
+      modalEl.present();
     });
   }
 

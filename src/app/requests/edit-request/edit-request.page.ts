@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription, of, iif, defer } from 'rxjs';
-import { mergeMap, map, switchMap, takeLast } from 'rxjs/operators';
+import { mergeMap, map, switchMap, takeLast, take } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
 import { SelectPatientComponent } from '../../shared/select-patient/select-patient.component';
@@ -13,6 +13,7 @@ import { Contact } from '../../consultants/contact.model';
 import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-edit-request',
@@ -28,6 +29,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
   selectedConsultant: Contact;
   attachmentUrls: string[] = [];
   attachments: File[] = [];
+  userType: string;
   private requestSub: Subscription;
 
   constructor(
@@ -38,7 +40,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
     private loadingController: LoadingController,
     private router: Router,
     private attachmentsService: AttachmentsService,
-    private imageUtilService: ImageUtilService
+    private imageUtilService: ImageUtilService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -49,8 +52,12 @@ export class EditRequestPage implements OnInit, OnDestroy {
       }
       this.isLoading = true;
       this.requestId = +paramMap.get('requestId');
-      this.requestSub = this.requestsService.getRequestWithObjects(+paramMap.get('requestId'))
-      .pipe(
+      this.requestSub = this.authService.userType.pipe(
+        take(1),
+        switchMap(userType => {
+          this.userType = userType;
+          return this.requestsService.getRequestWithObjects(+paramMap.get('requestId'));
+        }),
         mergeMap(request => {
           this.request = request;
           this.selectedPatient = request.patient;

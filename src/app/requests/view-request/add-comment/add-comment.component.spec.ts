@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ClosedRequestsPage } from './closed-requests.page';
+import { AddCommentComponent } from './add-comment.component';
 
-describe('ClosedRequestsPage', () => {
-  let component: ClosedRequestsPage;
-  let fixture: ComponentFixture<ClosedRequestsPage>;
+describe('AddCommentComponent', () => {
+  let component: AddCommentComponent;
+  let fixture: ComponentFixture<AddCommentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClosedRequestsPage ],
+      declarations: [ AddCommentComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ClosedRequestsPage);
+    fixture = TestBed.createComponent(AddCommentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

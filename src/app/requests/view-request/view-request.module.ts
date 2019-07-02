@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
 
 import { ViewRequestPage } from './view-request.page';
+import { AddCommentComponent } from './add-comment/add-comment.component';
 
 const routes: Routes = [
   {
@@ -17,10 +17,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ViewRequestPage]
+  declarations: [ViewRequestPage, AddCommentComponent],
+  entryComponents: [AddCommentComponent]
 })
 export class ViewRequestPageModule {}

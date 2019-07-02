@@ -63,10 +63,6 @@ const routes: Routes = [
             loadChildren: '../requests/new-request/new-request.module#NewRequestPageModule'
           },
           {
-            path: 'closed-requests',
-            loadChildren: '../requests/closed-requests/closed-requests.module#ClosedRequestsPageModule'
-          },
-          {
             path: 'edit-request/:requestId',
             loadChildren: '../requests/edit-request/edit-request.module#EditRequestPageModule'
           },

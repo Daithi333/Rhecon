@@ -55,7 +55,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.isLoading = true;
     this.loadingController
-      .create({keyboardClose: true, message: 'Retrieving your requests...'})
+      .create({keyboardClose: true, message: 'Retrieving your requests..'})
       .then(loadingEl => {
         loadingEl.present();
         this.requestsService.fetchRequestsWithObjects()

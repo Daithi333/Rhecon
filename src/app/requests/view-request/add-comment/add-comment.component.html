@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="onClose()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Add Comment</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form [formGroup]="form"> 
+      <ion-grid>
+        <ion-row>
+          <ion-col size-sm="8" offset-sm="2" padding>
+            <ion-item>
+              <ion-label position="floating">Comment</ion-label>
+              <ion-textarea rows="3" formControlName="comment" required></ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-sm="8" offset-sm="2" padding text-center>
+            <ion-button type="button" (click)="onSubmitComment()" [disabled]="!form.valid">Add comment</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>

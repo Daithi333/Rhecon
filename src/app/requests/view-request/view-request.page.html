@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/requests"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="primary" *ngIf="canEdit">
+    <ion-buttons slot="primary" *ngIf="canEdit && userType === 'requester'">
       <ion-button
         [routerLink]="['/', 'tabs', 'requests', 'edit-request', requestId]"
       >
@@ -18,7 +18,7 @@
   <div *ngIf="isLoading" text-center padding>
     <ion-spinner color="primary"></ion-spinner>
   </div>
-  <ion-grid *ngIf="!isLoading">
+  <ion-grid no-padding *ngIf="!isLoading">
     <ion-row>
       <ion-col
         size="12"
@@ -27,15 +27,60 @@
         size-xl="6"
         offset-xl="3"
         text-center
+        no-padding
       >
-        <h2>{{ request.title }}</h2>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3">
-        <ion-thumbnail class="portrait">
-          <ion-img [src]="request.patient.portraitUrl"></ion-img>
-        </ion-thumbnail>
+        <ion-list no-padding>
+          <br>
+          <ion-item>
+            <ion-icon slot="start" name="paper"></ion-icon>
+            <ion-label>
+              <h1>{{ request.title }}</h1>
+              <ion-note *ngIf="canEdit">Created: {{ this.request.createdOn | date: "dd/MM/yy" }}</ion-note>
+              <ion-note *ngIf="!canEdit" style="color: red;">Closed: {{ this.request.updatedOn | date: "dd/MM/yy" }}</ion-note>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img [src]="request.patient.portraitUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <ion-note>Patient</ion-note>
+              <h2>{{ request.patient.firstName }} {{ request.patient.lastName }}</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="userType === 'consultant'">
+            <ion-avatar slot="start">
+              <ion-img [src]="request.requester.portraitUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <ion-note>Requester</ion-note>
+              <h2>{{ request.requester.title === 'Dr' ? 'Dr' : '' }} {{ request.requester.firstName }} {{ request.requester.lastName }}</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="userType === 'requester'">
+            <ion-avatar slot="start">
+              <ion-img [src]="request.consultant.portraitUrl"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <ion-note>Consultant</ion-note>
+              <h2>{{ request.consultant.title === 'Dr' ? 'Dr' : '' }} {{ request.consultant.firstName }} {{ request.consultant.lastName }}</h2>
+              <p>{{ request.consultant.specialism }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="list"></ion-icon>
+            <ion-label text-wrap>
+              <ion-note>Notes</ion-note>
+              <h2>{{ request.notes }}</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon slot="start" name="attach"></ion-icon>
+            <ion-label>
+              <ion-note>Attachments</ion-note>
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -45,12 +90,22 @@
         offset-md="2"
         size-xl="6"
         offset-xl="3"
-        text-center
-      >
-        <h2>{{ request.patient.firstName }} {{ request.patient.lastName }}</h2>
-        <ion-label>
-          <p>{{ request.notes }}</p>
-        </ion-label>
+        class="sidePadding"
+      > 
+        <ion-list no-padding>
+          <!-- <ion-list-header no-padding>
+            <ion-text color="tertiary"><h5>Attachments</h5></ion-text> 
+            <ion-icon slot="primary" name="add"></ion-icon>
+          </ion-list-header> -->
+          <ion-item lines="none" *ngIf="attachments.length === 0">
+            <p>No files attached</p>
+          </ion-item>
+          <span class="preview" *ngFor="let attachment of attachments">
+            <ion-thumbnail>
+              <ion-img [src]="attachment" role="button" (click)="onSelectFile()"></ion-img>
+            </ion-thumbnail>
+          </span>
+        </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -60,21 +115,19 @@
         offset-md="2"
         size-xl="6"
         offset-xl="3"
-        text-center
-      >
-        <p *ngIf="userType==='requester'">
-          Consultant: {{ request.consultant.title }}. {{ request.consultant.lastName }}
-          {{ request.consultant.specialism }}
-        </p>
-        <p *ngIf="userType==='consultant'">
-          Consultant: {{ request.consultant.title }}. {{ request.consultant.lastName }}
-          {{ request.consultant.specialism }}
-        </p>
-        <p>Request sent: {{ this.request.createdOn | date: "dd/MM/yy" }}</p>
-        <p *ngIf="!canEdit" style="color: red;">
-          Request closed: {{ this.request.updatedOn | date: "dd/MM/yy" }}
-        </p>
-      </ion-col>
+        no-padding
+      > 
+        <ion-list no-padding *ngIf="comments.length !== 0">
+          <ion-list-header class="sidePadding">
+            <ion-text color="tertiary"><h5>Correspondence</h5></ion-text>
+            <ion-icon slot="end" name="add"></ion-icon>
+          </ion-list-header>
+          <ion-item>
+            <ion-icon slot="start" name="text"></ion-icon>
+            <p>{{ request.notes }}</p>
+          </ion-item>
+         </ion-list>
+       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col
@@ -83,13 +136,11 @@
         offset-md="2"
         size-xl="6"
         offset-xl="3"
+        padding
       >
-        <ion-label><h2>Attachments</h2></ion-label>
-        <span class="preview" *ngFor="let attachment of attachments">
-          <ion-thumbnail>
-            <ion-img [src]="attachment" role="button" (click)="onSelectFile()"></ion-img>
-          </ion-thumbnail>
-        </span>
+        <ion-button no-padding fill="clear" color="tertiary" type="button" (click)="openCommentModal()">
+          <ion-icon slot="start" name="chatboxes"></ion-icon>
+          Add comment</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
