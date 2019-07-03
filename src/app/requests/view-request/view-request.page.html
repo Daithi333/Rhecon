@@ -114,15 +114,15 @@
         offset-lg="3"
         size-xl="4"
         offset-xl="4"
-        class="sidePadding"
+        class="leftPadding"
       >
         <ion-list no-padding>
           <!-- <ion-list-header no-padding>
             <ion-text color="tertiary"><h5>Attachments</h5></ion-text> 
             <ion-icon slot="primary" name="add"></ion-icon>
           </ion-list-header> -->
-          <ion-item lines="none" *ngIf="attachments.length === 0">
-            <p>No files attached</p>
+          <ion-item lines="full" *ngIf="attachments.length === 0">
+            <p style="padding-left: 50px;">No files attached</p>
           </ion-item>
           <span class="preview" *ngFor="let attachment of attachments">
             <ion-thumbnail>

@@ -66,21 +66,21 @@
                 <p>{{ requestData.title }}</p>
               </ion-label>
             </ion-item>
-            <ion-item-options side="start" *ngIf="currentSegment === 'active'">
+            <ion-item-options side="start" *ngIf="currentSegment === 'active' && userType === 'requester'">
               <ion-item-option
                 color="secondary"
                 (click)="onEdit(requestData.id, slidingItem)">
                 <ion-icon name="create" slot="icon-only"></ion-icon>
               </ion-item-option>
             </ion-item-options>
-            <ion-item-options side="end" *ngIf="currentSegment === 'active'">
+            <ion-item-options side="end" *ngIf="currentSegment === 'active' && userType === 'requester' ">
               <ion-item-option
                 color="warning"
                 (click)="onCloseRequest(requestData.id, slidingItem)">
                 <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
               </ion-item-option>
             </ion-item-options>
-            <ion-item-options side="end" *ngIf="currentSegment === 'inactive'">
+            <ion-item-options side="end" *ngIf="currentSegment === 'inactive' && userType === 'requester'">
               <ion-item-option
                 color="danger"
                 (click)="onDeleteRequest(requestData.id, slidingItem)">
