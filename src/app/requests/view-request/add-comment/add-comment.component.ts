@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
+
+import { CommentsService } from '../comments.service';
 
 @Component({
   selector: 'app-add-comment',
@@ -9,11 +11,13 @@ import { ModalController, LoadingController, AlertController } from '@ionic/angu
 })
 export class AddCommentComponent implements OnInit {
   form: FormGroup;
+  @Input() requestId;
 
   constructor(
     private modalController: ModalController,
     private loadingController: LoadingController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private commentsService: CommentsService
   ) {}
 
   ngOnInit() {
@@ -34,6 +38,14 @@ export class AddCommentComponent implements OnInit {
       message: 'Adding comment..'
     }).then(loadingEl => {
       loadingEl.present();
+      this.commentsService.addComment(
+        this.requestId,
+        this.form.value.comment
+      ).subscribe(() => {
+        loadingEl.dismiss();
+        this.presentAlert();
+        this.onClose();
+      });
     });
   }
 

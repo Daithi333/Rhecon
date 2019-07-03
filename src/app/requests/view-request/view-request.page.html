@@ -18,7 +18,7 @@
   <div *ngIf="isLoading" text-center padding>
     <ion-spinner color="primary"></ion-spinner>
   </div>
-  <ion-grid no-padding *ngIf="!isLoading">
+  <ion-grid *ngIf="!isLoading">
     <ion-row>
       <ion-col
         size="12"
@@ -139,12 +139,19 @@
       >
         <ion-list no-padding *ngIf="comments.length !== 0">
           <ion-list-header class="sidePadding">
-            <ion-text color="tertiary"><h5>Correspondence</h5></ion-text>
+            <ion-text color="tertiary"><h5>Comments</h5></ion-text>
             <ion-icon slot="end" name="add"></ion-icon>
           </ion-list-header>
-          <ion-item>
-            <ion-icon slot="start" name="text"></ion-icon>
-            <p>{{ request.notes }}</p>
+          <ion-item *ngFor="let comment of comments" no-padding lines="none">
+            <ion-card>
+              <ion-card-content>
+                <p>{{ comment.comment }}</p>
+                <ion-card-subtitle>
+                  {{ comment.authorId }}  on {{ comment.createdOn | date: 'dd/MM/yy, HH:mm' }}
+                </ion-card-subtitle>
+              </ion-card-content>
+            </ion-card>
+            <ion-note></ion-note>
           </ion-item>
         </ion-list>
       </ion-col>

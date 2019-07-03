@@ -2,13 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { map, mergeMap, take, switchMap } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
 import { AuthService } from '../../auth/auth.service';
 import { AddCommentComponent } from './add-comment/add-comment.component';
+import { CommentsService } from './comments.service';
+import { Comment } from './comment.model';
 
 @Component({
   selector: 'app-view-request',
@@ -19,7 +21,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   request: RequestWithObjects;
   requestId: number;
   attachments: string[] = [];
-  comments: string[] = [];
+  comments: Comment[] = [];
   canEdit = true;
   isLoading = false;
   userType: string;
@@ -27,13 +29,14 @@ export class ViewRequestPage implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private navController: NavController,
-    private requestsService: RequestsService,
     private router: Router,
+    private navController: NavController,
     private alertController: AlertController,
+    private modalController: ModalController,
+    private requestsService: RequestsService,
     private attachmentsService: AttachmentsService,
     private authService: AuthService,
-    private modalController: ModalController
+    private commentsService: CommentsService
   ) { }
 
   ngOnInit() {
@@ -50,38 +53,38 @@ export class ViewRequestPage implements OnInit, OnDestroy {
           this.userType = userType;
           return this.requestsService.getRequestWithObjects(+paramMap.get('requestId'));
         }),
-        mergeMap(request => {
-            this.request = request;
-            return this.attachmentsService.fetchAttachments(request.id)
-              .pipe(
-                map(attachments => {
-                  this.attachments = attachments;
-                })
-              );
-          })
-        )
-        .subscribe(() => {
-          if (this.request.active === false) {
-            this.canEdit = false;
-          }
-          this.isLoading = false;
-        },
-        error => {
-          this.alertController.create({
-            header: 'Error',
-            message: 'Could not locate request.',
-            buttons: [
-              {
-                text: 'Okay',
-                handler: () => {
-                  this.router.navigate(['/tabs/requests']);
-                }
+        switchMap(request => {
+          this.request = request;
+          return this.attachmentsService.fetchAttachments(request.id);
+        }),
+        switchMap(attachments => {
+          this.attachments = attachments;
+          return this.commentsService.fetchComments(this.requestId);
+        })
+      )
+      .subscribe(comments => {
+        this.comments = comments;
+        if (this.request.active === false) {
+          this.canEdit = false;
+        }
+        this.isLoading = false;
+      },
+      error => {
+        this.alertController.create({
+          header: 'Error',
+          message: 'Could not locate request.',
+          buttons: [
+            {
+              text: 'Okay',
+              handler: () => {
+                this.router.navigate(['/tabs/requests']);
               }
-            ]
-          }).then(alertEl => {
-            alertEl.present();
-          });
+            }
+          ]
+        }).then(alertEl => {
+          alertEl.present();
         });
+      });
     });
   }
 
@@ -108,6 +111,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   openCommentModal() {
     this.modalController.create({
       component: AddCommentComponent,
+      componentProps: {
+        requestId: this.requestId
+      },
       id: 'addComment'
     })
     .then(modalEl => {
