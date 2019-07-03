@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="['/', 'tabs', 'patients', patientId]"></ion-back-button>
+      <ion-back-button
+        [defaultHref]="['/', 'tabs', 'patients', patientId]"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Patient</ion-title>
     <ion-buttons slot="primary">
@@ -18,14 +20,37 @@
   </div>
   <form [formGroup]="form" *ngIf="!isLoading">
     <ion-grid>
-      <br>
+      <br />
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
-          <app-portrait-selector (imageChoice)="onImageChosen($event)" [selectedImage]="patient.portraitUrl"></app-portrait-selector>
+        <ion-col
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
+          <app-portrait-selector
+            (imageChoice)="onImageChosen($event)"
+            [selectedImage]="patient.portraitUrl"
+          ></app-portrait-selector>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
@@ -33,7 +58,17 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col 
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
           <ion-item>
             <ion-label position="floating">Last Name</ion-label>
             <ion-input type="text" formControlName="lastName"></ion-input>
@@ -41,19 +76,40 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
           <ion-item>
             <ion-label>DOB</ion-label>
             <ion-datetime
               formControlName="dob"
               display-format="DD MMM YYYY"
-              picker-format="DD MMM YYYY">
+              picker-format="DD MMM YYYY"
+            >
             </ion-datetime>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
           <ion-item lines="none">
             <ion-label position="floating">Notes</ion-label>
             <ion-textarea rows="3" formControlName="notes"></ion-textarea>
@@ -61,8 +117,25 @@
         </ion-col>
       </ion-row>
       <ion-row class="grow" align-items-end>
-        <ion-col size-sm="8" offset-sm="2">
-          <ion-button type="submit" color="tertiary" expand="block" (click)="onUpdatePatient()" [disabled]="!form.valid">Update</ion-button>
+        <ion-col
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+        >
+          <ion-button
+            type="submit"
+            color="tertiary"
+            expand="block"
+            (click)="onUpdatePatient()"
+            [disabled]="!form.valid"
+            >Update</ion-button
+          >
         </ion-col>
       </ion-row>
     </ion-grid>
