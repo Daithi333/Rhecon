@@ -22,10 +22,14 @@
     <ion-row>
       <ion-col
         size="12"
+        size-sm="10"
+        offset-sm="1"
         size-md="8"
         offset-md="2"
-        size-xl="6"
-        offset-xl="3"
+        size-lg="6"
+        offset-ld="3"
+        size-xl="4"
+        offset-xl="4"
         text-center
         no-padding
       >
@@ -102,10 +106,14 @@
     <ion-row>
       <ion-col
         size="12"
+        size-sm="10"
+        offset-sm="1"
         size-md="8"
         offset-md="2"
-        size-xl="6"
-        offset-xl="3"
+        size-lg="6"
+        offset-ld="3"
+        size-xl="4"
+        offset-xl="4"
         class="sidePadding"
       >
         <ion-list no-padding>
@@ -131,10 +139,14 @@
     <ion-row>
       <ion-col
         size="12"
+        size-sm="10"
+        offset-sm="1"
         size-md="8"
         offset-md="2"
-        size-xl="6"
-        offset-xl="3"
+        size-lg="6"
+        offset-ld="3"
+        size-xl="4"
+        offset-xl="4"
         no-padding
       >
         <ion-list no-padding *ngIf="comments.length !== 0">
@@ -142,27 +154,32 @@
             <ion-text color="tertiary"><h5>Comments</h5></ion-text>
             <ion-icon slot="end" name="add"></ion-icon>
           </ion-list-header>
-          <ion-item *ngFor="let comment of comments" no-padding lines="none">
-            <ion-card>
-              <ion-card-content>
-                <p>{{ comment.comment }}</p>
-                <ion-card-subtitle>
-                  {{ comment.authorId }}  on {{ comment.createdOn | date: 'dd/MM/yy, HH:mm' }}
-                </ion-card-subtitle>
-              </ion-card-content>
-            </ion-card>
-            <ion-note></ion-note>
-          </ion-item>
+          <ion-card *ngFor="let comment of comments">
+            <ion-card-content>
+              <p>{{ comment.comment }}</p>
+              <ion-card-subtitle text-right>
+                <ion-text color="tertiary">
+                  {{ comment.authorId === request.requester.id ? request.requester.firstName : request.consultant.firstName }}
+                </ion-text>
+                <span *ngIf="comment.createdOn">on {{ comment.createdOn | date: 'dd/MM/yy - HH:mm' }}</span>
+                <span *ngIf="!comment.createdOn">just now</span>
+              </ion-card-subtitle>
+            </ion-card-content>
+          </ion-card>
         </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col
         size="12"
+        size-sm="10"
+        offset-sm="1"
         size-md="8"
         offset-md="2"
-        size-xl="6"
-        offset-xl="3"
+        size-lg="6"
+        offset-ld="3"
+        size-xl="4"
+        offset-xl="4"
         padding
       >
         <ion-button

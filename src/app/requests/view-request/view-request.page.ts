@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavController, AlertController, ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take, switchMap } from 'rxjs/operators';
+import { take, switchMap, map } from 'rxjs/operators';
 
 import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
@@ -59,11 +59,14 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         }),
         switchMap(attachments => {
           this.attachments = attachments;
-          return this.commentsService.fetchComments(this.requestId);
+          return this.commentsService.fetchComments(this.requestId).pipe(
+            map(comments => {
+              this.comments = comments;
+            })
+          );
         })
       )
-      .subscribe(comments => {
-        this.comments = comments;
+      .subscribe(() => {
         if (this.request.active === false) {
           this.canEdit = false;
         }
@@ -85,6 +88,12 @@ export class ViewRequestPage implements OnInit, OnDestroy {
           alertEl.present();
         });
       });
+    });
+  }
+
+  ionViewWillEnter() {
+    this.commentsService.comments.subscribe(comments => {
+      this.comments = comments;
     });
   }
 
