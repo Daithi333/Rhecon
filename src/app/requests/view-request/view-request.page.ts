@@ -3,6 +3,7 @@ import { NavController, AlertController, ModalController } from '@ionic/angular'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take, switchMap, map } from 'rxjs/operators';
+import * as FileSaver from 'file-saver';
 
 import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
@@ -22,10 +23,11 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   requestId: number;
   attachments: string[] = [];
   comments: Comment[] = [];
-  canEdit = true;
+  canEdit = true; // set to false if the request is inactive
   isLoading = false;
   userType: string;
   private requestSub: Subscription;
+  private commentsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -92,12 +94,13 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.commentsService.comments.subscribe(comments => {
+    this.commentsSub = this.commentsService.comments.subscribe(comments => {
       this.comments = comments;
     });
   }
 
-  onSelectFile() {
+  onSelectFile(fileUrl: string) {
+    let downloadFile;
     this.alertController.create({
       header: 'Download',
       message: 'Do you wish to download this attachment?',
@@ -105,7 +108,12 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           handler: () => {
-            // TODO
+            this.attachmentsService.downloadAttachment(fileUrl)
+              .subscribe(resData => {
+                console.log(resData.body);
+                const blob = new Blob([resData.body], { type: 'image/jpeg' } );
+                FileSaver.saveAs(blob);
+              });
           }
         },
         {
@@ -133,6 +141,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.requestSub) {
       this.requestSub.unsubscribe();
+    }
+    if (this.commentsSub) {
+      this.commentsSub.unsubscribe();
     }
   }
 

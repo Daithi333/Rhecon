@@ -104,6 +104,7 @@ export class AttachmentSelectorComponent implements OnInit {
         {
           text: 'Delete',
           handler: () => {
+            // delete from server if it is already uploaded, else just delete from local list
             if (attachmentUrl.substr(0, 24) === 'http://dmcelhill01.lampt') {
               this.deleteAttachment(requestId, attachmentUrl);
             } else {

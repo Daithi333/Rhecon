@@ -79,16 +79,6 @@ export class AttachmentsService {
     );
   }
 
-  addAttachmentFile(attachmentFile: File) {
-    const attachmentData = new FormData();
-    attachmentData.append('fileUpload', attachmentFile);
-
-    return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_upload.php',
-      attachmentData
-    );
-  }
-
   deleteAttachment(attachmentId: number) {
     return this.httpClient.delete(
       `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/delete.php/?id=${attachmentId}`
@@ -101,6 +91,24 @@ export class AttachmentsService {
       tap(attachments => {
         this._attachments.next(attachments.filter(a => a.id !== attachmentId));
       })
+    );
+  }
+
+  addAttachmentFile(attachmentFile: File) {
+    const attachmentData = new FormData();
+    attachmentData.append('fileUpload', attachmentFile);
+
+    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_upload.php',
+      attachmentData
+    );
+  }
+
+  downloadAttachment(fileUrl: string) {
+    return this.httpClient.post(
+      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_download.php?',
+      { fileUrl: fileUrl },
+      {observe: 'response', responseType: 'blob'}
     );
   }
 

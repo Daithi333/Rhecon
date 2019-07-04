@@ -86,7 +86,7 @@ export class PatientsService {
         if (!userId) {
           throw new Error('User not found');
         }
-        console.log('getPatient userId:' + userId);
+        // console.log('getPatient userId:' + userId);
         return this.httpClient.get<PatientData>(
           `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
         );
