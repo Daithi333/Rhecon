@@ -13,10 +13,24 @@
   </div>
   <ion-grid *ngIf="!isLoading">
     <ion-row>
-      <ion-col size="12" size-md="8" offset-md="2" size-xl="6" offset-xl="3" padding>
+      <ion-col
+        size="12"
+        size-sm="10"
+        offset-sm="1"
+        size-md="8"
+        offset-md="2"
+        size-lg="6"
+        offset-lg="3"
+        size-xl="4"
+        offset-xl="4"
+        padding
+      >
         <ion-card>
           <ion-card-header text-center>
-            <ion-card-title>{{ contact.title === 'Dr' ? 'Dr' : '' }} {{ contact.firstName }} {{ contact.lastName }}</ion-card-title>
+            <ion-card-title
+              >{{ contact.title === "Dr" ? "Dr" : "" }} {{ contact.firstName }}
+              {{ contact.lastName }}</ion-card-title
+            >
             <ion-card-subtitle>{{ contact.specialism }}</ion-card-subtitle>
           </ion-card-header>
           <ion-img [src]="contact.portraitUrl"></ion-img>
@@ -24,7 +38,7 @@
             <p><strong>Bio: </strong>{{ contact.bio }}</p>
           </ion-card-content>
         </ion-card>
-       </ion-col>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
