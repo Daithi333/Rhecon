@@ -20,15 +20,15 @@
       <ion-button (click)="onSelectImage()">
         <ion-icon name="camera"></ion-icon>
       </ion-button>
-      <ion-button (click)="onSelectVideo()">
+      <!-- <ion-button (click)="onSelectVideo()">
         <ion-icon name="videocam"></ion-icon>
-      </ion-button>
+      </ion-button> -->
       <ion-button (click)="onSelectDoc()">
         <ion-icon name="document"></ion-icon>
       </ion-button>
-      <ion-button (click)="onSelectAudio()">
+      <!-- <ion-button (click)="onSelectAudio()">
         <ion-icon name="mic"></ion-icon>
-      </ion-button>
+      </ion-button> -->
     </ion-item>
   </ion-col>
 </ion-row>
@@ -47,7 +47,7 @@
   >
     <span class="preview" *ngFor="let attachment of selectedAttachments">
       <ion-thumbnail>
-        <ion-img [src]="attachment" role="button" (click)="onClickFile(requestId, attachment)"></ion-img>
+        <ion-img [src]="choosepreviewIcon(attachment)" role="button" (click)="onClickFile(requestId, attachment)"></ion-img>
       </ion-thumbnail>
     </span>
   </ion-col>

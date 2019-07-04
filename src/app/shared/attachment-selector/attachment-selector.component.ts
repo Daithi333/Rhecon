@@ -60,17 +60,18 @@ export class AttachmentSelectorComponent implements OnInit {
 
   }
 
-  onSelectVideo() {
-
-  }
-
   onSelectDoc() {
-
+    this.fileSelector.nativeElement.click();
   }
 
   onSelectAudio() {
 
   }
+
+  onSelectVideo() {
+
+  }
+
   // Method to Extract file from the hidden HTML input's file selection event
   onAttachmentChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
@@ -119,6 +120,21 @@ export class AttachmentSelectorComponent implements OnInit {
     }).then(alertEl => {
       alertEl.present();
     });
+  }
+
+  // quick approach to show some non-image file previews. TODO, better solution 
+  choosepreviewIcon(url: string) {
+    const subString = url.substr(0, 10);
+    switch (subString) {
+      case 'http://dmc':
+        return url;
+      case 'data:video':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
+      case 'data:audio':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+      default:
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/file_icon.jpg';
+    }
   }
 
   // method to delete attachment record from server
