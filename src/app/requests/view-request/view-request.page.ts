@@ -111,7 +111,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
             this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
                 console.log(resData.body);
-                const blob = new Blob([resData.body], { type: 'image/jpeg' } );
+                const blob = new Blob([resData.body], { type: 'image/jpeg' } ); // TODO - needs to handle other file types
                 FileSaver.saveAs(blob);
               });
           }
