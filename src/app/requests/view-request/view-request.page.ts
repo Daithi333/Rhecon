@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { take, switchMap, map } from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
+
 import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../attachments.service';
@@ -100,7 +101,6 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   }
 
   onSelectFile(fileUrl: string) {
-    let downloadFile;
     this.alertController.create({
       header: 'Download',
       message: 'Do you wish to download this attachment?',
@@ -110,7 +110,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
           handler: () => {
             this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
-                console.log(resData.body);
+                // console.log(resData.body);
                 const blob = new Blob([resData.body], { type: 'image/jpeg' } ); // TODO - needs to handle other file types
                 FileSaver.saveAs(blob);
               });

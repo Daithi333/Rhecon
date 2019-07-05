@@ -122,7 +122,7 @@ export class AttachmentSelectorComponent implements OnInit {
     });
   }
 
-  // quick approach to show some non-image file previews. TODO, better solution 
+  // quick approach to show some non-image file previews. TODO, better solution
   choosepreviewIcon(url: string) {
     const subString = url.substr(0, 10);
     switch (subString) {
@@ -133,7 +133,7 @@ export class AttachmentSelectorComponent implements OnInit {
       case 'data:audio':
         return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
       default:
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/file_icon.jpg';
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
     }
   }
 
