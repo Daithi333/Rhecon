@@ -27,12 +27,6 @@ export class ProfilePage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.profileService.profile.subscribe(profile => {
-      this.profile = profile;
-    });
-  }
-
-  ionViewWillEnter() {
     this.isLoading = true;
     this.profileSub = this.profileService.fetchProfile().pipe(
       switchMap(profile => {
@@ -56,6 +50,12 @@ export class ProfilePage implements OnInit, OnDestroy {
         this.isConsultant = false;
       }
       this.isLoading = false;
+    });
+  }
+
+  ionViewWillEnter() {
+    this.profileService.profile.subscribe(profile => {
+      this.profile = profile;
     });
   }
 

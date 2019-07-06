@@ -91,7 +91,7 @@ export class EditProfilePage implements OnInit, OnDestroy {
       this.isLoading = false;
       this.alertController.create({
         header: 'Error',
-        message: 'Could not retrieve your profile, please try again later.',
+        message: 'Could not retrieve profile, please try again later.',
         buttons: [
           {
             text: 'Okay',

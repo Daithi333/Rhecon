@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/profile"></ion-back-button>
     </ion-buttons>
     <ion-title>Edit Profile</ion-title>
-    <ion-buttons slot="primary">
+    <ion-buttons slot="primary" *ngIf="!isLoading">
       <ion-button type="submit" (click)="onUpdateProfile()" [disabled]="!form.valid">
         <ion-icon name="checkmark" slot="icon-only"></ion-icon>
       </ion-button>
