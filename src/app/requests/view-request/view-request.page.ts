@@ -112,7 +112,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
               .subscribe(resData => {
                 // console.log(resData.body);
                 const fileType = this.determineFileType(fileUrl);
-                const blob = new Blob([resData.body], { type: fileType } ); // TODO - needs to handle other file types
+                const blob = new Blob([resData.body], { type: fileType } );
                 FileSaver.saveAs(blob);
               });
           }
@@ -123,19 +123,6 @@ export class ViewRequestPage implements OnInit, OnDestroy {
       ]
     }).then(alertEl => {
       alertEl.present();
-    });
-  }
-
-  openCommentModal() {
-    this.modalController.create({
-      component: AddCommentComponent,
-      componentProps: {
-        requestId: this.requestId
-      },
-      id: 'addComment'
-    })
-    .then(modalEl => {
-      modalEl.present();
     });
   }
 
@@ -159,26 +146,39 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     }
   }
 
-    // quick approach to show some non-image file previews. TODO, better solution
-    choosepreviewIcon(url: string) {
-      const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-      switch (ext) {
-        case 'jpg':
-          return url;
-        case 'png':
-          return url;
-        case 'pdf':
-          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
-        case 'mp4':
-          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
-        case 'wmv':
-          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
-        case 'zip':
-          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
-        default:
-          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
-      }
+  // quick approach to show some non-image file previews. TODO, better solution
+  choosepreviewIcon(url: string) {
+    const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
+    switch (ext) {
+      case 'jpg':
+        return url;
+      case 'png':
+        return url;
+      case 'pdf':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+      case 'mp4':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
+      case 'wmv':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+      case 'zip':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
+      default:
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
     }
+  }
+
+  openCommentModal() {
+    this.modalController.create({
+      component: AddCommentComponent,
+      componentProps: {
+        requestId: this.requestId
+      },
+      id: 'addComment'
+    })
+    .then(modalEl => {
+      modalEl.present();
+    });
+  }
 
   ngOnDestroy() {
     if (this.requestSub) {
