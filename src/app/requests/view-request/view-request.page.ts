@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NavController, AlertController, ModalController } from '@ionic/angular';
+import { NavController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take, switchMap, map } from 'rxjs/operators';
@@ -39,7 +39,8 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     private requestsService: RequestsService,
     private attachmentsService: AttachmentsService,
     private authService: AuthService,
-    private commentsService: CommentsService
+    private commentsService: CommentsService,
+    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -113,7 +114,11 @@ export class ViewRequestPage implements OnInit, OnDestroy {
                 // console.log(resData.body);
                 const fileType = this.determineFileType(fileUrl);
                 const blob = new Blob([resData.body], { type: fileType } );
-                FileSaver.saveAs(blob);
+                if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
+                  FileSaver.saveAs(blob);
+                } else {
+                  FileSaver.saveAs(fileUrl);
+                }
               });
           }
         },
