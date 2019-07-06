@@ -117,6 +117,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
                   FileSaver.saveAs(blob);
                 } else {
+                  // opens image in device, in lieu of getting the file download to work..
                   FileSaver.saveAs(fileUrl);
                 }
               });

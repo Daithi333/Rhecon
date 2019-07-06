@@ -37,14 +37,14 @@
                 {{ profile.lastName }}
               </h3>
             </ion-card-title>
-            <ion-card-subtitle *ngIf="isConsultant && !isLoading">{{
-              selectedSpecialism.specialism
-            }}</ion-card-subtitle>
+            <ion-card-subtitle *ngIf="isConsultant">
+              {{ selectedSpecialism.specialism }}
+            </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <ion-img [src]="profile.portraitUrl"></ion-img>
-            <br />
-            <br />
+            <br>
+            <br>
             <p text-center><strong>Bio</strong></p>
             <p>{{ profile.bio }}</p>
           </ion-card-content>
