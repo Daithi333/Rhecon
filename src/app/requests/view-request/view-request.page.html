@@ -127,7 +127,7 @@
           <span class="preview" *ngFor="let attachment of attachments">
             <ion-thumbnail>
               <ion-img
-                [src]="attachment"
+                [src]="choosepreviewIcon(attachment)"
                 role="button"
                 (click)="onSelectFile(attachment)"
               ></ion-img>

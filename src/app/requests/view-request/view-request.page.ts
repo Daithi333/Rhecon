@@ -111,7 +111,8 @@ export class ViewRequestPage implements OnInit, OnDestroy {
             this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
                 // console.log(resData.body);
-                const blob = new Blob([resData.body], { type: 'image/jpeg' } ); // TODO - needs to handle other file types
+                const fileType = this.determineFileType(fileUrl);
+                const blob = new Blob([resData.body], { type: fileType } ); // TODO - needs to handle other file types
                 FileSaver.saveAs(blob);
               });
           }
@@ -137,6 +138,47 @@ export class ViewRequestPage implements OnInit, OnDestroy {
       modalEl.present();
     });
   }
+
+  determineFileType(url: string) {
+    const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
+    switch (ext) {
+      case 'jpg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'pdf':
+        return 'application/pdf';
+      case 'mp4':
+        return 'video/mp4';
+      case 'wmv':
+        return 'audio/wmv';
+      case 'zip':
+        return 'application/zip';
+      default:
+        return '';
+    }
+  }
+
+    // quick approach to show some non-image file previews. TODO, better solution
+    choosepreviewIcon(url: string) {
+      const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
+      switch (ext) {
+        case 'jpg':
+          return url;
+        case 'png':
+          return url;
+        case 'pdf':
+          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+        case 'mp4':
+          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
+        case 'wmv':
+          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+        case 'zip':
+          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
+        default:
+          return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
+      }
+    }
 
   ngOnDestroy() {
     if (this.requestSub) {

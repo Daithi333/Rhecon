@@ -97,13 +97,7 @@ export class AttachmentSelectorComponent implements OnInit {
       message: 'Please choose an action for this attachment.',
       buttons: [
         {
-          text: 'Download',
-          handler: () => {
-            // TODO - trigger file download from server
-          }
-        },
-        {
-          text: 'Delete',
+          text: 'Remove',
           handler: () => {
             // delete from server if it is already uploaded, else just delete from local list
             if (attachmentUrl.substr(0, 24) === 'http://dmcelhill01.lampt') {
@@ -124,14 +118,20 @@ export class AttachmentSelectorComponent implements OnInit {
 
   // quick approach to show some non-image file previews. TODO, better solution
   choosepreviewIcon(url: string) {
-    const subString = url.substr(0, 10);
-    switch (subString) {
-      case 'http://dmc':
+    const ext = url.substring(url.lastIndexOf('.') + 1, url.length).toLowerCase();
+    switch (ext) {
+      case 'jpg':
         return url;
-      case 'data:video':
+      case 'png':
+        return url;
+      case 'pdf':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+      case 'mp4':
         return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
-      case 'data:audio':
+      case 'wmv':
         return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+      case 'zip':
+        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
       default:
         return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
     }
