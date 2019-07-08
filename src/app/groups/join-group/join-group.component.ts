@@ -48,10 +48,10 @@ export class JoinGroupComponent implements OnInit {
       },
       error => {
         let $errorMsg = 'There was a problem verifying the code';
-        let $header = 'Error';
+        let $header = 'ErrorInvalid Code';
         switch (error.error.message) {
           case 'Code not found':
-            $errorMsg = 'Invalid Code';
+            $errorMsg = 'Code entered in invalid';
             break;
           case 'Code is no longer valid':
             $errorMsg = 'Code is no longer valid';

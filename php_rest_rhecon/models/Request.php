@@ -129,13 +129,16 @@
      * Function to add a new request record
      */
     public function create() {
+      $timestamp = date("Y-m-d H:i:s", time());
+      
       $query = 'INSERT INTO ' . $this->table . '
                 SET
                 title = :title,
                 requesterId = :requesterId,
                 consultantId = :consultantId,
                 patientId = :patientId,
-                notes = :notes';
+                notes = :notes,
+                createdOn = "' . $timestamp . '" ';
       
       // Prepare statement
       $stmt = $this->conn->prepare($query);
