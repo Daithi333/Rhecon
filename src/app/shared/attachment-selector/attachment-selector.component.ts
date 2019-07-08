@@ -16,6 +16,7 @@ export class AttachmentSelectorComponent implements OnInit {
   @Output() attachmentChoice = new EventEmitter<string | File>();
   @Input() selectedAttachments: string[] = [];
   @Input() requestId: number;
+  chosenAttachmentType: string;
 
   constructor(
     private platform: Platform,
@@ -74,6 +75,7 @@ export class AttachmentSelectorComponent implements OnInit {
     }
     const fr = new FileReader();
     fr.onload = () => {
+      this.chosenAttachmentType = chosenFile.type;
       // convert to string to allow preview
       const dataUrl = fr.result.toString();
       this.selectedAttachments.push(dataUrl);
@@ -113,22 +115,18 @@ export class AttachmentSelectorComponent implements OnInit {
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     switch (ext) {
-      case 'jpg':
+      case 'jpg' || 'jpeg' || 'png':
         return url;
-      case 'png':
-        return url;
+      case 'docx' || 'doc':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
+      case 'xls' || 'xlsx':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
       case 'pdf':
         return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
-      case 'docx':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.png';
-      case 'mp4':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/video_icon.png';
-      case 'wmv':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/audio_icon.png';
       case 'zip':
         return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/zip_icon.png';
       default:
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/doc_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/document_icon.png';
     }
   }
 
