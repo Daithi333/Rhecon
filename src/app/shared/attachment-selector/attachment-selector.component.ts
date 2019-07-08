@@ -115,11 +115,17 @@ export class AttachmentSelectorComponent implements OnInit {
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     switch (ext) {
-      case 'jpg' || 'jpeg' || 'png':
+      case 'jpg':
         return url;
-      case 'docx' || 'doc':
+      case 'png':
+        return url;
+      case 'docx':
         return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
-      case 'xls' || 'xlsx':
+      case 'doc':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
+      case 'xls':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
+      case 'xlsx':
         return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
       case 'pdf':
         return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
