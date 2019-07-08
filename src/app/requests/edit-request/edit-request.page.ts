@@ -217,7 +217,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
         mergeMap(attachment => {
           return this.attachmentsService.addAttachmentFile(attachment).pipe(
             map(fileData => {
-              // console.log('File data: ' + fileData);
+              // console.log(fileData);
               return fileData;
             })
           );

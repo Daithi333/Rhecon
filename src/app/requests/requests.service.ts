@@ -109,7 +109,7 @@ export class RequestsService {
       }),
       takeLast(1),
       tap(requests => {
-        console.log(requests);
+        // console.log(requests);
         if (requests) {
           this._requestsWithObjects.next(requests);
         }
@@ -182,7 +182,7 @@ export class RequestsService {
           null,
           null
         );
-        return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/create.php',
+        return this.httpClient.post<{dbId: number}>('http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/create.php',
           { ...newRequest, id: null }
         );
       }),
@@ -234,7 +234,7 @@ export class RequestsService {
           new Date()
         );
         return this.httpClient.put(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/update.php',
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/update.php',
           { ...updatedRequests[updatedRequestIndex] }
         );
       }),
@@ -245,7 +245,7 @@ export class RequestsService {
 
   closeRequest(requestId: number) {
     return this.httpClient.put(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/close.php/?id=${requestId}`,
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/close.php/?id=${requestId}`,
       { id: requestId }
     )
     .pipe(
@@ -262,7 +262,7 @@ export class RequestsService {
 
   deleteRequest(requestId: number) {
     return this.httpClient.delete(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/delete.php/?id=${requestId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/delete.php/?id=${requestId}`
     )
     .pipe(
       switchMap(() => {
@@ -291,10 +291,10 @@ export class RequestsService {
         return iif(
           () => userType === 'requester',
           defer(() => this.httpClient.get<{[key: number]: RequestData}>(
-            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`)
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/read.php?requesterId=${userId}`)
           ),
           defer(() => this.httpClient.get<{[key: number]: RequestData}>(
-            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read.php?consultantId=${userId}`)
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/read.php?consultantId=${userId}`)
           )
         );
       }),
@@ -341,10 +341,10 @@ export class RequestsService {
         return iif(
           () => userType === 'requester',
           defer(() => this.httpClient.get<RequestData>(
-            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`)
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/read_single.php?requesterId=${userId}&id=${id}`)
           ),
           defer(() => this.httpClient.get<RequestData>(
-            `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/request/read_single.php?consultantId=${userId}&id=${id}`)
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/read_single.php?consultantId=${userId}&id=${id}`)
           )
         );
       }),

@@ -13,9 +13,9 @@
     style="padding-top: 0px; padding-bottom: 0px;"
   >
     <ion-item lines="none">
-      <ion-icon slot="start" name="attach"></ion-icon>
+      <ion-icon slot="start" name="cloud-upload"></ion-icon>
       <ion-label>
-        <h2>Attach</h2>
+        <h2>Attachments</h2>
       </ion-label>
       <ion-button (click)="onSelectImage()">
         <ion-icon name="camera"></ion-icon>
@@ -23,8 +23,8 @@
       <!-- <ion-button (click)="onSelectVideo()">
         <ion-icon name="videocam"></ion-icon>
       </ion-button> -->
-      <ion-button (click)="onSelectDoc()">
-        <ion-icon name="document"></ion-icon>
+      <ion-button (click)="onSelectFile()">
+        <ion-icon name="attach"></ion-icon>
       </ion-button>
       <!-- <ion-button (click)="onSelectAudio()">
         <ion-icon name="mic"></ion-icon>
@@ -54,6 +54,13 @@
 </ion-row>
 <input
   type="file"
+  accept="image/*"
   #fileSelector
+  (change)="onAttachmentChosen($event)"
+/>
+<input
+  type="file"
+  accept="application/*|text/*"
+  #fileSelector2
   (change)="onAttachmentChosen($event)"
 />

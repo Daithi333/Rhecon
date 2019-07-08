@@ -26,7 +26,7 @@ export class HttpService {
 
   fetchTitles() {
     return this.httpClient.get<{[key: number]: TitleData}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/title/read.php'
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/title/read.php'
     ).pipe(
       map(resData => {
         const titles: TitleData[] = [];
@@ -45,7 +45,7 @@ export class HttpService {
 
   fetchSpecialisms() {
     return this.httpClient.get<{[key: number]: SpecialismData}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/specialism/read.php'
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/specialism/read.php'
     ).pipe(
       map(resData => {
         const specialisms: SpecialismData[] = [];
@@ -64,7 +64,7 @@ export class HttpService {
 
   fetchUserTypes() {
     return this.httpClient.get<{[key: number]: UserTypeData}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user-type/read.php'
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user-type/read.php'
     )
     .pipe(
       map(resData => {

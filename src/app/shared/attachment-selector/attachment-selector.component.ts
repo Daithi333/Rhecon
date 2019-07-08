@@ -12,6 +12,7 @@ import { AttachmentsService } from '../../requests/attachments.service';
 export class AttachmentSelectorComponent implements OnInit {
   useFileSelector = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
+  @ViewChild('fileSelector2') fileSelector2: ElementRef<HTMLInputElement>;
   @Output() attachmentChoice = new EventEmitter<string | File>();
   @Input() selectedAttachments: string[] = [];
   @Input() requestId: number;
@@ -60,16 +61,8 @@ export class AttachmentSelectorComponent implements OnInit {
 
   }
 
-  onSelectDoc() {
-    this.fileSelector.nativeElement.click();
-  }
-
-  onSelectAudio() {
-
-  }
-
-  onSelectVideo() {
-
+  onSelectFile() {
+    this.fileSelector2.nativeElement.click();
   }
 
   // Method to Extract file from the hidden HTML input's file selection event
@@ -100,7 +93,7 @@ export class AttachmentSelectorComponent implements OnInit {
           text: 'Remove',
           handler: () => {
             // delete from server if it is already uploaded, else just delete from local list
-            if (attachmentUrl.substr(0, 24) === 'http://dmcelhill01.lampt') {
+            if (attachmentUrl.substr(0, 20) === 'http://davidmcelhill') {
               this.deleteAttachment(requestId, attachmentUrl);
             } else {
               this.selectedAttachments = this.selectedAttachments.filter(a => a !== attachmentUrl);
@@ -118,22 +111,24 @@ export class AttachmentSelectorComponent implements OnInit {
 
   // quick approach to show some non-image file previews. TODO, better solution
   choosepreviewIcon(url: string) {
-    const ext = url.substring(url.lastIndexOf('.') + 1, url.length).toLowerCase();
+    const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     switch (ext) {
       case 'jpg':
         return url;
       case 'png':
         return url;
       case 'pdf':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+      case 'docx':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.png';
       case 'mp4':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/video_icon.png';
       case 'wmv':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/audio_icon.png';
       case 'zip':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/zip_icon.png';
       default:
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/doc_icon.png';
     }
   }
 
@@ -142,7 +137,8 @@ export class AttachmentSelectorComponent implements OnInit {
     let attachmentId;
     this.attachmentsService.getAttachment(requestId, attachmentUrl)
     .subscribe(attachment => {
-      console.log('Retrieved Attachment: ' + attachment);
+      console.log('Retrieved Attachment to delete: ');
+      console.log(attachment);
       attachmentId = attachment.id;
       this.alertController.create({
         header: 'Confirm',

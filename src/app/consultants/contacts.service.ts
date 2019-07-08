@@ -38,7 +38,7 @@ export class ContactsService {
           throw new Error('User not found!');
         }
         return this.httpClient.get<{[key: number]: ContactData}>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/contact/read.php?userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read.php?userId=${userId}`
         );
       }),
       map(resData => {
@@ -69,7 +69,7 @@ export class ContactsService {
 
   getContact(id: number) {
     return this.httpClient.get<ContactData>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/contact/read_single.php?id=${id}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?id=${id}`
     )
     .pipe(
       map(contactData => {

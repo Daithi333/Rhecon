@@ -41,7 +41,7 @@ export class PatientsService {
           throw new Error('User not found!');
         }
         return this.httpClient.get<{[key: number]: PatientData}>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
         );
       }),
       map(resData => {
@@ -88,7 +88,7 @@ export class PatientsService {
         }
         // console.log('getPatient userId:' + userId);
         return this.httpClient.get<PatientData>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
         );
       }),
       map(patientData => {
@@ -110,7 +110,7 @@ export class PatientsService {
     imageData.append('fileUpload', imageFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/portrait_upload.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/portrait_upload.php',
       imageData
     );
   }
@@ -140,7 +140,7 @@ export class PatientsService {
           userId
         );
         return this.httpClient.post<{dbId: number}>(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/create.php',
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/create.php',
           { ...newPatient, id: null }
         );
       }),
@@ -190,7 +190,7 @@ export class PatientsService {
           preUpdatePatient.userId
         );
         return this.httpClient.put(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/update.php',
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/update.php',
           { ...updatedPatients[updatedPatientIndex] }
         );
       }),
@@ -201,7 +201,7 @@ export class PatientsService {
 
   removePatient(patientId: number) {
     return this.httpClient.put(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/patient/close.php/?id=${patientId}`,
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/close.php/?id=${patientId}`,
       { id: patientId }
     )
     .pipe(

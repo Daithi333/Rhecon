@@ -31,7 +31,7 @@ export class CommentsService {
 
   fetchComments(requestId: number) {
     return this.httpClient.get<{[key: number]: CommentData}>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/comment/read.php?requestId=${requestId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/comment/read.php?requestId=${requestId}`
     )
     .pipe(
       map(resData => {
@@ -74,7 +74,7 @@ export class CommentsService {
           comment,
           null
         );
-        return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/comment/create.php',
+        return this.httpClient.post<{dbId: number}>('http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/comment/create.php',
           { ...newComment }
         );
       }),

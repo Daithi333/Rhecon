@@ -39,7 +39,7 @@ export class ProfileService {
           throw new Error('User not found!');
         }
         return this.httpClient.get<ProfileData>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/read_profile.php?id=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/read_profile.php?id=${userId}`
         );
       }),
       map(profileData => {
@@ -64,7 +64,7 @@ export class ProfileService {
     imageData.append('fileUpload', imageFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/user_image_upload.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/user_image_upload.php',
       imageData
     );
   }
@@ -89,7 +89,7 @@ export class ProfileService {
     );
     console.log(updatedProfile);
     return this.httpClient.put(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/user/update_profile.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/update_profile.php',
       updatedProfile
     ).pipe(
       tap(() => {

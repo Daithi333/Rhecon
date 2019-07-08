@@ -19,7 +19,7 @@ export class AttachmentsService {
 
   fetchAttachments(requestId: number) {
     return this.httpClient.get<{[key: number]: Attachment}>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/read.php?requestId=${requestId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/read.php?requestId=${requestId}`
     )
     .pipe(
       map(resData => {
@@ -42,7 +42,7 @@ export class AttachmentsService {
 
   getAttachment(requestId: number, attachmentUrl: string) {
     return this.httpClient.get<Attachment>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/read_single.php?
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/read_single.php?
       requestId=${requestId}&attachmentUrl=${attachmentUrl}`
     )
     .pipe(
@@ -63,7 +63,7 @@ export class AttachmentsService {
       requestId,
       attachmentUrl
     };
-    return this.httpClient.post<{dbId: number}>('http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/create.php',
+    return this.httpClient.post<{dbId: number}>('http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/create.php',
       { ...newAttachment }
     )
     .pipe(
@@ -81,7 +81,7 @@ export class AttachmentsService {
 
   deleteAttachment(attachmentId: number) {
     return this.httpClient.delete(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/attachment/delete.php/?id=${attachmentId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/delete.php/?id=${attachmentId}`
     )
     .pipe(
       switchMap(() => {
@@ -99,14 +99,14 @@ export class AttachmentsService {
     attachmentData.append('fileUpload', attachmentFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_upload.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_upload.php',
       attachmentData
     );
   }
 
   downloadAttachment(fileUrl: string) {
     return this.httpClient.post(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/attachment_download.php?',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_download.php?',
       { fileUrl: fileUrl },
       {observe: 'response', responseType: 'blob'}
     );

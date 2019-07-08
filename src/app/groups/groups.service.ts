@@ -70,7 +70,7 @@ export class GroupsService {
           throw new Error('User not found!');
         }
         return this.httpClient.get<Group>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_single.php?id=${groupId}&userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/read_single.php?id=${groupId}&userId=${userId}`
         );
       }),
       map(groupData => {
@@ -113,7 +113,7 @@ export class GroupsService {
           []
         );
         return this.httpClient.post<{dbId: number, dbId2: number}>(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create.php',
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create.php',
           { ...newGroup, id: null, userId: userId }
         );
       }),
@@ -135,7 +135,7 @@ export class GroupsService {
     imageData.append('fileUpload', imageFile);
 
     return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/file/group_image_upload.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/group_image_upload.php',
       imageData
     );
   }
@@ -164,7 +164,7 @@ export class GroupsService {
           preUpdateGroup.members
         );
         return this.httpClient.put(
-          'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/update.php',
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/update.php',
           { ...updatedGroups[updatedGroupIndex] }
         );
       }),
@@ -175,7 +175,7 @@ export class GroupsService {
 
   addInvitation(groupName: string, groupId: number, recipient: string) {
     return this.httpClient.post<{ message: string, dbId: number }>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/create.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/create.php',
       { groupName: groupName, groupId: groupId, recipient: recipient }
     );
   }
@@ -223,14 +223,14 @@ export class GroupsService {
 
   addMember(userId: number, groupId: number) {
     return this.httpClient.post<{ id: number }>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/create_member.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create_member.php',
       { userId: userId, groupId: groupId }
     );
   }
 
   removeMember(groupId: number, memberId: number) {
     return this.httpClient.delete(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${memberId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${memberId}`
     ).pipe(
       switchMap(() => {
         return this.groups;
@@ -250,7 +250,7 @@ export class GroupsService {
           throw new Error('User not found!');
         }
         return this.httpClient.delete(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${userId}`
         );
       }),
       switchMap(() => {
@@ -275,7 +275,7 @@ export class GroupsService {
           throw new Error('User not found!');
         }
         return this.httpClient.get<{[key: number]: Group}>(
-          `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read.php?userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/read.php?userId=${userId}`
         );
       }),
       map(resData => {
@@ -304,7 +304,7 @@ export class GroupsService {
   private fetchMembership(group: Group) {
     const members: Contact[] = [];
     return this.httpClient.get<number[]>(
-      `http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/group/read_membership.php?groupId=${group.id}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/read_membership.php?groupId=${group.id}`
     ).pipe(
       mergeMap(memberIds => {
         return memberIds.map(memberId => {
@@ -323,14 +323,14 @@ export class GroupsService {
 
   private verifyInvitation(inviteCode: string) {
     return this.httpClient.post<{ id: number, groupId: number }>(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/read_single.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/read_single.php',
       { inviteCode: inviteCode }
     );
   }
 
   private invalidateInvitation(invitationId: number) {
     return this.httpClient.post(
-      'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/api/invitation/invalidate.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/invalidate.php',
       { id: invitationId }
     );
   }

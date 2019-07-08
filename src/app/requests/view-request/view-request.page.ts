@@ -141,6 +141,10 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         return 'image/png';
       case 'pdf':
         return 'application/pdf';
+      case 'doc':
+        return 'application/msword';
+      case 'docx':
+        return 'application/msword';
       case 'mp4':
         return 'video/mp4';
       case 'wmv':
@@ -161,15 +165,17 @@ export class ViewRequestPage implements OnInit, OnDestroy {
       case 'png':
         return url;
       case 'pdf':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
+      case 'docx':
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.png';
       case 'mp4':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/video_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/video_icon.png';
       case 'wmv':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/audio_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/audio_icon.png';
       case 'zip':
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/zip_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/zip_icon.png';
       default:
-        return 'http://dmcelhill01.lampt.eeecs.qub.ac.uk/php_rest_rhecon/files/icons/doc_icon.png';
+        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/doc_icon.png';
     }
   }
 
