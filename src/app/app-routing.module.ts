@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'auth', loadChildren: './auth/auth.module#AuthPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule', canLoad: [AuthGuard] },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule', canLoad: [AuthGuard] },
-  { path: 'profile', children: [
+  { path: 'profile', children: [ // TODO - outsource profile routing to profile module
     {
       path: '',
       loadChildren: './profile/profile.module#ProfilePageModule', canLoad: [AuthGuard]
