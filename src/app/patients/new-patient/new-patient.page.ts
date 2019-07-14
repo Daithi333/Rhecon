@@ -15,7 +15,7 @@ import { ImageUtilService } from '../../shared-portrait/image-util-service';
 })
 export class NewPatientPage implements OnInit {
   form: FormGroup;
-  imagePreview = 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/default-patient-icon.png';
+  imagePreview = '../../assets/icon/default-patient-icon.png';
 
   constructor(
     private patientsService: PatientsService,

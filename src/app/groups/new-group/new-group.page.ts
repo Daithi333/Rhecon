@@ -16,7 +16,7 @@ import { ImageUtilService } from '../../shared-portrait/image-util-service';
 export class NewGroupPage implements OnInit {
   form: FormGroup;
   isLoading = false;
-  selectedImage = 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/default-group-icon.jpg';
+  selectedImage = '../../assets/icon/default-group-icon.jpg';
   private imageChanged = false;
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
 

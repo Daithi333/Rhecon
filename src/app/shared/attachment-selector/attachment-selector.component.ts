@@ -117,8 +117,8 @@ export class AttachmentSelectorComponent implements OnInit {
   }
 
   /**
-   * choose icon for file preview section if not an image
-   * @param url - url for server storage location
+   * To choose icon for file preview section if not an image
+   * @param url - url for file on remote storage
    */
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
@@ -131,7 +131,7 @@ export class AttachmentSelectorComponent implements OnInit {
   }
 
   /**
-   * choose an icon for newly attached file if not an image
+   * To choose an icon for newly attached file if not an image
    * @param url - url is base64 string
    */
   choosepreviewIconNew(url: string) {
