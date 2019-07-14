@@ -3,6 +3,7 @@ import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 
 import { AttachmentsService } from '../../requests/attachments.service';
+import { fileTypes } from '../file-types';
 
 @Component({
   selector: 'app-attachment-selector',
@@ -111,29 +112,37 @@ export class AttachmentSelectorComponent implements OnInit {
     });
   }
 
-  // quick approach to show some non-image file previews. TODO, better solution
+  isNewAttachment(url: string) {
+    return url.substring(0, 4) === 'data' ? true : false;
+  }
+
+  /**
+   * choose icon for file preview section if not an image
+   * @param url - url for server storage location
+   */
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-    switch (ext) {
-      case 'jpg':
-        return url;
-      case 'png':
-        return url;
-      case 'docx':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
-      case 'doc':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
-      case 'xls':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
-      case 'xlsx':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
-      case 'pdf':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
-      case 'zip':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/zip_icon.png';
-      default:
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/document_icon.png';
+    const fileType =  fileTypes.find(f => f.ext === ext);
+    if (fileType.mime.substring(0, 5) === 'image') {
+      return url;
+    } else {
+      return fileType.icon;
     }
+  }
+
+  /**
+   * choose an icon for newly attached file if not an image
+   * @param url - url is base64 string
+   */
+  choosepreviewIconNew(url: string) {
+    const mime = url.substring(url.lastIndexOf(':') + 1, url.lastIndexOf(';'));
+    if (mime.substring(0, 5) === 'image') {
+      return url;
+    } else {
+      const fileType =  fileTypes.find(f => f.mime === mime);
+      return fileType.icon;
+    }
+
   }
 
   // method to delete attachment record from server
