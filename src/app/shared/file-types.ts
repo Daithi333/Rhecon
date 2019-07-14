@@ -1,46 +1,58 @@
 interface FileType {
   ext: string;
   mime: string;
+  icon: string;
 }
 
+const path = '../../assets/icon/';
+const video = 'video_icon.png';
+const audio = 'video_icon.png';
+const word = 'word_icon.jpg';
+const excel = 'excel_icon.png';
+const pdf = 'pdf_icon.png';
+const zip = 'zip_icon.png';
+const file = 'file_icon.jpg';
+const dcm = 'dcm_icon.jpg';
+const text = 'text_icon.png';
+const presentation = 'presentation_icon.png';
+const unknown = 'document_icon.png';
+
 export const fileTypes: FileType[] = [
-  {ext: 'acc', mime: 'audio/aac'},
-  {ext: 'avi', mime: 'video/x-msvideo'},
-  {ext: 'bin', mime: 'application/octet-stream'},
-  {ext: 'bmp', mime: 'image/bmp'},
-  {ext: 'csv', mime: 'text/csv'},
-  {ext: 'dcm', mime: 'application/dicom'},
-  {ext: 'dcm30', mime: 'application/dicom'},
-  {ext: 'dicom', mime: 'application/dicom'},
-  {ext: 'doc', mime: 'application/msword'},
-  {ext: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
-  {ext: 'gif', mime: 'image/gif'},
-  {ext: 'ico', mime: 'image/vnd.microsoft.icon'},
-  {ext: 'ics', mime: 'text/calendar'},
-  {ext: 'jpeg', mime: 'image/jpeg'},
-  {ext: 'jpg', mime: 'image/jpeg'},
-  {ext: 'mp3', mime: 'audio/mpeg'},
-  {ext: 'mpeg', mime: 'video/mpeg'},
-  {ext: 'opd', mime: 'application/vnd.oasis.opendocument.presentation'},
-  {ext: 'ods', mime: 'application/vnd.oasis.opendocument.spreadsheet'},
-  {ext: 'odt', mime: 'application/vnd.oasis.opendocument.text'},
-  {ext: 'oga', mime: 'audio/ogg'},
-  {ext: 'ogv', mime: 'video/ogg'},
-  {ext: 'ogx', mime: 'application/ogg'},
-  {ext: 'png', mime: 'image/png'},
-  {ext: 'pdf', mime: 'application/pdf'},
-  {ext: 'ppt', mime: 'application/vnd.ms-powerpoint'},
-  {ext: 'pptx', mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'},
-  {ext: 'tif', mime: 'image/tiff'},
-  {ext: 'tiff', mime: 'image/tiff'},
-  {ext: 'ts', mime: 'video/mp2t'},
-  {ext: 'txt', mime: 'text/plain'},
-  {ext: 'vsd', mime: 'application/vnd.visio'},
-  {ext: 'wav', mime: 'audio/wav'},
-  {ext: 'weba', mime: 'audio/webm'},
-  {ext: 'webm', mime: 'video/webm'},
-  {ext: 'webp', mime: 'image/webp'},
-  {ext: 'xls', mime: 'application/vnd.ms-excel'},
-  {ext: 'xlsx', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
-  {ext: 'zip', mime: 'application/zip'},
+  {ext: 'acc', mime: 'audio/aac', icon: path + audio},
+  {ext: 'avi', mime: 'video/x-msvideo', icon: path + video},
+  {ext: 'bin', mime: 'application/octet-stream', icon: path + unknown},
+  {ext: 'bmp', mime: 'image/bmp', icon: ''},
+  {ext: 'csv', mime: 'text/csv', icon: path + text},
+  {ext: 'dcm', mime: 'application/dicom', icon: path + dcm},
+  {ext: 'dcm30', mime: 'application/dicom', icon: path + dcm},
+  {ext: 'dicom', mime: 'application/dicom', icon: path + dcm},
+  {ext: 'doc', mime: 'application/msword', icon: path + word},
+  {ext: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', icon: path + word},
+  {ext: 'gif', mime: 'image/gif', icon: ''},
+  {ext: 'ico', mime: 'image/vnd.microsoft.icon', icon: ''},
+  {ext: 'ics', mime: 'text/calendar', icon: path + text},
+  {ext: 'jpeg', mime: 'image/jpeg', icon: ''},
+  {ext: 'jpg', mime: 'image/jpeg', icon: ''},
+  {ext: 'mp3', mime: 'audio/mpeg', icon: path + audio},
+  {ext: 'mpeg', mime: 'video/mpeg', icon: path + video},
+  {ext: 'opd', mime: 'application/vnd.oasis.opendocument.presentation', icon: path + presentation},
+  {ext: 'ods', mime: 'application/vnd.oasis.opendocument.spreadsheet', icon: path + excel},
+  {ext: 'odt', mime: 'application/vnd.oasis.opendocument.text', icon: path + text},
+  {ext: 'oga', mime: 'audio/ogg', icon: path + audio},
+  {ext: 'ogv', mime: 'video/ogg', icon: path + video},
+  {ext: 'png', mime: 'image/png', icon: ''},
+  {ext: 'pdf', mime: 'application/pdf', icon: path + pdf},
+  {ext: 'ppt', mime: 'application/vnd.ms-powerpoint', icon: path + presentation},
+  {ext: 'pptx', mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', icon: path + presentation},
+  {ext: 'tif', mime: 'image/tiff', icon: ''},
+  {ext: 'tiff', mime: 'image/tiff', icon: ''},
+  {ext: 'ts', mime: 'video/mp2t', icon: path + video},
+  {ext: 'txt', mime: 'text/plain', icon: path + text},
+  {ext: 'wav', mime: 'audio/wav', icon: path + audio},
+  {ext: 'weba', mime: 'audio/webm', icon: path + audio},
+  {ext: 'webm', mime: 'video/webm', icon: path + video},
+  {ext: 'webp', mime: 'image/webp', icon: ''},
+  {ext: 'xls', mime: 'application/vnd.ms-excel', icon: path + excel},
+  {ext: 'xlsx', mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', icon: path + excel},
+  {ext: 'zip', mime: 'application/zip', icon: path + zip}
 ];

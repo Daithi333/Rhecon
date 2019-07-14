@@ -13,6 +13,7 @@ import { AuthService } from '../../auth/auth.service';
 import { AddCommentComponent } from './add-comment/add-comment.component';
 import { CommentsService } from './comments.service';
 import { Comment } from './comment.model';
+import { fileTypes } from 'src/app/shared/file-types';
 
 @Component({
   selector: 'app-view-request',
@@ -132,52 +133,21 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     });
   }
 
+  // Method returns mime type for blob creation in the file download function
   determineFileType(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-    switch (ext) {
-      case 'jpg':
-        return 'image/jpeg';
-      case 'png':
-        return 'image/png';
-      case 'pdf':
-        return 'application/pdf';
-      case 'doc':
-        return 'application/msword';
-      case 'docx':
-        return 'application/msword';
-      case 'xls':
-        return 'application/vnd.ms-excel';
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      case 'zip':
-        return 'application/zip';
-      default:
-        return '';
-    }
+    const fileType =  fileTypes.find(f => f.ext === ext);
+    return fileType.mime;
   }
 
-  // quick approach to show some non-image file previews. TODO, better solution
+  // return icon to display in file preview, when not an image
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
-    switch (ext) {
-      case 'jpg':
-        return url;
-      case 'png':
-        return url;
-      case 'docx':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
-      case 'doc':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/word_icon.jpg';
-      case 'xls':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
-      case 'xlsx':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/excel_icon.png';
-      case 'pdf':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/pdf_icon.png';
-      case 'zip':
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/zip_icon.png';
-      default:
-        return 'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/files/icons/document_icon.png';
+    const fileType =  fileTypes.find(f => f.ext === ext);
+    if (fileType.mime.substring(0, 5) === 'image') {
+      return url;
+    } else {
+      return fileType.icon;
     }
   }
 
