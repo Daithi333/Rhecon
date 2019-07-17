@@ -27,12 +27,13 @@ export class PatientsService {
     private httpClient: HttpClient
   ) {}
 
-  // returns the locally stored list of patients
   get patients() {
     return this._patients.asObservable();
   }
 
-  // retrieves patients from DB to initialise the local behavior subject
+  /**
+   * Fetch patients from DB based on userId to initialise the local list
+   */
   fetchPatients() {
     return this.authService.userId.pipe(
       take(1),
@@ -105,6 +106,10 @@ export class PatientsService {
     );
   }
 
+  /**
+   * Add patient image file to the server
+   * @param imageFile - patient image file
+   */
   addImage(imageFile: File) {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
@@ -115,6 +120,14 @@ export class PatientsService {
     );
   }
 
+  /**
+   * Add a new patient to database and local list
+   * @param firstName - patient firstname
+   * @param lastName - patient lastname
+   * @param dob - patient date of birth
+   * @param portraitUrl - image url
+   * @param notes - patient notes
+   */
   addPatient(
     firstName: string,
     lastName: string,
@@ -157,6 +170,9 @@ export class PatientsService {
     );
   }
 
+  /**
+   * Update a patient on db and local list
+   */
   updatePatient(
     patientId: number,
     firstName: string,
@@ -199,6 +215,10 @@ export class PatientsService {
       }));
   }
 
+  /**
+   * deactivates a patient on the database and removes from local list
+   * @param patientId - id of the patient
+   */
   removePatient(patientId: number) {
     return this.httpClient.put(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/close.php/?id=${patientId}`,

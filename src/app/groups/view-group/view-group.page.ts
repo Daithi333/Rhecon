@@ -101,6 +101,31 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     });
   }
 
+  onPromoteToAdmin(memberId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm action',
+      message: `Are you sure you wish to make this member an admin for ${this.group.groupName}?`,
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.groupsService.promoteToAdmin(memberId, this.group.id).subscribe(() => {
+              slidingItem.close();
+            });
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
   onRemoveMember(memberId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm removal',

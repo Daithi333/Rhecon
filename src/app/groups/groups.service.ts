@@ -221,9 +221,9 @@ export class GroupsService {
     );
   }
 
-  addMember(userId: number, groupId: number) {
-    return this.httpClient.post<{ id: number }>(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create_member.php',
+  promoteToAdmin(userId: number, groupId: number) {
+    return this.httpClient.put(
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/update_membership.php',
       { userId: userId, groupId: groupId }
     );
   }
@@ -263,8 +263,19 @@ export class GroupsService {
     );
   }
 
-  disbandGroup(groupId: number) {
-    // TODO
+  deleteGroup(groupId: number) {
+    return this.httpClient.delete(
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete.php?id=${groupId}`
+    )
+    .pipe(
+      switchMap(() => {
+        return this.groups;
+      }),
+      take(1),
+      tap(requests => {
+        this._groups.next(requests.filter(g => g.id !== groupId));
+      })
+    );
   }
 
   private fetchGroups() {
@@ -332,6 +343,13 @@ export class GroupsService {
     return this.httpClient.post(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/invalidate.php',
       { id: invitationId }
+    );
+  }
+
+  private addMember(userId: number, groupId: number) {
+    return this.httpClient.post<{ id: number }>(
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create_member.php',
+      { userId: userId, groupId: groupId }
     );
   }
 

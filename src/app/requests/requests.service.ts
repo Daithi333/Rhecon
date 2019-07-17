@@ -262,7 +262,7 @@ export class RequestsService {
 
   deleteRequest(requestId: number) {
     return this.httpClient.delete(
-      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/delete.php/?id=${requestId}`
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/delete.php?id=${requestId}`
     )
     .pipe(
       switchMap(() => {

@@ -92,18 +92,18 @@ export class GroupsPage implements OnInit, OnDestroy {
     });
   }
 
-  onDisbandGroup(groupId: number, slidingItem: IonItemSliding) {
+  onDeleteGroup(groupId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm action',
       message: 'Are you sure you wish to disband this group?',
       buttons: [
         {
           text: 'Yes',
-          // handler: () => {
-          //   this.groupsService.disbandGroup(groupId).subscribe(() => {
-          //     slidingItem.close();
-          //   });
-          // }
+          handler: () => {
+            this.groupsService.deleteGroup(groupId).subscribe(() => {
+              slidingItem.close();
+            });
+          }
         },
         {
           text: 'No',

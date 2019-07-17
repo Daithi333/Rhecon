@@ -8,22 +8,21 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group data objects
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
   $group = new Group($db);
 
-  $group->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
-  $group->groupId = isset($_GET['groupId']) ? $_GET['groupId'] : die();
+  $group->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-  // Delete request
-  if($group->deleteMembership()) {
+  // Delete group
+  if($group->delete()) {
     echo json_encode(
-      array('message' => 'Membership Deleted')
+      array('message' => 'Group Deleted')
     );
   } else {
     echo json_encode(
-      array('message' => 'Membership Not Deleted')
+      array('message' => 'Group Not Deleted')
     );
   }
   

@@ -2,28 +2,32 @@
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: DELETE');
+  header('Access-Control-Allow-Methods: PUT');
   header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
 
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group data objects
+  // Instantiate DB and connect
   $database = new Database();
   $db = $database->connect();
+
+  // Instantiate Group data object
   $group = new Group($db);
 
-  $group->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
-  $group->groupId = isset($_GET['groupId']) ? $_GET['groupId'] : die();
+  // get the raw data
+  $data = json_decode(file_get_contents("php://input"));
 
-  // Delete request
-  if($group->deleteMembership()) {
+  $group->userId = $data->userId;
+  $group->groupId = $data->groupId;
+
+  // Update group
+  if($group->updateMembership()) {
     echo json_encode(
-      array('message' => 'Membership Deleted')
+      array('message' => 'Membership Updated')
     );
   } else {
     echo json_encode(
-      array('message' => 'Membership Not Deleted')
+      array('message' => 'Membership Not Updated')
     );
   }
-  

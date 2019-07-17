@@ -39,7 +39,6 @@ export class PatientsPage implements OnInit, OnDestroy {
   onEdit(patientId: number, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.router.navigate(['/', 'tabs', 'patients', 'edit-patient', patientId]);
-    console.log('Editing item', patientId);
   }
 
   onRemove(patientId: number, slidingItem: IonItemSliding) {
