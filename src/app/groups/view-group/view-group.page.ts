@@ -6,6 +6,8 @@ import { NavController, AlertController, IonItemSliding, ActionSheetController, 
 import { Group } from '../group-model';
 import { GroupsService } from '../groups.service';
 import { EmailInvitationComponent } from './email-invitation/email-invitation.component';
+import { AuthService } from '../../auth/auth.service';
+import { take, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-group',
@@ -14,6 +16,7 @@ import { EmailInvitationComponent } from './email-invitation/email-invitation.co
 })
 export class ViewGroupPage implements OnInit, OnDestroy {
   group: Group;
+  userId: number;
   groupId: number;
   isLoading = false;
   editMode = false;
@@ -26,7 +29,8 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     private groupsService: GroupsService,
     private router: Router,
     private actionSheetController: ActionSheetController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -37,28 +41,37 @@ export class ViewGroupPage implements OnInit, OnDestroy {
       }
       this.groupId = +paramMap.get('groupId');
       this.isLoading = true;
-      this.groupSub = this.groupsService.getGroup(+paramMap.get('groupId'))
-        .subscribe(group => {
-          this.group = group;
-          this.editMode = this.group.isAdmin;
-          this.isLoading = false;
-        },
-        error => {
-          this.alertController.create({
-            header: 'Error',
-            message: 'Could not locate group information.',
-            buttons: [
-              {
-                text: 'Okay',
-                handler: () => {
-                  this.router.navigate(['/groups']);
-                }
+      this.groupSub = this.authService.userId.pipe(
+        take(1),
+        switchMap(userId => {
+          this.userId = userId;
+          if (!userId) {
+            throw new Error('User not found!');
+          }
+          return this.groupsService.getGroup(+paramMap.get('groupId'));
+        })
+      )
+      .subscribe(group => {
+        this.group = group;
+        this.editMode = this.group.isAdmin;
+        this.isLoading = false;
+      },
+      error => {
+        this.alertController.create({
+          header: 'Error',
+          message: 'Could not locate group information.',
+          buttons: [
+            {
+              text: 'Okay',
+              handler: () => {
+                this.router.navigate(['/groups']);
               }
-            ]
-          }).then(alertEl => {
-            alertEl.present();
-          });
+            }
+          ]
+        }).then(alertEl => {
+          alertEl.present();
         });
+      });
     });
   }
 
@@ -72,11 +85,11 @@ export class ViewGroupPage implements OnInit, OnDestroy {
             this.openEmailModal();
           }
         },
-        {
-          text: 'Invite by text',
-          handler: () => {
-          }
-        },
+        // {
+        //   text: 'Invite by text',
+        //   handler: () => {
+        //   }
+        // },
         {
           text: 'Cancel',
           role: 'cancel'
@@ -106,12 +119,13 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     this.alertController.create({
       header: 'Confirm Admin Change',
       message: `Are you sure you wish to make ${newAdmin.firstName}
-                ${newAdmin.lastName} the admin for ${this.group.groupName}?`,
+                ${newAdmin.lastName} the new admin for ${this.group.groupName}?`,
       buttons: [
         {
           text: 'Yes',
           handler: () => {
             this.groupsService.changeAdmin(this.group.id, newAdminId).subscribe(() => {
+              this.editMode = false;
               this.presentAlert();
               slidingItem.close();
               this.router.navigate(['/groups']);
