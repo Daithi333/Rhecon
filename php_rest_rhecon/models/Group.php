@@ -12,7 +12,7 @@
     public $imageUrl;
     public $isAdmin;
     public $userId;
-    public $groupId; // for the membership table join
+    public $groupId; // same as id but for the membership table join
     public $newAdminId; // for admin swap
     
     // Constructor with DB arg

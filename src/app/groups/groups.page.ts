@@ -25,9 +25,10 @@ export class GroupsPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.groupsSub = this.groupsService.groups.subscribe(groups => {
-      this.groups = groups;
-    });
+    this.groupsSub = this.groupsService.groups
+      .subscribe(groups => {
+        this.groups = groups;
+      });
   }
 
   ionViewWillEnter() {
@@ -93,9 +94,15 @@ export class GroupsPage implements OnInit, OnDestroy {
   }
 
   onDeleteGroup(groupId: number, slidingItem: IonItemSliding) {
+    const group = this.groups.find(g => g.id === groupId);
+    if (group.members.length > 1) {
+      this.presentDeleteRejection();
+      slidingItem.close();
+      return;
+    }
     this.alertController.create({
       header: 'Confirm action',
-      message: 'Are you sure you wish to disband this group?',
+      message: 'Are you sure you wish to delete this group?',
       buttons: [
         {
           text: 'Yes',
@@ -121,6 +128,16 @@ export class GroupsPage implements OnInit, OnDestroy {
     if (this.groupsSub) {
       this.groupsSub.unsubscribe();
     }
+  }
+
+  private presentDeleteRejection() {
+    this.alertController.create({
+      header: 'Unable to delete',
+      message: 'A group with members cannot be deleted. You can leave after assigning a new admin from the Edit Group page.',
+      buttons: ['Okay']
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }

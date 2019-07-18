@@ -84,7 +84,6 @@ export class GroupsService {
         return group;
       }),
       mergeMap(fetchedGroup => {
-        // console.log(fetchedGroup);
         return this.fetchMembership(fetchedGroup).pipe(
           takeLast(1),
           map(members => {
@@ -272,16 +271,22 @@ export class GroupsService {
   }
 
   deleteGroup(groupId: number) {
-    return this.httpClient.delete(
-      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete.php?id=${groupId}`
-    )
-    .pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.delete(
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete.php?id=${groupId}&userId=${userId}`
+        );
+      }),
       switchMap(() => {
         return this.groups;
       }),
       take(1),
-      tap(requests => {
-        this._groups.next(requests.filter(g => g.id !== groupId));
+      tap(groups => {
+        this._groups.next(groups.filter(g => g.id !== groupId));
       })
     );
   }
