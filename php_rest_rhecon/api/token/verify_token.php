@@ -19,11 +19,15 @@
 
   $token = isset($data->token) ? $data->token : '';
 
-  // if (!$token) {
-  //   $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-  //   $arr = explode(' ', $authHeader);
-  //   $token = $arr[1];
-  // }
+  if (!$token) {
+
+    // https://stackoverflow.com/questions/2902621/fetching-custom-authorization-header-from-incoming-php-request
+    $headers = apache_request_headers();
+    if (isset($headers['Authorization'])) {
+      $arr = explode(' ', $headers['Authorization']);
+      $token = $arr[1];
+    }
+  }
 
   if ($token) {
     try {
@@ -49,7 +53,9 @@
   } else {
     http_response_code(401);
 
-      echo json_encode(array(
-        "message" => "Access denied."
-      ));
+      echo json_encode(
+        array(
+          "message" => "Access denied."
+        )
+      );
   }
