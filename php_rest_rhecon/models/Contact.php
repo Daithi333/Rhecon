@@ -16,6 +16,7 @@
     public $firstName;
     public $lastName;
     public $specialism;
+    public $email;
     public $portraitUrl;
     public $bio;
     public $userId;
@@ -34,7 +35,7 @@
                       WHERE n.userId = :userId';
 
       $query = 'SELECT u.id, t.title, u.firstName, u.lastName,
-                 s.specialism, u.portraitUrl, u.bio
+                 s.specialism, u.email, u.portraitUrl, u.bio
                 FROM ' . $this->membershipTable . ' m
                 LEFT JOIN ' . $this->groupTable  . ' g
                 ON g.id = m.groupId
@@ -63,7 +64,7 @@
      */
     public function readSingle() {
       $query = 'SELECT u.id, t.title, u.firstName, u.lastName,
-                s.specialism, u.portraitUrl, u.bio
+                s.specialism, u.email, u.portraitUrl, u.bio
                 FROM ' . $this->userTable . ' u
                 LEFT JOIN ' . $this->titleTable  . ' t
                 ON t.id = u.titleId
@@ -85,6 +86,7 @@
         $this->firstName = $row['firstName'];
         $this->lastName = $row['lastName'];
         $this->specialism = $row['specialism'];
+        $this->email = $row['email'];
         $this->portraitUrl = $row['portraitUrl'];
         $this->bio = $row['bio'];
 

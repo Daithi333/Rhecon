@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onClose()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Search For Group</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" padding>
+          <ion-item>
+            <ion-label position="floating">Group Name</ion-label>
+            <ion-input type="text" formControlName="groupName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" padding text-center>
+          <ion-button
+            type="button"
+            color="tertiary"
+            expand="block"
+            (click)="onSubmit()"
+            [disabled]="!form.valid"
+            >Search</ion-button
+          >
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" text-center>
+          <ion-list>
+            <ion-item *ngFor="let group of groups">
+              <ion-thumbnail>
+                <ion-img [src]="group.imageUrl"></ion-img>
+              </ion-thumbnail>
+              <ion-label class="sidePadding">
+                <h2>{{ group.groupName }}</h2>
+                <ion-note>Admin: {{ group.admin.firstName }} {{ group.admin.lastName }}</ion-note>
+                <p>Email: {{ group.admin.email }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

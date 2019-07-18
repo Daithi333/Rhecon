@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Group } from './group-model';
 import { GroupsService } from './groups.service';
 import { JoinGroupComponent } from './join-group/join-group.component';
+import { GroupSearchComponent } from './group-search/group-search.component';
 
 @Component({
   selector: 'app-groups',
@@ -38,7 +39,7 @@ export class GroupsPage implements OnInit, OnDestroy {
     });
   }
 
-  onCreate() {
+  onCreateGroup() {
     this.alertController.create({
       header: 'Group Membership',
       message: 'By setting up a group, you will be responsible for inviting and removing members.',
@@ -58,7 +59,17 @@ export class GroupsPage implements OnInit, OnDestroy {
     });
   }
 
-  onJoin() {
+  onGroupSearch() {
+    this.modalController.create({
+      component: GroupSearchComponent,
+      id: 'groupSearch'
+    })
+    .then(modalEl => {
+      modalEl.present();
+    });
+  }
+
+  onJoinGroup() {
     this.modalController.create({
       component: JoinGroupComponent,
       id: 'joinGroup'

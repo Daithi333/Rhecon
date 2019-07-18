@@ -157,9 +157,8 @@ export class PatientsService {
           { ...newPatient, id: null }
         );
       }),
-      switchMap(responseData => {
-        console.log(responseData);
-        uniqueId = responseData.dbId;
+      switchMap(resData => {
+        uniqueId = resData.dbId;
         return this.patients;
       }),
       take(1),

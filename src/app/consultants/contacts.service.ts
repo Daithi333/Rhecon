@@ -13,6 +13,7 @@ interface ContactData {
   firstName: string;
   lastName: string;
   specialism: Specialism;
+  email: string;
   portraitUrl: string;
   bio: string;
   groups: string;
@@ -52,6 +53,7 @@ export class ContactsService {
                 resData[key].firstName,
                 resData[key].lastName,
                 resData[key].specialism,
+                resData[key].email,
                 resData[key].portraitUrl,
                 resData[key].bio,
                 []
@@ -79,6 +81,7 @@ export class ContactsService {
           contactData.firstName,
           contactData.lastName,
           contactData.specialism,
+          contactData.email,
           contactData.portraitUrl,
           contactData.bio,
           []

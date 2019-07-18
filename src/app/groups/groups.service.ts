@@ -7,6 +7,14 @@ import { Group } from './group-model';
 import { AuthService } from '../auth/auth.service';
 import { ContactsService } from '../consultants/contacts.service';
 import { Contact } from '../consultants/contact.model';
+import { GroupSearch } from './group-search.model';
+
+interface GroupData {
+  id: number;
+  groupName: string;
+  imageUrl: string;
+  userId: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +28,6 @@ export class GroupsService {
     private contactsService: ContactsService
   ) {}
 
-  // returns the locally stored list of groups
   get groups() {
     return this._groups.asObservable();
   }
@@ -89,6 +96,32 @@ export class GroupsService {
           map(members => {
             group.members = members;
             return group;
+          })
+        );
+      })
+    );
+  }
+
+  groupSearchWithAdmin(groupName: string) {
+    const groupArr: GroupSearch[] = [];
+    return this.groupSearch(groupName).pipe(
+      mergeMap(groups => {
+        if (!groups || !groups.length) {
+          return of(null);
+        }
+        return groups.map(group => {
+          return group;
+        });
+      }),
+      mergeMap(group => {
+        if (!group) {
+          return of(null);
+        }
+        return this.contactsService.getContact(group.admin).pipe(
+          map(contact => {
+            group.admin = contact;
+            groupArr.push(group);
+            return groupArr;
           })
         );
       })
@@ -341,6 +374,29 @@ export class GroupsService {
       mergeMap(contact => {
         members.push(contact);
         return of(members);
+      })
+    );
+  }
+
+  private groupSearch(groupName: string) {
+    return this.httpClient.get<{[key: number]: GroupData}>(
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/search.php?groupName=${groupName}`
+    ).pipe(
+      map(resData => {
+        const groups = [];
+        for (const key in resData) {
+          if (resData.hasOwnProperty(key)) {
+            groups.push(
+              {
+                id: +resData[key].id,
+                groupName: resData[key].groupName,
+                imageUrl: resData[key].imageUrl,
+                admin: +resData[key].userId
+              }
+            );
+          }
+        }
+        return groups;
       })
     );
   }

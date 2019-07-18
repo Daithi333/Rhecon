@@ -91,6 +91,27 @@
     }
 
     /**
+     * Function to retrieve groups and admin based on name comparison
+     */
+    public function search($searchedName) {
+
+      $query = 'SELECT g.id, g.groupName, g.imageUrl, m.userId
+                FROM ' . $this->membershipTable . ' m
+                LEFT JOIN ' . $this->table . ' g
+                ON m.groupId=g.id
+                WHERE g.groupName LIKE "%' . $searchedName . '%"
+                AND m.isAdmin = 1';
+
+      $searchedName = Utility::sanitise_input($searchedName);
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->execute();
+
+      return $stmt;
+    }
+
+    /**
      * Function to add a new group record
      */
     public function create() {

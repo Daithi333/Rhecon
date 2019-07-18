@@ -70,7 +70,6 @@ export class JoinGroupComponent implements OnInit {
           default:
             break;
         }
-        // console.log(error);
         loadingEl.dismiss();
         this.alertController.create({
           header: $header,

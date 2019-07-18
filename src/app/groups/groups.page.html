@@ -31,7 +31,7 @@
           *ngIf="!isLoading"
         >
           <ion-list no-padding>
-            <ion-item [routerLink]="" type="button" (click)="onCreate()">
+            <ion-item [routerLink]="" type="button" (click)="onCreateGroup()">
               <ion-thumbnail slot="start">
                   <ion-img src="../../assets/icon/add-group-icon.png"></ion-img>
               </ion-thumbnail>
@@ -39,7 +39,15 @@
                 <h3>Create new group</h3>
               </ion-label>
             </ion-item>
-            <ion-item [routerLink]="" type="button" (click)="onJoin()">
+            <ion-item [routerLink]="" type="button" (click)="onGroupSearch()">
+              <ion-thumbnail slot="start">
+                  <ion-img src="../../assets/icon/group-search-icon.jpg"></ion-img>
+              </ion-thumbnail>
+              <ion-label>
+                <h3>Search for group</h3>
+              </ion-label>
+            </ion-item>
+            <ion-item [routerLink]="" type="button" (click)="onJoinGroup()">
               <ion-thumbnail slot="start">
                   <ion-img src="../../assets/icon/join-group-icon.jpg"></ion-img>
               </ion-thumbnail>

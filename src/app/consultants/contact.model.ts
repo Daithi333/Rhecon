@@ -7,6 +7,7 @@ export class Contact {
     public firstName: string,
     public lastName: string,
     public specialism: Specialism,
+    public email: string,
     public portraitUrl: string,
     public bio: string,
     public group: string[]

@@ -23,6 +23,7 @@
       'firstName' => $contact->firstName,
       'lastName' => $contact->lastName,
       'specialism' => $contact->specialism,
+      'email' => $contact->email,
       'portraitUrl' => $contact->portraitUrl,
       'bio' => $contact->bio
     );

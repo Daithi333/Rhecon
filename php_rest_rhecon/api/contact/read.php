@@ -32,6 +32,7 @@
         'firstName' => $firstName,
         'lastName' => $lastName,
         'specialism' => $specialism,
+        'email' => $email,
         'portraitUrl' => $portraitUrl,
         'bio' => $bio
       );
