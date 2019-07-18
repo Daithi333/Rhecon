@@ -13,6 +13,7 @@
     public $isAdmin;
     public $userId;
     public $groupId; // for the membership table join
+    public $newAdminId; // for admin swap
     
     // Constructor with DB arg
     public function __construct($db) {
@@ -185,11 +186,41 @@
     }
 
     /**
-    * Function to update a single group membership record to admin
+    * Function to add admin to a single group membership
     */
-    public function updateMembership() {
+    public function setAdmin() {
       $query = 'UPDATE ' . $this->membershipTable . '
                 SET isAdmin = 1
+                WHERE userId = :newAdminId
+                AND groupId = :groupId';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->newAdminId = Utility::sanitise_input($this->newAdminId);
+      $this->groupId = Utility::sanitise_input($this->groupId);
+
+      // bind data
+      $stmt->bindParam(':newAdminId', $this->newAdminId);
+      $stmt->bindParam(':groupId', $this->groupId);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+    * Function to remove admin from a single membership record
+    */
+    public function removeAdmin() {
+      $query = 'UPDATE ' . $this->membershipTable . '
+                SET isAdmin = 0
                 WHERE userId = :userId
                 AND groupId = :groupId';
       

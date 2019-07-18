@@ -20,14 +20,24 @@
 
   $group->userId = $data->userId;
   $group->groupId = $data->groupId;
+  $group->newAdminId = $data->newAdminId;
 
-  // Update group
-  if($group->updateMembership()) {
-    echo json_encode(
-      array('message' => 'Membership Updated')
-    );
+  // Update group admin
+  if($group->setAdmin()) {
+
+    if($group->removeAdmin()) {
+      echo json_encode(
+        array('message' => 'Admin Replaced Sucessfully')
+      );
+
+    } else {
+      echo json_encode(
+        array('message' => 'Admin Added Original Not Replaced')
+      );
+    };
+    
   } else {
     echo json_encode(
-      array('message' => 'Membership Not Updated')
+      array('message' => 'Admin Not Updated')
     );
   }

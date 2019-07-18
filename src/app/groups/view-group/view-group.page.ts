@@ -101,16 +101,20 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     });
   }
 
-  onPromoteToAdmin(memberId: number, slidingItem: IonItemSliding) {
+  onChangeAdmin(newAdminId: number, slidingItem: IonItemSliding) {
+    const newAdmin = this.group.members.find(m => m.id === newAdminId);
     this.alertController.create({
-      header: 'Confirm action',
-      message: `Are you sure you wish to make this member an admin for ${this.group.groupName}?`,
+      header: 'Confirm Admin Change',
+      message: `Are you sure you wish to make ${newAdmin.firstName}
+                ${newAdmin.lastName} the admin for ${this.group.groupName}?`,
       buttons: [
         {
           text: 'Yes',
           handler: () => {
-            this.groupsService.promoteToAdmin(memberId, this.group.id).subscribe(() => {
+            this.groupsService.changeAdmin(this.group.id, newAdminId).subscribe(() => {
+              this.presentAlert();
               slidingItem.close();
+              this.router.navigate(['/groups']);
             });
           }
         },
@@ -177,6 +181,20 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     if (this.groupSub) {
       this.groupSub.unsubscribe();
     }
+  }
+
+  private presentAlert() {
+    this.alertController.create({
+      header: 'Success',
+      message: 'Admin successfully changed',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }

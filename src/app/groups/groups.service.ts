@@ -221,10 +221,18 @@ export class GroupsService {
     );
   }
 
-  promoteToAdmin(userId: number, groupId: number) {
-    return this.httpClient.put(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/update_membership.php',
-      { userId: userId, groupId: groupId }
+  changeAdmin(groupId: number, newAdminId: number) {
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.put(
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/update_membership.php',
+          { userId: userId, groupId: groupId, newAdminId: newAdminId }
+        );
+      })
     );
   }
 
