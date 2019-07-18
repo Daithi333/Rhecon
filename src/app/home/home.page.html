@@ -39,7 +39,6 @@
         size-xl="4"
         offset-xl="4"
         text-center
-        padding
       >
         <br />
         <ion-thumbnail>
@@ -59,9 +58,10 @@
         offset-lg="3"
         size-xl="4"
         offset-xl="4"
-        padding
         text-center
+        *ngIf="!isLoading"
       >
+        <ion-text color="primary"><h4><em>Welcome {{ profile.firstName }}</em></h4></ion-text> 
       </ion-col>
     </ion-row>
   </ion-grid>
