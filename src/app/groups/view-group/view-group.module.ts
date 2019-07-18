@@ -23,7 +23,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ViewGroupPage, EmailInvitationComponent, GroupSearchComponent],
-  entryComponents: [EmailInvitationComponent, GroupSearchComponent]
+  declarations: [ViewGroupPage, EmailInvitationComponent],
+  entryComponents: [EmailInvitationComponent]
 })
 export class ViewGroupPageModule {}

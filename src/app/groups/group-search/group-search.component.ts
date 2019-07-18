@@ -10,7 +10,7 @@ import { GroupSearch } from '../group-search.model';
   templateUrl: './group-search.component.html',
   styleUrls: ['./group-search.component.scss'],
 })
-export class GroupSearchComponent implements OnInit, OnDestroy {
+export class GroupSearchComponent implements OnInit {
   form: FormGroup;
   groups: GroupSearch[];
 
@@ -46,10 +46,6 @@ export class GroupSearchComponent implements OnInit, OnDestroy {
         loadingEl.dismiss();
       });
     });
-  }
-
-  ngOnDestroy() {
-    this.groups.splice(0, this.groups.length);
   }
 
 }
