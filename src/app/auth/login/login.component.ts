@@ -12,7 +12,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -43,15 +42,12 @@ export class LoginComponent implements OnInit {
     }
     const email = form.value.email;
     const password = form.value.password;
-    this.isLoading = true;
     this.loadingController
       .create({keyboardClose: true, message: 'Logging in...'})
       .then(loadingEl => {
         loadingEl.present();
         this.authService.login(email, password)
           .subscribe(resData => {
-            // console.log(resData);
-            this.isLoading = false;
             loadingEl.dismiss();
             this.onClose();
             this.router.navigateByUrl('/tabs/home');

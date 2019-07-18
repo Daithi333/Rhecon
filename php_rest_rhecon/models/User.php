@@ -22,13 +22,6 @@
     }
 
     /**
-     * Function to retrieve user record
-     */
-    public function read() {
-
-    }
-
-    /**
      * Function to create new user record
      */
     public function create() {
@@ -168,6 +161,35 @@
       $stmt->bindParam(':specialismId', $this->specialismId);
       $stmt->bindParam(':portraitUrl', $this->portraitUrl);
       $stmt->bindParam(':bio', $this->bio);
+      
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+     * Function to update a single user password
+     */
+    public function updatePassword() {
+      $query = 'UPDATE ' . $this->table . '
+                SET password = :password
+                WHERE id = :id';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+      $this->password = Utility::sanitise_input($this->password);
+
+      // bind data
+      $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':password', $this->password);
       
       // Execute query
       if($stmt->execute()) {

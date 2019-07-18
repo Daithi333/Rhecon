@@ -24,12 +24,13 @@
     $user->email = $data->email;
     $enteredPassword = $data->password;
 
-    // Create user on db and generate auth token
+    // Check if user is on db
     if($user->readSingle()) {
 
       // verify entered password against hashed password from DB
       if (password_verify($enteredPassword, $user->password)) {
         
+        // Create token if successful 
         $issuer = $_SERVER['SERVER_NAME'];
         $audience = 'Rhecon';
         $issuedAt = time();

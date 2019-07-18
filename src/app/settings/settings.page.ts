@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsPage implements OnInit {
 
-  constructor() { }
+  constructor(private modalController: ModalController) { }
 
   ngOnInit() {
+  }
+
+  onChangePassword() {
+    this.modalController.create({
+      component: ChangePasswordComponent,
+      id: 'changePassword'
+    })
+    .then(modalEl => {
+      modalEl.present();
+    });
   }
 
 }

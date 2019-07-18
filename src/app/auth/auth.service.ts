@@ -63,6 +63,18 @@ export class AuthService {
     );
   }
 
+  get email() {
+    return this._userAuth.asObservable().pipe(
+      map(user => {
+        if (user) {
+          return user.email;
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
   get token() {
     return this._userAuth.asObservable().pipe(
       map(user => {
@@ -100,14 +112,14 @@ export class AuthService {
       null
     );
     return this.httpClient.post<SignupResponseData>(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/create.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/signup.php',
       { ...newUser }
     );
   }
 
   login(email: string, password: string) {
     return this.httpClient.post<LoginResponseData>(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/read_single.php',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/login.php',
       { email: email, password: password }
     ).pipe(
       tap(resData => {
@@ -170,8 +182,15 @@ export class AuthService {
     );
   }
 
+  changePassword(email: string, currentPassword: string, newPassword: string) {
+    return this.httpClient.post< {message: string} >(
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/change_password.php',
+      { email: email, currentPassword: currentPassword, newPassword: newPassword }
+    );
+  }
+
   resetPasswordEmail(email: string) {
-    return this.httpClient.post<{ message: string, dbId: number }>(
+    return this.httpClient.post<{ message: string }>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/reset_password.php',
       { email: email }
     );
