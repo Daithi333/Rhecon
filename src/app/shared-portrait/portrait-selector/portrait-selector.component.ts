@@ -75,7 +75,6 @@ export class PortraitSelectorComponent implements OnInit {
           this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
             const reorientatedDataUrl = reorientatedImage;
             this.selectedImage = reorientatedDataUrl;
-            console.log(reorientatedDataUrl);
             this.imageChoice.emit(reorientatedDataUrl);
           });
         }
