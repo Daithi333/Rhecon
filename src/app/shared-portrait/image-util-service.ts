@@ -32,7 +32,7 @@ export class ImageUtilService {
 
   // https://stackoverflow.com/questions/7584794/accessing-jpeg-exif-rotation-data-in-javascript-on-the-client-side
 
-  getOrientation = (file: File, callback: Function) => {
+  getOrientation = (file: File, callback: any) => {
     const reader = new FileReader();
 
     reader.onload = (event: ProgressEvent) => {

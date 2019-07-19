@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 import { ImageUtilService } from '../image-util-service';
 
@@ -14,23 +14,25 @@ export class PortraitSelectorComponent implements OnInit {
   @Output() imageChoice = new EventEmitter<string | File>();
   @Input() selectedImage: string;
 
-  constructor(private platform: Platform, private imageUtilityService: ImageUtilService) { }
+  constructor(
+    private platform: Platform,
+    private imageUtilityService: ImageUtilService,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
-    // console.log('Mobile: ', this.platform.is('mobile'));
-    // console.log('Hybrid: ', this.platform.is('hybrid'));
-    // console.log('Desktop: ', this.platform.is('desktop'));
     if (
+      // platform is mobile and hybrid, it is a browser emulating a mobile
       (this.platform.is('mobile') && !this.platform.is('hybrid')) ||
       this.platform.is('desktop')
     ) {
-      // TODO - add action sheet to allow choice of camera or file chooser on non-mobile device with cam attached
+      // TODO - action sheet to allow choice of camera or file chooser for non-mobile device with camera
       this.useFileSelector = true;
     }
   }
 
   onSelectImage() {
-    // check to open file selector if camera unavailable
+    // if camera plugin is unavailable, use file selector
     if (!Capacitor.isPluginAvailable('Camera') || this.useFileSelector) {
       this.fileSelector.nativeElement.click();
       return;
@@ -56,17 +58,16 @@ export class PortraitSelectorComponent implements OnInit {
   }
 
   onFileChosen(event: Event) {
-    console.log(event);
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
-      // TODO - add alert
+      this.presentAlert();
       return;
     }
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
       this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
-        // if orientation is 1 or absent from exif data, no problem..
+        // if orientation is 1 or absent from exif data, no action required
         if (+orientation === 1 || +orientation === -1) {
           this.selectedImage = dataUrl;
           this.imageChoice.emit(chosenFile);
@@ -81,6 +82,20 @@ export class PortraitSelectorComponent implements OnInit {
       });
     };
     fr.readAsDataURL(chosenFile);
+  }
+
+  private presentAlert() {
+    this.alertController.create({
+      header: 'Error',
+      message: 'There has been a problem with your file selection. Please try again later.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }
