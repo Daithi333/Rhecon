@@ -35,12 +35,18 @@ export class PatientsService {
    * Fetch patients from DB based on userId to initialise the local list
    */
   fetchPatients() {
+    let userId;
     return this.authService.userId.pipe(
       take(1),
-      switchMap(userId => {
-        if (!userId) {
+      switchMap(userIdData => {
+        if (!userIdData) {
           throw new Error('User not found!');
         }
+        userId = userIdData;
+        return this.authService.token;
+      }),
+      take(1),
+      switchMap(token => {
         return this.httpClient.get<{[key: number]: PatientData}>(
           `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
         );
