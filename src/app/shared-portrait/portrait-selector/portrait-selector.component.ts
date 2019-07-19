@@ -45,6 +45,7 @@ export class PortraitSelectorComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
+      // reorientate if not 1 or -1
       this.selectedImage = image.dataUrl;
       this.imageChoice.emit(image.dataUrl);
     })
