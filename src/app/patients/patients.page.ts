@@ -33,6 +33,8 @@ export class PatientsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.patientsService.fetchPatients().subscribe(() => {
       this.isLoading = false;
+    }, error => {
+      this.isLoading = false;
     });
   }
 

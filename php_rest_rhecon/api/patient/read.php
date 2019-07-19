@@ -3,7 +3,7 @@
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
   header('Access-Control-Allow-Methods: GET');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,Accept,X-Requested-With');
+  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization');
 
   include_once '../../config/Database.php';
   include_once '../../config/secure.php';
@@ -15,15 +15,16 @@
   $db = $database->connect();
   $patient = new Patient($db);
 
-  // $headers = apache_request_headers();
-  // if (isset($headers['Authorization'])) {
-  //   $arr = explode(' ', $headers['Authorization']);
-  //   $token = $arr[1];
-  // }
+  // retrieve auth token from headers
+  $headers = apache_request_headers();
+  if (isset($headers['Authorization'])) {
+    $arr = explode(' ', $headers['Authorization']);
+    $token = $arr[1];
+  }
 
-  // if ($token) {
-  //   try {
-  //     $decoded = JWT::decode($token, $secret, array('HS256'));
+  if ($token) {
+    try {
+      $decoded = JWT::decode($token, $secret, array('HS256'));
 
       // get user id from URL
       $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
@@ -53,30 +54,31 @@
           array_push($patientArr, $patientElement);
         }
 
-        // output as JSON
         http_response_code(200);
+        // output as JSON
         echo json_encode($patientArr);
 
       } else {
-        http_response_code(404);
+        http_response_code(204);
         echo json_encode(
           array('message' => 'No patients found')
         );
       }
 
-  //   } catch (Exception $ex) {
-  //     http_response_code(401);
-  //     echo json_encode(
-  //       array(
-  //         "message" => "Access denied",
-  //         "error" => $ex->getMessage()
-  //       )
-  //     );
-  //   }
+    } catch (Exception $ex) {
+      http_response_code(401);
+      echo json_encode(
+        array(
+          "message" => "Access denied",
+          "error" => $ex->getMessage()
+        )
+      );
+    }
 
-  // } else {
-  //   http_response_code(401);
-  //   echo json_encode(
-  //     array("message" => "Access denied")
-  //   );
-  // }
+  } else {
+    // TODO - causing CORS OPTIONS error even though token valid and else should not be activated
+    //http_response_code(401);
+    echo json_encode(
+      array("message" => "Access denied")
+    );
+  }

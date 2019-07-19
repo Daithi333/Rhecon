@@ -48,7 +48,8 @@ export class PatientsService {
       take(1),
       switchMap(token => {
         return this.httpClient.get<{[key: number]: PatientData}>(
-          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`,
+          { headers: { Authorization: 'Bearer ' + token } }
         );
       }),
       map(resData => {
@@ -78,7 +79,7 @@ export class PatientsService {
 
   /**
    * Fetch patient record from DB. Also requires requester id when fetched to populate a
-   * request object, (the consultant is not part of the parient record)
+   * request object, (the consultant is not part of the patient record)
    * @param id - the patient record id
    * @param requesterId - initiator of a request object and owner of the patient record
    */

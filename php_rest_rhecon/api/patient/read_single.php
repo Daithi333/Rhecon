@@ -28,12 +28,14 @@
       'userId ' => $patient->userId  
     );
 
+    http_response_code(200);
     print_r(json_encode($patientArr));  
 
   } else {
-    // echo json_encode(
-    //   array('message' => 'No patients found')
-    // );
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No patients found')
+    );
   }
 
    
