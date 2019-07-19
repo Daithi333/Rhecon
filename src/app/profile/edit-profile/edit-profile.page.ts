@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, defer, iif } from 'rxjs';
+import { Subscription, defer, iif, forkJoin } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { switchMap, map } from 'rxjs/operators';
@@ -36,23 +36,15 @@ export class EditProfilePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.profileSub = this.profileService.fetchProfile().pipe(
-      switchMap(profile => {
-        console.log(this.profile);
-        this.profile = profile;
-        return this.httpService.fetchSpecialisms();
-      }),
-      switchMap(specialismData => {
-        this.specialisms = specialismData;
-        return this.httpService.fetchTitles().pipe(
-          map(titlesData => {
-            this.titles = titlesData;
-          })
-        );
-      })
-    )
-    .subscribe(() => {
-      console.log(this.profile);
+    forkJoin([
+      this.profileService.fetchProfile(),
+      this.httpService.fetchSpecialisms(),
+      this.httpService.fetchTitles()
+    ])
+    .subscribe(([profile, specialisms, titles])  => {
+      this.profile = profile;
+      this.specialisms = specialisms;
+      this.titles = titles;
       let selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
       const selectedTitle = this.titles.find(t => t.id === this.profile.titleId);
 

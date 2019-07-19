@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Subscription, forkJoin } from 'rxjs';
 
 import { TitleData, SpecialismData, HttpService } from '../shared-http/http.service';
 import { ProfileService } from './profile.service';
@@ -28,22 +27,15 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.profileSub = this.profileService.fetchProfile().pipe(
-      switchMap(profile => {
-        this.profile = profile;
-        return this.httpService.fetchSpecialisms();
-      }),
-      switchMap(specialismData => {
-        this.specialisms = specialismData;
-        return this.httpService.fetchTitles().pipe(
-          map(titlesData => {
-            this.titles = titlesData;
-          })
-        );
-      })
-    )
-    .subscribe(() => {
-      console.log(this.profile);
+    forkJoin([
+      this.profileService.fetchProfile(),
+      this.httpService.fetchSpecialisms(),
+      this.httpService.fetchTitles()
+    ])
+    .subscribe(([profile, specialisms, titles])  => {
+      this.profile = profile;
+      this.specialisms = specialisms;
+      this.titles = titles;
       this.selectedTitle = this.titles.find(t => t.id === this.profile.titleId);
       this.selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
       if (this.profile.specialismId === 1) {
