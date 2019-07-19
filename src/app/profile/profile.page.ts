@@ -4,6 +4,8 @@ import { Subscription, forkJoin } from 'rxjs';
 import { TitleData, SpecialismData, HttpService } from '../shared-http/http.service';
 import { ProfileService } from './profile.service';
 import { Profile } from './profile.model';
+import { AuthService } from '../auth/auth.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -14,33 +16,33 @@ export class ProfilePage implements OnInit, OnDestroy {
   titles: TitleData[] = [];
   specialisms: SpecialismData[] = [];
   profile: Profile;
+  userType: string;
   profileSub: Subscription;
   isLoading = false;
-  isConsultant = true; // to be replaced by data taken from authservice: tokendata to include userTypeId
   selectedTitle: TitleData;
   selectedSpecialism: SpecialismData;
 
   constructor(
     private httpService: HttpService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.isLoading = true;
-    forkJoin([
+    this.profileSub = forkJoin([
       this.profileService.fetchProfile(),
       this.httpService.fetchSpecialisms(),
-      this.httpService.fetchTitles()
+      this.httpService.fetchTitles(),
+      this.authService.userType
     ])
-    .subscribe(([profile, specialisms, titles])  => {
+    .subscribe(([profile, specialisms, titles, userType])  => {
       this.profile = profile;
       this.specialisms = specialisms;
       this.titles = titles;
+      this.userType = userType;
       this.selectedTitle = this.titles.find(t => t.id === this.profile.titleId);
       this.selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
-      if (this.profile.specialismId === 1) {
-        this.isConsultant = false;
-      }
       this.isLoading = false;
     });
   }

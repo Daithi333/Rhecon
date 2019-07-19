@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, defer, iif, forkJoin } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AlertController, LoadingController } from '@ionic/angular';
 
 import { Profile } from '../profile.model';
 import { SpecialismData, TitleData, HttpService } from '../../shared-http/http.service';
 import { ProfileService } from '../profile.service';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -21,9 +22,9 @@ export class EditProfilePage implements OnInit, OnDestroy {
   form: FormGroup;
   profile: Profile;
   profileSub: Subscription;
+  userType: string;
   isLoading = false;
   imageChanged = false;
-  isConsultant = true; // to be replaced by data taken from authservice: tokendata to include userTypeId
 
   constructor(
     private httpService: HttpService,
@@ -31,28 +32,26 @@ export class EditProfilePage implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private imageUtilService: ImageUtilService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.isLoading = true;
-    forkJoin([
+    this.profileSub = forkJoin([
       this.profileService.fetchProfile(),
       this.httpService.fetchSpecialisms(),
-      this.httpService.fetchTitles()
+      this.httpService.fetchTitles(),
+      this.authService.userType
     ])
-    .subscribe(([profile, specialisms, titles])  => {
+    .subscribe(([profile, specialisms, titles, userType])  => {
       this.profile = profile;
       this.specialisms = specialisms;
       this.titles = titles;
-      let selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
+      this.userType = userType;
+      const selectedSpecialism = this.specialisms.find(s => s.id === this.profile.specialismId);
       const selectedTitle = this.titles.find(t => t.id === this.profile.titleId);
 
-      if (this.profile.specialismId === 1) {
-        this.isConsultant = false;
-        // api doesnt return this 'fake' specialsim. TODO - find better approach..
-        selectedSpecialism = { id: 1, specialism: 'Community Healthcare'};
-      }
       this.form = new FormGroup({
         title: new FormControl(selectedTitle, {
           updateOn: 'blur',

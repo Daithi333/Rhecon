@@ -20,7 +20,6 @@
     public function read() {
       $query = 'SELECT s.id, s.specialism
                 FROM ' . $this->table . ' s
-                WHERE s.specialism != "Community Healthcare"
                 ORDER BY s.specialism ASC';
 
       $stmt = $this->conn->prepare($query);
@@ -31,3 +30,4 @@
     }
 
   }
+ 

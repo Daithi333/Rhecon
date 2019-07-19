@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, take } from 'rxjs/operators';
 import { BehaviorSubject, from } from 'rxjs';
 
 import { User } from './user.model';
@@ -41,6 +41,7 @@ export class AuthService {
 
   get userId() {
     return this._userAuth.asObservable().pipe(
+      take(1),
       map(user => {
         if (user) {
           return user.userId;
@@ -53,6 +54,7 @@ export class AuthService {
 
   get userType() {
     return this._userAuth.asObservable().pipe(
+      take(1),
       map(user => {
         if (user) {
           return user.userType;

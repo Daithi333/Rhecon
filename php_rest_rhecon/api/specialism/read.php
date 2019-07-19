@@ -31,11 +31,12 @@
       array_push($specialismArr, $specialismElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($specialismArr);
 
-    // } else {
-    //   echo json_encode(
-    //     array('message' => 'No specialisms found')
-    //   );
+    } else {
+      http_response_code(204);
+      echo json_encode(
+        array('message' => 'No specialisms found')
+      );
   }

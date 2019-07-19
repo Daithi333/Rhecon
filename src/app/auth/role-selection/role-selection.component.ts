@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { map, mergeMap } from 'rxjs/operators';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 
 import { HttpService, SpecialismData, UserTypeData } from '../../shared-http/http.service';
 
@@ -28,21 +27,16 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.specialismsSub = this.httpService.fetchSpecialisms()
-      .pipe(
-        mergeMap(specialismData => {
-          this.specialisms = specialismData;
-          return this.httpService.fetchUserTypes().pipe(
-            map(userTypeData => {
-              this.userTypes = userTypeData;
-            })
-          );
-        })
-      )
-      .subscribe(() => {
-        this.isLoading = false;
-      },
-      error => {
+    forkJoin([
+      this.httpService.fetchSpecialisms(),
+      this.httpService.fetchUserTypes()
+    ])
+    .subscribe(([specialisms, userTypes]) => {
+      this.specialisms = specialisms.filter(s => s.specialism !== 'Community Healthcare');
+      this.userTypes = userTypes;
+      this.isLoading = false;
+    },
+     error => {
         this.alertController.create({
           header: 'Error',
           message: 'Could not retrieve data, please try again shortly.',
