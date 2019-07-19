@@ -65,15 +65,21 @@ export class PortraitSelectorComponent implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
-      // let reorientatedDataUrl;
-      // this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
-      //   console.log(orientation);
-      //   this.imageUtilityService.resetOrientation(dataUrl, orientation, reorientatedImage => {
-      //     reorientatedDataUrl = reorientatedImage;
-      //   });
-      // });
-      this.selectedImage = dataUrl;
-      this.imageChoice.emit(chosenFile);
+      this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
+        // if orientation is 1 or absent from exif data, no problem..
+        if (+orientation === 1 || +orientation === -1) {
+          this.selectedImage = dataUrl;
+          this.imageChoice.emit(chosenFile);
+        // if orientation is anything else, it needs reorientated
+        } else {
+          this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
+            const reorientatedDataUrl = reorientatedImage;
+            this.selectedImage = reorientatedDataUrl;
+            console.log(reorientatedDataUrl);
+            this.imageChoice.emit(reorientatedDataUrl);
+          });
+        }
+      });
     };
     fr.readAsDataURL(chosenFile);
   }

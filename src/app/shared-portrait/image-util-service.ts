@@ -118,7 +118,7 @@ export class ImageUtilService {
       ctx.drawImage(img, 0, 0);
 
       // export base64
-      callback(canvas.toDataURL());
+      callback(canvas.toDataURL('image/jpeg'));
     };
 
     img.src = srcBase64;

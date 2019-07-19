@@ -97,7 +97,6 @@ export class EditPatientPage implements OnInit, OnDestroy {
         defer(() => this.callUpdatePatient(this.patient.portraitUrl)),
         defer(() => this.patientsService.addImage(this.form.get('patientImage').value).pipe(
           switchMap(resData => {
-            console.log(resData);
             // TODO - handle error from the add image function - server, size, etc
             return this.callUpdatePatient(resData.fileUrl);
           })
