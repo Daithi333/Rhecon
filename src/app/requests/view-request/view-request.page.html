@@ -38,15 +38,8 @@
           <ion-item>
             <ion-icon slot="start" name="paper"></ion-icon>
             <ion-label>
-              <h1>{{ request.title }}</h1>
-              <ion-note *ngIf="canEdit"
-                >Created:
-                {{ this.request.createdOn | date: "dd/MM/yy" }}</ion-note
-              >
-              <ion-note *ngIf="!canEdit" style="color: red;"
-                >Closed:
-                {{ this.request.updatedOn | date: "dd/MM/yy" }}</ion-note
-              >
+              <ion-note>Title</ion-note>
+              <h2>{{ request.title }}</h2>
             </ion-label>
           </ion-item>
           <ion-item>
@@ -94,6 +87,14 @@
               <h2>{{ request.notes }}</h2>
             </ion-label>
           </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="calendar"></ion-icon>
+            <ion-label>
+              <p>Sent: {{ this.request.createdOn | date: "dd/MM/yy" }}</p>
+              <p *ngIf="canEdit">Updated: {{ this.request.updatedOn | date: "dd/MM/yy" }}</p>
+              <p *ngIf="!canEdit" style="color: red;">Closed: {{ this.request.updatedOn | date: "dd/MM/yy" }}</p>
+            </ion-label>
+          </ion-item>
           <ion-item lines="none">
             <ion-icon slot="start" name="attach"></ion-icon>
             <ion-label>
@@ -117,10 +118,6 @@
         class="leftPadding"
       >
         <ion-list no-padding>
-          <!-- <ion-list-header no-padding>
-            <ion-text color="tertiary"><h5>Attachments</h5></ion-text> 
-            <ion-icon slot="primary" name="add"></ion-icon>
-          </ion-list-header> -->
           <ion-item lines="full" *ngIf="attachments.length === 0">
             <p style="padding-left: 50px;">No files attached</p>
           </ion-item>
