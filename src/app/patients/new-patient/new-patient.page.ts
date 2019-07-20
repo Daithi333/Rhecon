@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { iif, defer } from 'rxjs';
@@ -21,11 +21,11 @@ export class NewPatientPage implements OnInit {
     private patientsService: PatientsService,
     private loadingController: LoadingController,
     private router: Router,
-    private imageUtilService: ImageUtilService
+    private imageUtilService: ImageUtilService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
-    // create reactive form group and controls
     this.form = new FormGroup({
       firstName: new FormControl(null, {
         updateOn: 'blur',
@@ -55,7 +55,7 @@ export class NewPatientPage implements OnInit {
         );
       } catch (error) {
         console.log('File conversion error: ' + error);
-        // TODO - add alert if conversion to file fails
+        this.fileConversionAlert();
       }
     } else {
       imageFile = imageData;
@@ -97,6 +97,20 @@ export class NewPatientPage implements OnInit {
       patientImage,
       this.form.value.notes
     );
+  }
+
+  private fileConversionAlert() {
+    this.alertController.create({
+      header: 'Error',
+      message: 'Something went wrong with file conversion. Please retry using .jpg format.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }

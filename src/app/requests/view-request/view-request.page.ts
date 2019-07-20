@@ -13,7 +13,7 @@ import { AuthService } from '../../auth/auth.service';
 import { AddCommentComponent } from './add-comment/add-comment.component';
 import { CommentsService } from './comments.service';
 import { Comment } from './comment.model';
-import { fileTypes } from 'src/app/shared/file-types';
+import { fileTypes } from '../../shared/file-types';
 
 @Component({
   selector: 'app-view-request',
