@@ -51,9 +51,7 @@ export class RequestsService {
           console.log('No requests');
           return of(null);
         }
-        return requests.map(request => {
-          return request;
-        });
+        return requests.map(request => request);
       }),
       mergeMap(request => {
         if (!request) {

@@ -48,6 +48,7 @@
           offset-lg="3"
           size-xl="4"
           offset-xl="4"
+          class="sidePadding"
         >
           <ion-item>
             <ion-label position="floating">Title</ion-label>
@@ -59,55 +60,15 @@
               >
             </ion-select>
           </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col
-          size="12"
-          size-sm="10"
-          offset-sm="1"
-          size-md="8"
-          offset-md="2"
-          size-lg="6"
-          offset-lg="3"
-          size-xl="4"
-          offset-xl="4"
-        >
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
           </ion-item>
-        </ion-col>
-        <ion-col
-          size="12"
-          size-sm="10"
-          offset-sm="1"
-          size-md="8"
-          offset-md="2"
-          size-lg="6"
-          offset-lg="3"
-          size-xl="4"
-          offset-xl="4"
-        >
           <ion-item>
             <ion-label position="floating">Last Name</ion-label>
             <ion-input type="text" formControlName="lastName"></ion-input>
           </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row *ngIf="isConsultant && !isLoading">
-        <ion-col
-          size="12"
-          size-sm="10"
-          offset-sm="1"
-          size-md="8"
-          offset-md="2"
-          size-lg="6"
-          offset-lg="3"
-          size-xl="4"
-          offset-xl="4"
-        >
-          <ion-item>
+          <ion-item *ngIf="userType === 'Consultant' && !isLoading">
             <ion-label position="floating">Specialism</ion-label>
             <ion-select name="specialism" formControlName="specialism">
               <ion-select-option
@@ -117,43 +78,6 @@
               >
             </ion-select>
           </ion-item>
-        </ion-col>
-      </ion-row>
-      <!-- <ion-row *ngIf="!isConsultant && !isLoading">
-        <ion-col
-          size="12"
-          size-sm="10"
-          offset-sm="1"
-          size-md="8"
-          offset-md="2"
-          size-lg="6"
-          offset-lg="3"
-          size-xl="4"
-          offset-xl="4"
-        >
-          <ion-item>
-            <ion-label position="floating">Country of Operation</ion-label>
-            <ion-select name="country" formControlName="country">
-              <ion-select-option value="1">Ethiopia</ion-select-option>
-              <ion-select-option value="2">Nigeria</ion-select-option>
-              <ion-select-option value="3">Botswana</ion-select-option>
-              <ion-select-option value="4">Indonesia</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-      </ion-row> -->
-      <ion-row>
-        <ion-col
-          size="12"
-          size-sm="10"
-          offset-sm="1"
-          size-md="8"
-          offset-md="2"
-          size-lg="6"
-          offset-lg="3"
-          size-xl="4"
-          offset-xl="4"
-        >
           <ion-item lines="none">
             <ion-label position="floating">Bio</ion-label>
             <ion-textarea formControlName="bio" autoGrow></ion-textarea>
@@ -171,6 +95,7 @@
           offset-lg="3"
           size-xl="4"
           offset-xl="4"
+          class="sidePadding"
         >
           <ion-button
             type="submit"

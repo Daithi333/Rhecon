@@ -40,7 +40,7 @@ export class PortraitSelectorComponent implements OnInit {
     Plugins.Camera.getPhoto({
       quality: 60,
       source: CameraSource.Prompt,
-      correctOrientation: false,
+      correctOrientation: true,
       width: 600,
       resultType: CameraResultType.DataUrl,
     })
