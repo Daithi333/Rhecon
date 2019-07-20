@@ -33,7 +33,8 @@ export class GroupsService {
   }
 
   /**
-   * Fetch a list of groups and their members for the local list.
+   * Chains together private methods to fetch groups and then their membership.
+   * Updates the local list when complete
    */
   fetchGroupsWithMembers() {
     const groupArr: Group[] = [];
@@ -68,6 +69,10 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Fetch a group and its membership from DB based on group id
+   * @param groupId  - id of the group
+   */
   getGroup(groupId: number) {
     let group: Group;
     return this.authService.userId.pipe(
@@ -102,6 +107,10 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Lookup groups and their admins based on groupname input
+   * @param groupName - string entered by user in open search
+   */
   groupSearchWithAdmin(groupName: string) {
     const groupArr: GroupSearch[] = [];
     return this.groupSearch(groupName).pipe(
@@ -128,6 +137,11 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Add new group to DB and local list
+   * @param groupName  - name of the group
+   * @param imageUrl - url of the group image
+   */
   addGroup(groupName: string, imageUrl: string) {
     let uniqueId: number;
     let newGroup;
@@ -146,7 +160,7 @@ export class GroupsService {
         );
         return this.httpClient.post<{dbId: number, dbId2: number}>(
           'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create.php',
-          { ...newGroup, id: null, userId: userId }
+          { ...newGroup, userId: userId }
         );
       }),
       switchMap(responseData => {
@@ -162,6 +176,10 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Upload a group image file to server
+   * @param imageFile - image file to be uploaded
+   */
   addImage(imageFile: File) {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
@@ -172,6 +190,12 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Update a group on the DB and local list
+   * @param groupId  - id of the group
+   * @param groupName - updated name for the group
+   * @param imageUrl - updated image url for the group
+   */
   updateGroup(groupId: number, groupName: string, imageUrl: string) {
     let updatedGroups: Group[];
     return this.groups.pipe(
@@ -205,6 +229,7 @@ export class GroupsService {
       }));
   }
 
+  // add a group invitation record to the DB
   addInvitation(groupName: string, groupId: number, recipient: string) {
     return this.httpClient.post<{ message: string, dbId: number }>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/create.php',
@@ -213,9 +238,9 @@ export class GroupsService {
   }
 
   /**
-   * Method chains together http calls associated with joining a group with a code.
-   * Verify the code, add the membership, invalidate the code, fetch the group data and adds to users view
-   * @param inviteCode
+   * Chains together private methods associated with joining a group with a code.
+   * Verify the code, add the membership, invalidate the code, fetch the group data, add group to local list
+   * @param inviteCode - string entered by the user to join the group
    */
   joinWithCode(inviteCode: string) {
     let userId;
@@ -253,6 +278,7 @@ export class GroupsService {
     );
   }
 
+  // lets admin hand over the reins to another group member
   changeAdmin(groupId: number, newAdminId: number) {
     return this.authService.userId.pipe(
       take(1),
@@ -268,6 +294,7 @@ export class GroupsService {
     );
   }
 
+  // for admin to remove a group member
   removeMember(groupId: number, memberId: number) {
     return this.httpClient.delete(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/delete_membership.php/?groupId=${groupId}&userId=${memberId}`
@@ -282,6 +309,8 @@ export class GroupsService {
     );
   }
 
+  // TODO - combine with removeMember() making member id optional and iff() defer() operators
+  // for user to remove themselves from a group
   leaveGroup(groupId: number) {
     return this.authService.userId.pipe(
       take(1),
@@ -303,6 +332,8 @@ export class GroupsService {
     );
   }
 
+
+  // Delete a group. Only an option if user is the only member and admin
   deleteGroup(groupId: number) {
     return this.authService.userId.pipe(
       take(1),
@@ -324,6 +355,9 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Retrieve groups from the db with empty membership array
+   */
   private fetchGroups() {
     return this.authService.userId.pipe(
       take(1),
@@ -358,6 +392,10 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Retrieve the members of a group passed in
+   * @param group - group object
+   */
   private fetchMembership(group: Group) {
     const members: Contact[] = [];
     return this.httpClient.get<number[]>(
@@ -378,6 +416,10 @@ export class GroupsService {
     );
   }
 
+  /**
+   * Search for groups based on user input string. Admin id included
+   * @param groupName - group name input by user in open search
+   */
   private groupSearch(groupName: string) {
     return this.httpClient.get<{[key: number]: GroupData}>(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/search.php?groupName=${groupName}`
@@ -401,6 +443,7 @@ export class GroupsService {
     );
   }
 
+  // check validity of an invitation code
   private verifyInvitation(inviteCode: string) {
     return this.httpClient.post<{ id: number, groupId: number }>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/read_single.php',
@@ -408,6 +451,7 @@ export class GroupsService {
     );
   }
 
+  // invalidate an invitation code (after use)
   private invalidateInvitation(invitationId: number) {
     return this.httpClient.post(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/invalidate.php',
@@ -415,6 +459,7 @@ export class GroupsService {
     );
   }
 
+  // add an non admin member to group
   private addMember(userId: number, groupId: number) {
     return this.httpClient.post<{ id: number }>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/create_member.php',
