@@ -26,7 +26,7 @@ export class PortraitSelectorComponent implements OnInit {
       (this.platform.is('mobile') && !this.platform.is('hybrid')) ||
       this.platform.is('desktop')
     ) {
-      // TODO - action sheet to allow choice of camera or file chooser for non-mobile device with camera
+      // TODO - action sheet to allow choice of camera or file chooser on non-mobile device with camera
       this.useFileSelector = true;
     }
   }
