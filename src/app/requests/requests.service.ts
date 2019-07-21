@@ -59,9 +59,6 @@ export class RequestsService {
         }
         return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
           map(patient => {
-            if (!patient) {
-              return of(null);
-            }
             request.patientId = patient;
             return request;
           })
@@ -73,9 +70,6 @@ export class RequestsService {
         }
         return this.contactsService.getContact(request.requesterId).pipe(
           map(requester => {
-            if (!requester) {
-              return of(null);
-            }
             request.requesterId = requester;
             return request;
           })

@@ -16,7 +16,6 @@ interface ContactData {
   email: string;
   portraitUrl: string;
   bio: string;
-  groups: string;
 }
 
 @Injectable({
@@ -55,8 +54,7 @@ export class ContactsService {
                 resData[key].specialism,
                 resData[key].email,
                 resData[key].portraitUrl,
-                resData[key].bio,
-                []
+                resData[key].bio
               )
             );
           }
@@ -83,8 +81,7 @@ export class ContactsService {
           contactData.specialism,
           contactData.email,
           contactData.portraitUrl,
-          contactData.bio,
-          []
+          contactData.bio
         );
       })
     );

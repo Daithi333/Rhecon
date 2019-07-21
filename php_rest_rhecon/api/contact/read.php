@@ -41,10 +41,12 @@
     }
 
     // output as JSON
+    http_response_code(200);
     echo json_encode($contactArr);
 
-    // } else {
-    //   echo json_encode(
-    //     array('message' => 'No patients found')
-    //   );
+    } else {
+      http_response_code(204);
+      echo json_encode(
+        array('message' => 'No contacts found')
+      );
   }

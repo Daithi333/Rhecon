@@ -9,7 +9,6 @@ export class Contact {
     public specialism: Specialism,
     public email: string,
     public portraitUrl: string,
-    public bio: string,
-    public group: string[]
+    public bio: string
   ) {}
 }

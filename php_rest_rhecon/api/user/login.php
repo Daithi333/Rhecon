@@ -72,7 +72,7 @@
       }
      
     } else {
-      http_response_code(204);
+      http_response_code(401);
       echo json_encode(
         array('message' => 'User not found')
       );
