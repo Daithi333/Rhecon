@@ -11,7 +11,7 @@ import { SelectConsultantComponent } from '../../shared/select-consultant/select
 import { Patient } from '../../patients/patient.model';
 import { Contact } from '../../consultants/contact.model';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
-import { AttachmentsService } from '../attachments.service';
+import { AttachmentsService } from '../../shared/attachments.service';
 
 @Component({
   selector: 'app-new-request',

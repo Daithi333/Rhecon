@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AttachmentsService } from './attachments.service';
+import { AttachmentsService } from '../shared/attachments.service';
 
 describe('AttachmentsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

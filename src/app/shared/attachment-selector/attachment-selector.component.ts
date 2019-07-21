@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input }
 import { Platform, AlertController } from '@ionic/angular';
 import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
 
-import { AttachmentsService } from '../../requests/attachments.service';
+import { AttachmentsService } from '../attachments.service';
 import { fileTypes } from '../file-types';
 
 @Component({

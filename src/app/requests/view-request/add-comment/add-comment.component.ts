@@ -51,8 +51,8 @@ export class AddCommentComponent implements OnInit {
 
   private async presentAlert() {
     const alert = await this.alertController.create({
-      header: 'Comment Added',
-      message: 'Comment has been added to the request',
+      header: 'Comment Sent',
+      message: 'Your comment has been added to the request',
       buttons: ['OK']
     });
     await alert.present();

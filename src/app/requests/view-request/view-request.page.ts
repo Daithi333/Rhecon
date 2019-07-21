@@ -8,7 +8,7 @@ import * as FileSaver from 'file-saver';
 
 import { RequestsService } from '../requests.service';
 import { RequestWithObjects } from '../request-with-objects.model';
-import { AttachmentsService } from '../attachments.service';
+import { AttachmentsService } from '../../shared/attachments.service';
 import { AuthService } from '../../auth/auth.service';
 import { AddCommentComponent } from './add-comment/add-comment.component';
 import { CommentsService } from './comments.service';
