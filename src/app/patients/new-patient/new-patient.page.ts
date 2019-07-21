@@ -45,6 +45,7 @@ export class NewPatientPage implements OnInit {
     });
   }
 
+  // if the image is a string, convert to blob before patching into the form
   onImageChosen(imageData: string | File) {
     let imageFile;
     if (typeof imageData === 'string') {

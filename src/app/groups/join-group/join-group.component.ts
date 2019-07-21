@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 
 import { GroupsService } from '../groups.service';
@@ -21,7 +21,9 @@ export class JoinGroupComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      inviteCode: new FormControl(null)
+      inviteCode: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(50)]
+      })
     });
   }
 

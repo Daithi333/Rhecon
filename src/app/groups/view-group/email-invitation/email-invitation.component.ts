@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { GroupsService } from '../../groups.service';
 
@@ -23,7 +23,9 @@ export class EmailInvitationComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      email: new FormControl(null)
+      email: new FormControl(null, {
+        validators: [Validators.required, Validators.email]
+      })
     });
   }
 

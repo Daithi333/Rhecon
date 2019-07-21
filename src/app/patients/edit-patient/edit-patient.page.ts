@@ -115,7 +115,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
     }
   }
 
-  // call UpdatePatient method with appropiate image url
+  // call UpdatePatient method with appropriate image url
   private callUpdatePatient(patientImage: string) {
     return this.patientsService.updatePatient(
       this.patient.id,
