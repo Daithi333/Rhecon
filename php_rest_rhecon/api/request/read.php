@@ -49,12 +49,12 @@
     }
 
     // output as JSON
-    // http_response_code(200);
+    http_response_code(200);
     echo json_encode($requestArr);
 
   } else {
-    // http_response_code(404);
-    // echo json_encode(
-    //   array('message' => 'No requests found')
-    // );
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No requests found')
+    );
   }

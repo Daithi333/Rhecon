@@ -5,7 +5,7 @@
     private $conn;
     private $table = 'Rhecon_Request';
 
-    // Patient properties
+    // Request properties
     public $id;
     public $title;
     public $requesterId;

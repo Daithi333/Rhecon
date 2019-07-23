@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';
 
-  // Instantiate DB and Patient data objects
+  // Instantiate DB and Patient objects
   $database = new Database();
   $db = $database->connect();
   $patient = new Patient($db);

@@ -2,16 +2,18 @@
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
+  header('Access-Control-Allow-Methods: GET, OPTIONS');
+  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization');
 
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';
 
-  // Instantiate DB and connect
+  // Instantiate DB and Patient objects
   $database = new Database();
   $db = $database->connect();
-
-  // Instantiate Patient data object
   $patient = new Patient($db);
+
+  // include '../token/check_token.php';
 
   // get patient id from URL
   $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
@@ -25,7 +27,7 @@
       'dob' => $patient->dob,
       'notes' => $patient->notes,
       'portraitUrl' => $patient->portraitUrl,
-      'userId ' => $patient->userId  
+      'userId ' => $patient->userId
     );
 
     http_response_code(200);

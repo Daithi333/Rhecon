@@ -90,6 +90,11 @@
                   <h3>{{ group.groupName }} </h3>
                   <p>{{ group.members.length }} Members</p>
                 </ion-label>
+                <ion-icon
+                slot="end"
+                name="key"
+                *ngIf="group.isAdmin"
+              ></ion-icon>
               </ion-item>
               <ion-item-options side="end" *ngIf="!group.isAdmin">
                 <ion-item-option
