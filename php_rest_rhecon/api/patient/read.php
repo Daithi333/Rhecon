@@ -2,8 +2,8 @@
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
-  header('Access-Control-Allow-Methods: GET');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization');
+  header('Access-Control-Allow-Methods: GET, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';

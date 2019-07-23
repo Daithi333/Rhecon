@@ -3,7 +3,7 @@
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
   header('Access-Control-Allow-Methods: GET, OPTIONS');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization');
+  header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';
@@ -13,7 +13,7 @@
   $db = $database->connect();
   $patient = new Patient($db);
 
-  // include '../token/check_token.php';
+  include '../token/check_token.php';
 
   // get patient id from URL
   $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();

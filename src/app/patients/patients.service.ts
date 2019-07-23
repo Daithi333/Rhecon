@@ -84,18 +84,25 @@ export class PatientsService {
    * @param requesterId - initiator of a request object and owner of the patient record
    */
   getPatient(id: number, requesterId?: number) {
+    let userId;
     return iif(
       () => !requesterId,
       defer(() => this.authService.userId),
       defer(() => of(requesterId)),
     ).pipe(
       take(1),
-      switchMap(userId => {
-        if (!userId) {
+      switchMap(userIdData => {
+        if (!userIdData) {
           throw new Error('User not found');
         }
+        userId = userIdData;
+        return this.authService.token;
+      }),
+      take(1),
+      switchMap(token => {
         return this.httpClient.get<PatientData>(
-          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`,
+          { headers: { Authorization: 'Bearer ' + token } }
         );
       }),
       take(1),
