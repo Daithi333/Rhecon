@@ -86,7 +86,7 @@ export class AttachmentSelectorComponent implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  // Method to allow user to download or delete a file from request upon clicking it
+  // Method to allow user to delete a file from request upon clicking it
   onClickFile(requestId: number, attachmentUrl: string) {
     this.alertController.create({
       header: 'Choose action',
