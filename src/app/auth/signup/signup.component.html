@@ -16,7 +16,7 @@
     </div>
     <ion-grid>
       <ion-row>
-        <ion-col size="4" size-sm="3" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2" text-center>
           <ion-item>
             <ion-label position="floating">Title</ion-label>
             <ion-select name="title" formControlName="titleId">
@@ -24,7 +24,9 @@
             </ion-select>
           </ion-item>
         </ion-col>
-        <ion-col size="8" size-sm="5" class="sidePadding">
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input type="text" formControlName="firstName"></ion-input>
@@ -32,7 +34,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item>
             <ion-label position="floating">Last Name</ion-label>
             <ion-input type="text" formControlName="lastName"></ion-input>
@@ -40,7 +42,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item>
             <ion-label position="floating">Email</ion-label>
             <ion-input type="email" formControlName="email"></ion-input>
@@ -48,7 +50,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item>
             <ion-label position="floating">Password</ion-label>
             <ion-input type="password" formControlName="password"></ion-input>
@@ -56,16 +58,40 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2">
           <ion-item lines="none">
-            <small><ion-note>Password should be at least 8 characters and contain at least 1 number</ion-note></small>
+            <small><ion-note>Password should be a minimum of 8 characters in length and contain at least 1 number</ion-note></small>
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row class="grow" align-items-end>
+      <ion-row *ngIf="!form.get('titleId').valid && form.get('titleId').touched">
         <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <small><ion-text color="danger">Please enter valid title</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('firstName').valid && form.get('firstName').touched">
+        <ion-col  size-sm="8" offset-sm="2" class="sidePadding">
+          <small><ion-text color="danger">Please enter valid first name</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('lastName').valid && form.get('lastName').touched">
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <small><ion-text color="danger">Please enter valid last name</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('email').valid && form.get('email').touched">
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <small><ion-text color="danger">Please enter valid email address</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('password').valid && form.get('password').touched">
+        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+          <small><ion-text color="danger">Please enter valid password</ion-text></small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="grow" align-items-end>
+        <ion-col size-sm="8" offset-sm="2">
           <ion-button type="submit" color="tertiary" expand="block" (click)="onSignup()" [disabled]="!form.valid">Sign up</ion-button>
-          <!-- <ion-button fill="clear" expand="block">Have a group joining code?</ion-button> -->
         </ion-col>
       </ion-row>
     </ion-grid>
