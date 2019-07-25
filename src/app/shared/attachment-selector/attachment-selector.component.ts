@@ -37,6 +37,10 @@ export class AttachmentSelectorComponent implements OnInit {
     }
   }
 
+  /**
+   * Use Camera API to take photo or select from gallery
+   * In event of failure, activate the hidden file input
+   */
   onSelectImage() {
     // check to open file selector if camera unavailable
     if (!Capacitor.isPluginAvailable('Camera') || this.useFileSelector) {
@@ -69,11 +73,19 @@ export class AttachmentSelectorComponent implements OnInit {
     this.fileSelector2.nativeElement.click();
   }
 
-  // Method to Extract file from the hidden HTML input's file selection event
+  /**
+   * Retrieve file from file selection event and emit.
+   * Extract data Url for preview in between
+   * @param event - File selection event
+   */
   onAttachmentChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
-      // TODO - add alert
+      return;
+    }
+    if (chosenFile.size > 26214400) {
+      console.log(chosenFile.size);
+      this.fileSizeAlert();
       return;
     }
     const fr = new FileReader();
@@ -92,7 +104,11 @@ export class AttachmentSelectorComponent implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  // Method to allow user to delete a file from request upon clicking it
+  /**
+   * Delete file from a request, remove DB record or local list if just added
+   * @param requestId - request id to which the file belongs
+   * @param attachmentUrl - url of the attachment
+   */
   onClickFile(requestId: number, attachmentUrl: string) {
     this.alertController.create({
       header: 'Choose action',
@@ -124,7 +140,7 @@ export class AttachmentSelectorComponent implements OnInit {
 
   /**
    * To choose icon for file preview section if not an image
-   * @param url - url for file on remote storage
+   * @param url - url for file location on server
    */
   choosepreviewIcon(url: string) {
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
@@ -140,7 +156,7 @@ export class AttachmentSelectorComponent implements OnInit {
 
   /**
    * To choose an icon for newly attached file if not an image
-   * @param url - url is base64 string
+   * @param url - url is base64 string of newly added file
    */
   choosepreviewIconNew(url: string) {
     const mime = url.substring(url.lastIndexOf(':') + 1, url.lastIndexOf(';'));
@@ -155,7 +171,11 @@ export class AttachmentSelectorComponent implements OnInit {
 
   }
 
-  // method to delete attachment record from server
+  /**
+   * To delete attachment record from server
+   * @param requestId - id of the request to which attachment belongs
+   * @param attachmentUrl - url for server location
+   */
   private deleteAttachment(requestId: number, attachmentUrl: string) {
     let attachmentId;
     this.attachmentsService.getAttachment(requestId, attachmentUrl)
@@ -183,6 +203,7 @@ export class AttachmentSelectorComponent implements OnInit {
     });
   }
 
+  // helper method for onAttachmentChosen - corrects image orientation if necessary and pushes to proview array
   private correctImageOrientation(chosenFile: File, dataUrl: string) {
     this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
       // if orientation is 1 or absent from exif data, no action required
@@ -195,6 +216,20 @@ export class AttachmentSelectorComponent implements OnInit {
           this.selectedAttachments.push(reorientatedDataUrl);
         });
       }
+    });
+  }
+
+  private fileSizeAlert() {
+    this.alertController.create({
+      header: 'File too large',
+      message: 'Attachments cannot be larger than 25MB.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
   }
 

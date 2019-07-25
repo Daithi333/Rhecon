@@ -9,8 +9,7 @@
     offset-ld="3"
     size-xl="4"
     offset-xl="4"
-    padding
-    style="padding-top: 0px; padding-bottom: 0px;"
+    class="sidePadding"
   >
     <ion-item lines="none">
       <ion-icon slot="start" name="cloud-upload"></ion-icon>
@@ -20,15 +19,9 @@
       <ion-button (click)="onSelectImage()">
         <ion-icon name="camera"></ion-icon>
       </ion-button>
-      <!-- <ion-button (click)="onSelectVideo()">
-        <ion-icon name="videocam"></ion-icon>
-      </ion-button> -->
       <ion-button (click)="onSelectFile()">
         <ion-icon name="attach"></ion-icon>
       </ion-button>
-      <!-- <ion-button (click)="onSelectAudio()">
-        <ion-icon name="mic"></ion-icon>
-      </ion-button> -->
     </ion-item>
   </ion-col>
 </ion-row>
@@ -43,7 +36,7 @@
     offset-ld="3"
     size-xl="4"
     offset-xl="4"
-    padding
+    style="padding-right: 4px; padding-left: 12px;"
   >
     <span class="preview" *ngFor="let attachment of selectedAttachments">
       <ion-thumbnail>

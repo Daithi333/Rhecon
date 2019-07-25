@@ -31,6 +31,10 @@ export class PortraitSelectorComponent implements OnInit {
     }
   }
 
+  /**
+   * Use Camera API to take photo or select from gallery
+   * In event of failure, activate the hidden file input
+   */
   onSelectImage() {
     // if camera plugin is unavailable, use file selector
     if (!Capacitor.isPluginAvailable('Camera') || this.useFileSelector) {
@@ -45,7 +49,6 @@ export class PortraitSelectorComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     })
     .then(image => {
-      // reorientate if not 1 or -1
       this.selectedImage = image.dataUrl;
       this.imageChoice.emit(image.dataUrl);
     })
@@ -58,6 +61,11 @@ export class PortraitSelectorComponent implements OnInit {
     });
   }
 
+  /**
+   * Retrieve file from file selection event and emit.
+   * Extract data Url for preview in between
+   * @param event - File selection event
+   */
   onFileChosen(event: Event) {
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
