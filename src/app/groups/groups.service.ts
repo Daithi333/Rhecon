@@ -108,36 +108,6 @@ export class GroupsService {
   }
 
   /**
-   * Lookup groups and their admins based on groupname input
-   * @param groupName - string entered by user in open search
-   */
-  groupSearchWithAdmin(groupName: string) {
-    const groupArr: GroupSearch[] = [];
-    return this.groupSearch(groupName).pipe(
-      mergeMap(groups => {
-        if (!groups || !groups.length) {
-          return of(null);
-        }
-        return groups.map(group => {
-          return group;
-        });
-      }),
-      mergeMap(group => {
-        if (!group) {
-          return of(null);
-        }
-        return this.contactsService.getContact(group.admin).pipe(
-          map(contact => {
-            group.admin = contact;
-            groupArr.push(group);
-            return groupArr;
-          })
-        );
-      })
-    );
-  }
-
-  /**
    * Add new group to DB and local list
    * @param groupName  - name of the group
    * @param imageUrl - url of the group image
@@ -227,6 +197,36 @@ export class GroupsService {
       tap(() => {
         this._groups.next(updatedGroups);
       }));
+  }
+
+  /**
+   * Lookup groups and their admins based on groupname input
+   * @param groupName - string entered by user in open search
+   */
+  groupSearchWithAdmin(groupName: string) {
+    const groupArr: GroupSearch[] = [];
+    return this.groupSearch(groupName).pipe(
+      mergeMap(groups => {
+        if (!groups || !groups.length) {
+          return of(null);
+        }
+        return groups.map(group => {
+          return group;
+        });
+      }),
+      mergeMap(group => {
+        if (!group) {
+          return of(null);
+        }
+        return this.contactsService.getContact(group.admin).pipe(
+          map(contact => {
+            group.admin = contact;
+            groupArr.push(group);
+            return groupArr;
+          })
+        );
+      })
+    );
   }
 
   // add a group invitation record to the DB
