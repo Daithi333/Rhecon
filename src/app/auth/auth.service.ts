@@ -148,6 +148,7 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  // login when app reloads and token still not expired
   autoLogin() {
     return from(Plugins.Storage.get({key: 'userAuth'})).pipe(
       map(storedData => {
@@ -218,6 +219,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
+  // store authentication information in local storage
   private storeAuthData(
     userId: number,
     userType: string,
@@ -235,6 +237,7 @@ export class AuthService implements OnDestroy {
     Plugins.Storage.set({ key: 'userAuth', value: userAuthdata });
   }
 
+  // logout when token expires
   private autoLogout(timeTillExpiration: number) {
     if (this.logoutTimer) {
       clearTimeout(this.logoutTimer);
