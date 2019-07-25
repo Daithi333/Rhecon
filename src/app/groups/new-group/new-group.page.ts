@@ -6,7 +6,6 @@ import { iif, defer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { GroupsService } from '../groups.service';
-import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-new-group',
@@ -23,8 +22,7 @@ export class NewGroupPage implements OnInit {
   constructor(
     private groupsService: GroupsService,
     private loadingController: LoadingController,
-    private router: Router,
-    private imageUtilService: ImageUtilService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -45,27 +43,12 @@ export class NewGroupPage implements OnInit {
     this.imageChanged = true; // track if new image was added and needs uploaded
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
-      // TODO - add alert
       return;
     }
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
       this.selectedImage = dataUrl;
-      // let attachmentFile;
-      // if (typeof chosenFile === 'string') {
-      //   try {
-      //     attachmentFile = this.imageUtilService.base64toBlob(
-      //       chosenFile.replace('data:image/jpeg;base64,', ''),
-      //       'image/jpeg'
-      //     );
-      //   } catch (error) {
-      //     console.log('File conversion error: ' + error);
-      //     // TODO - add alert if conversion to file fails
-      //   }
-      // } else {
-      //   attachmentFile = chosenFile;
-      // }
       this.form.patchValue({ imageUrl: chosenFile });
     };
     fr.readAsDataURL(chosenFile);

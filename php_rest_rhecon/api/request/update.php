@@ -22,6 +22,11 @@
   $request->patientId = $data->patientId;
   $request->notes = $data->notes;
 
+  if (empty($request->title)) {
+    echo json_encode(array('message' => 'Invalid title'));
+    exit(400);
+  }
+
   // Update request
   if($request->update()) {
     echo json_encode(

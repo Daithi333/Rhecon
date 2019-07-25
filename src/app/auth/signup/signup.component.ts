@@ -37,11 +37,11 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       firstName: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required]
+        validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
       }),
       lastName: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required]
+        validators: [Validators.required, Validators.pattern(/^[a-zA-Z'. -]*$/)]
       }),
       email: new FormControl(null, {
         updateOn: 'blur',

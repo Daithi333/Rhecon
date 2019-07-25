@@ -26,6 +26,21 @@
     $user->portraitUrl = $data->portraitUrl;
     $user->bio = $data->bio;
 
+    if ( empty($user->firstName) || (!preg_match("/^[a-zA-Z'. -]*$/", $user->firstName)) ) {
+      echo json_encode(array('message' => 'Invalid firstname'));
+      exit(400);
+    }
+
+    if ( empty($user->lastName) || (!preg_match("/^[a-zA-Z'. -]*$/", $user->lastName)) ) {
+      echo json_encode(array('message' => 'Invalid lastname'));
+      exit(400);
+    }
+
+    if (empty($user->portraitUrl)) {
+      echo json_encode(array('message' => 'Invalid portraitUrl'));
+      exit(400);
+    }
+
     // Update user profile
     if($user->update()) {
       echo json_encode(

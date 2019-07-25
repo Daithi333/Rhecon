@@ -24,6 +24,11 @@
     $user->email = $data->email;
     $enteredPassword = $data->password;
 
+    if ( empty($user->email) || (!filter_var($user->email, FILTER_VALIDATE_EMAIL)) ) {
+      echo json_encode(array('message' => 'Invalid email'));
+      exit(400);
+    }
+
     // Check if user is on db
     if($user->readSingle()) {
 

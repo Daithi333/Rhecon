@@ -22,6 +22,16 @@
   $group->groupName = $data->groupName;
   $group->imageUrl = $data->imageUrl;
 
+  if ( empty($group->groupName) || (!preg_match("/^[0-9a-zA-Z'. -]*$/", $group->groupName)) ) {
+    echo json_encode(array('message' => 'Invalid groupName'));
+    exit(400);
+  }
+
+  if (empty($group->imageUrl)) {
+    echo json_encode(array('message' => 'Invalid imageUrl'));
+    exit(400);
+  }
+
   // Update group
   if($group->update()) {
     echo json_encode(

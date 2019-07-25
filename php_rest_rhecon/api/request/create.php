@@ -24,6 +24,11 @@
     $request->patientId = $data->patientId;
     $request->notes = $data->notes;
 
+    if (empty($request->title)) {
+      echo json_encode(array('message' => 'Invalid title'));
+      exit(400);
+    }
+
     // Create request on db. Retrieve and return the db id if successful
     if($request->create()) {
       $uniqueId = $db->lastInsertId();

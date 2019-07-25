@@ -23,6 +23,21 @@
     $currentPassword = $data->currentPassword;
     $newPassword = $data->newPassword;
 
+    if ( empty($user->email) || (!filter_var($user->email, FILTER_VALIDATE_EMAIL)) ) {
+      echo json_encode(array('message' => 'Invalid email'));
+      exit(400);
+    }
+
+    if ( empty($currentPassword) || (!preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/", $currentPassword)) ) {
+      echo json_encode(array('message' => 'Invalid password'));
+      exit(400);
+    }
+
+    if ( empty($newPassword) || (!preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$/", $newPassword)) ) {
+      echo json_encode(array('message' => 'Invalid password'));
+      exit(400);
+    }
+
     // Check if user is on db
     if($user->readSingle()) {
 
@@ -33,29 +48,21 @@
 
         if ($user->updatePassword()) {
           http_response_code(200);
-          echo json_encode(
-            array('message' => 'Password changed')
-          );
+          echo json_encode(array('message' => 'Password changed'));
 
         } else {
           http_response_code(500);
-          echo json_encode(
-            array('message' => 'Password not changed')
-          );
+          echo json_encode(array('message' => 'Password not changed'));
         }
 
       } else {
         http_response_code(400);
-        echo json_encode(
-          array('message' => 'Password incorrect')
-        );
+        echo json_encode(array('message' => 'Password incorrect'));
       }
      
     } else {
       http_response_code(404);
-      echo json_encode(
-        array('message' => 'User not found')
-      );
+      echo json_encode(array('message' => 'User not found'));
     }
+    
   }
-  
