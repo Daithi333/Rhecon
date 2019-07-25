@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
 import { tap, map, take } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { BehaviorSubject, from } from 'rxjs';
 
 import { User } from './user.model';
 import { UserAuth } from './user-auth.model';
+import { Router } from '@angular/router';
 
 interface SignupResponseData {
   message: string;
@@ -24,8 +25,9 @@ interface LoginResponseData {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private _userAuth = new BehaviorSubject<UserAuth>(null);
+  private logoutTimer: any;
 
   get isUserAuthenticated() {
     return this._userAuth.asObservable().pipe(
@@ -88,7 +90,7 @@ export class AuthService {
     );
   }
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   signup(
     titleId: number,
@@ -139,6 +141,8 @@ export class AuthService {
           new Date(resData.expiresAt * 1000)
         );
         this._userAuth.next(user);
+        console.log(user.timeTillExpiry + ' ms');
+        this.autoLogout(user.timeTillExpiry);
         this.storeAuthData(user.userId, userType, user.email, user.token, user.expiresAt.toISOString());
       })
     );
@@ -174,7 +178,9 @@ export class AuthService {
       tap(user => {
         if (user) {
           this._userAuth.next(user);
-          console.log('auto logged in');
+          console.log(user.timeTillExpiry + ' ms');
+          this.autoLogout(user.timeTillExpiry);
+
         }
       }),
       map(user => {
@@ -198,8 +204,18 @@ export class AuthService {
   }
 
   logout() {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
     this._userAuth.next(null);
     Plugins.Storage.remove({ key: 'userAuth' });
+    this.router.navigateByUrl('/auth');
+  }
+
+  ngOnDestroy() {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
   }
 
   private storeAuthData(
@@ -217,6 +233,15 @@ export class AuthService {
       expiresAt: expiresAt
     });
     Plugins.Storage.set({ key: 'userAuth', value: userAuthdata });
+  }
+
+  private autoLogout(timeTillExpiration: number) {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
+    this.logoutTimer = setTimeout(() => {
+      this.logout();
+    }, timeTillExpiration);
   }
 
 }

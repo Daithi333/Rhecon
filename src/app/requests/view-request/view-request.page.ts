@@ -30,6 +30,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
   userType: string;
   private requestSub: Subscription;
   private commentsSub: Subscription;
+  private attachmentsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -110,10 +111,11 @@ export class ViewRequestPage implements OnInit, OnDestroy {
         {
           text: 'Yes',
           handler: () => {
-            this.attachmentsService.downloadAttachment(fileUrl)
+            this.attachmentsSub = this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
-                // console.log(resData.body);
+                console.log(resData.body);
                 const fileType = this.determineFileType(fileUrl);
+                console.log(fileType);
                 const blob = new Blob([resData.body], { type: fileType } );
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
                   FileSaver.saveAs(blob);
@@ -170,6 +172,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     }
     if (this.commentsSub) {
       this.commentsSub.unsubscribe();
+    }
+    if (this.attachmentsSub) {
+      this.attachmentsSub.unsubscribe();
     }
   }
 

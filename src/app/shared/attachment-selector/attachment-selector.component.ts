@@ -4,6 +4,7 @@ import { Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/c
 
 import { AttachmentsService } from '../attachments.service';
 import { fileTypes } from '../file-types';
+import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-attachment-selector',
@@ -22,7 +23,8 @@ export class AttachmentSelectorComponent implements OnInit {
   constructor(
     private platform: Platform,
     private attachmentsService: AttachmentsService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private imageUtilityService: ImageUtilService
   ) {}
 
   ngOnInit() {
@@ -77,10 +79,14 @@ export class AttachmentSelectorComponent implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       this.chosenAttachmentType = chosenFile.type;
-      // convert to string to allow preview
       const dataUrl = fr.result.toString();
-      this.selectedAttachments.push(dataUrl);
-      console.log(this.selectedAttachments);
+      // if attachment is an image, may need re-orientated due to EXIF orientation
+      if (chosenFile.type.substr(0, 5) === 'image') {
+        this.correctImageOrientation(chosenFile, dataUrl);
+      } else {
+        this.selectedAttachments.push(dataUrl);
+        console.log(this.selectedAttachments);
+      }
       this.attachmentChoice.emit(chosenFile);
     };
     fr.readAsDataURL(chosenFile);
@@ -125,9 +131,11 @@ export class AttachmentSelectorComponent implements OnInit {
     const fileType =  fileTypes.find(f => f.ext === ext);
     if (fileType.mime.substring(0, 5) === 'image') {
       return url;
-    } else {
-      return fileType.icon;
     }
+    if (!fileType) {
+      return '../../assets/icon/document_icon.png';
+    }
+    return fileType.icon;
   }
 
   /**
@@ -138,10 +146,12 @@ export class AttachmentSelectorComponent implements OnInit {
     const mime = url.substring(url.lastIndexOf(':') + 1, url.lastIndexOf(';'));
     if (mime.substring(0, 5) === 'image') {
       return url;
-    } else {
-      const fileType =  fileTypes.find(f => f.mime === mime);
-      return fileType.icon;
     }
+    const fileType =  fileTypes.find(f => f.mime === mime);
+    if (!fileType) {
+      return '../../assets/icon/document_icon.png';
+    }
+    return fileType.icon;
 
   }
 
@@ -150,8 +160,6 @@ export class AttachmentSelectorComponent implements OnInit {
     let attachmentId;
     this.attachmentsService.getAttachment(requestId, attachmentUrl)
     .subscribe(attachment => {
-      console.log('Retrieved Attachment to delete: ');
-      console.log(attachment);
       attachmentId = attachment.id;
       this.alertController.create({
         header: 'Confirm',
@@ -172,6 +180,21 @@ export class AttachmentSelectorComponent implements OnInit {
       }).then(alertEl => {
         alertEl.present();
       });
+    });
+  }
+
+  private correctImageOrientation(chosenFile: File, dataUrl: string) {
+    this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
+      // if orientation is 1 or absent from exif data, no action required
+      if (+orientation === 1 || +orientation === -1) {
+        this.selectedAttachments.push(dataUrl);
+      // if orientation is anything else, it needs reorientated
+      } else {
+        this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
+          const reorientatedDataUrl = reorientatedImage;
+          this.selectedAttachments.push(reorientatedDataUrl);
+        });
+      }
     });
   }
 

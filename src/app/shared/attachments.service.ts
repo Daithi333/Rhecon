@@ -98,7 +98,7 @@ export class AttachmentsService {
     const attachmentData = new FormData();
     attachmentData.append('fileUpload', attachmentFile);
 
-    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+    return this.httpClient.post<{fileUrl: string, filePath: string, message?: string}>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_upload.php',
       attachmentData
     );

@@ -13,8 +13,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private menuController: MenuController,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {
     this.initializeApp();
   }
@@ -29,7 +28,6 @@ export class AppComponent {
 
   onLogout() {
     this.authService.logout();
-    this.router.navigateByUrl('/auth');
   }
 
   toggleClose() {

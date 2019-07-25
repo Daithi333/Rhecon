@@ -72,7 +72,6 @@ export class NewRequestPage implements OnInit {
       attachmentFile = attachmentData;
     }
     this.attachments.push(attachmentFile);
-    // console.log(this.attachments);
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
@@ -132,11 +131,14 @@ export class NewRequestPage implements OnInit {
     .then(loadingEl => {
       loadingEl.present();
       this.handleAttachments(this.attachments).subscribe(() => {
-        // console.log('Subscribed!');
         this.loadingController.dismiss();
         this.requestForm.reset();
         this.attachments.splice(0, this.attachments.length);
         this.router.navigate(['/tabs/requests']);
+      }, error => {
+        this.loadingController.dismiss();
+        const errorMsg = error.error.message;
+        console.log(errorMsg);
       });
     });
   }
@@ -171,6 +173,10 @@ export class NewRequestPage implements OnInit {
           );
         }),
         mergeMap(fileData => {
+          console.log(fileData);
+          if (!fileData.fileUrl) {
+            throw new Error(fileData.message);
+          }
           return this.attachmentsService.addAttachment(newRequestId, fileData.fileUrl).pipe(
             map(attachmentsArr => {
               return attachmentsArr;

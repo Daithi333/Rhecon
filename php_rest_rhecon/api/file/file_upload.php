@@ -14,11 +14,10 @@
   $fileName = $rand . $fileName;
   $targetFile = $relativePath . $targetDir . $fileName;
 
-  $imageFileType = pathinfo($targetFile, PATHINFO_EXTENSION);
-  $validExt = array('gif', 'png', 'jpg', 'jpeg', 'tiff', 'bmp');
+  $fileType = pathinfo($targetFile, PATHINFO_EXTENSION);
 
   $uploadOk = true;
-  $errorMsg = 'Something went wrong';
+  $errorMsg = 'Problem uploading file';
 
   // Check if file already exists
   if (file_exists($targetFile)) {
@@ -26,20 +25,25 @@
     $uploadOk = false;
   }
 
-  // Check file size < 20MB
-  if ($_FILES['fileUpload']['size'] > 2000000) {
-    $errorMsg = 'File size is too large';
+  // Check file size < Max allowed
+  if ($_FILES['fileUpload']['size'] > $maxSize) {
+    $errorMsg = 'File size too large';
     $uploadOk = false;
   }
 
-  // if ( (!in_array(strtolower($imageFileType), $validExt)) ) {
-  //   $errorMsg = 'Images must be in one of the following formats: gif, png, jpg, bmp, tiff';
-  //   $uploadOk = false;
-  // }
+  if ( (!in_array(strtolower($fileType), $validExt)) ) {
+    $errorMsg = 'Unsupported Format';
+    $uploadOk = false;
+  }
 
   // Check if uploadOk after the checks..
   if (!$uploadOk) {
-    Utility::api_error($errorMsg);
+    http_response_code(400);
+    echo json_encode(
+      array(
+        'message' => $errorMsg
+      )
+    );
 
   } else {  
     if (move_uploaded_file($temp, $targetFile)) {
@@ -50,7 +54,12 @@
         )
       );
     } else {
-      Utility::api_error('Problem uploading file');
+      http_response_code(500);
+      echo json_encode(
+        array(
+          'message' => $errorMsg
+        )
+      );
     }
 
   }

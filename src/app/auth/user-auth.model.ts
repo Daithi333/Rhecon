@@ -18,4 +18,11 @@ export class UserAuth {
     return this._expiresAt;
   }
 
+  get timeTillExpiry() {
+    if (!this.token) {
+      return 0;
+    }
+    return this.expiresAt.getTime() - new Date().getTime();
+  }
+
 }

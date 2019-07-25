@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, ModalController, LoadingController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription, of, iif, defer } from 'rxjs';
 import { mergeMap, map, switchMap, takeLast, take } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { Contact } from '../../consultants/contact.model';
 import { RequestWithObjects } from '../request-with-objects.model';
 import { AttachmentsService } from '../../shared/attachments.service';
 import { ImageUtilService } from '../../shared-portrait/image-util-service';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-edit-request',
@@ -41,7 +41,8 @@ export class EditRequestPage implements OnInit, OnDestroy {
     private router: Router,
     private attachmentsService: AttachmentsService,
     private imageUtilService: ImageUtilService,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -177,11 +178,13 @@ export class EditRequestPage implements OnInit, OnDestroy {
     })
     .then(loadingEl => {
       loadingEl.present();
-      this.getRequest(this.attachments).subscribe(() => {
-        console.log('Subscribed');
+      this.callUpdateRequest(this.attachments).subscribe(() => {
         loadingEl.dismiss();
         this.requestForm.reset();
         this.router.navigate(['/tabs/requests']);
+      }, error => {
+        loadingEl.dismiss();
+        this.fileUploadAlert(error.error.message);
       });
     });
   }
@@ -193,7 +196,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
   }
 
   // method to call the update request method and chain on attachments requests if there are any
-  private getRequest(attachments) {
+  private callUpdateRequest(attachments) {
     const updateRequestObs = this.requestsService.updateRequest(
       this.request.id,
       this.requestForm.value.title,
@@ -209,7 +212,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
           return of(this.attachments);
         }),
         mergeMap(attachmentsArr => {
-          console.log(attachmentsArr);
           return attachmentsArr.map(attachment => {
             return attachment;
           });
@@ -217,15 +219,17 @@ export class EditRequestPage implements OnInit, OnDestroy {
         mergeMap(attachment => {
           return this.attachmentsService.addAttachmentFile(attachment).pipe(
             map(fileData => {
-              // console.log(fileData);
               return fileData;
             })
           );
         }),
         mergeMap(fileData => {
+          console.log(fileData);
+          if (!fileData.fileUrl) {
+            throw new Error(fileData.message);
+          }
           return this.attachmentsService.addAttachment(this.requestId, fileData.fileUrl).pipe(
             map(attachmentsArr => {
-              // console.log('Attachments: ' + attachments);
               return attachmentsArr;
             })
           );
@@ -233,6 +237,23 @@ export class EditRequestPage implements OnInit, OnDestroy {
         takeLast(1)
       ))
     );
+  }
+
+  private fileUploadAlert(errorMsg: string) {
+    this.alertController.create({
+      header: 'Upload Error',
+      message: `Unable to upload file: ${errorMsg}`,
+      buttons: [
+        {
+          text: 'Okay',
+          handler: () => {
+            this.router.navigateByUrl('/tabs/requests/' + this.requestId);
+          }
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }

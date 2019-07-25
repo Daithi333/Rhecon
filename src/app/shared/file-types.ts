@@ -6,7 +6,7 @@ interface FileType {
 
 const path = '../../assets/icon/';
 const video = 'video_icon.png';
-const audio = 'video_icon.png';
+const audio = 'audio_icon.png';
 const word = 'word_icon.jpg';
 const excel = 'excel_icon.png';
 const pdf = 'pdf_icon.png';
@@ -33,7 +33,9 @@ export const fileTypes: FileType[] = [
   {ext: 'ics', mime: 'text/calendar', icon: path + text},
   {ext: 'jpeg', mime: 'image/jpeg', icon: ''},
   {ext: 'jpg', mime: 'image/jpeg', icon: ''},
+  {ext: 'm4a', mime: 'audio/mp4', icon: path + audio},
   {ext: 'mp3', mime: 'audio/mpeg', icon: path + audio},
+  {ext: 'mp4', mime: 'video/mp4', icon: path + video},
   {ext: 'mpeg', mime: 'video/mpeg', icon: path + video},
   {ext: 'opd', mime: 'application/vnd.oasis.opendocument.presentation', icon: path + presentation},
   {ext: 'ods', mime: 'application/vnd.oasis.opendocument.spreadsheet', icon: path + excel},
