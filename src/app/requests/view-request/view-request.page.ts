@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take, switchMap, map } from 'rxjs/operators';
+import { take, switchMap, map, takeLast } from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
 
@@ -113,9 +113,8 @@ export class ViewRequestPage implements OnInit, OnDestroy {
           handler: () => {
             this.attachmentsSub = this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
-                console.log(resData.body);
+                // console.log(resData.body);
                 const fileType = this.determineFileType(fileUrl);
-                console.log(fileType);
                 const blob = new Blob([resData.body], { type: fileType } );
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
                   FileSaver.saveAs(blob);

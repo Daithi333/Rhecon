@@ -16,9 +16,9 @@
 
   $fileType = pathinfo($targetFile, PATHINFO_EXTENSION);
 
-  // from the blob constructor which only sends jpg
+  // from the blob constructor which only sends jpeg
   if (!$fileType) {
-    $fileType = 'jpg';
+    $fileType = 'jpeg';
   }
  
   $uploadOk = true;

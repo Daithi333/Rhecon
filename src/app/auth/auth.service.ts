@@ -141,7 +141,7 @@ export class AuthService implements OnDestroy {
           new Date(resData.expiresAt * 1000)
         );
         this._userAuth.next(user);
-        console.log(user.timeTillExpiry + ' ms');
+        // console.log(user.timeTillExpiry + ' ms');
         this.autoLogout(user.timeTillExpiry);
         this.storeAuthData(user.userId, userType, user.email, user.token, user.expiresAt.toISOString());
       })
