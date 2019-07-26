@@ -75,7 +75,6 @@ export class PortraitSelectorComponent implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
-      console.log(dataUrl);
       this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
         // if orientation is 1 or absent from exif data, no action required
         if (+orientation === 1 || +orientation === -1) {
