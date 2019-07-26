@@ -12,6 +12,13 @@
 <ion-content>
   <form [formGroup]="form">
     <ion-grid>
+       <ion-row>
+        <ion-col size-sm="8" offset-sm="2" padding style="padding-bottom: 0px;">
+          <ion-item lines="none">
+            <ion-label text-wrap>Please enter recipient email address and a short message.</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col size-sm="8" offset-sm="2" padding>
           <ion-item>
@@ -36,7 +43,7 @@
             expand="block"
             (click)="onSendInvite()"
             [disabled]="!form.valid"
-            >Send</ion-button
+            >Send Email</ion-button
           >
         </ion-col>
       </ion-row>

@@ -52,7 +52,7 @@
     }
 
     // check if email is already in use before creating user
-    if (!$user->readSingle()) {
+    if ($user->readSingle()) {
       echo json_encode(array('message' => 'Email address already registered'));
       exit(400);
     }
