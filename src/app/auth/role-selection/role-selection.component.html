@@ -67,7 +67,7 @@
             color="tertiary"
             expand="block"
             (click)="onProceed()"
-            [disabled]="!form.valid"
+            [disabled]="!form.valid || ( (form.get('role').value == 3) && (form.get('specialism').value == 1) )"
             >Proceed</ion-button
           >
         </ion-col>
