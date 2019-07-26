@@ -148,7 +148,7 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  // login when app reloads and token still not expired
+  // login automatically when the app is reloaded and local storage token not expired
   autoLogin() {
     return from(Plugins.Storage.get({key: 'userAuth'})).pipe(
       map(storedData => {

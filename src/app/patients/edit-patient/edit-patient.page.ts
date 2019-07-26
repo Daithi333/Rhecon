@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, LoadingController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription, iif, defer } from 'rxjs';
 
@@ -28,7 +28,8 @@ export class EditPatientPage implements OnInit, OnDestroy {
     private patientsService: PatientsService,
     private loadingController: LoadingController,
     private router: Router,
-    private imageUtilService: ImageUtilService
+    private imageUtilService: ImageUtilService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -61,6 +62,22 @@ export class EditPatientPage implements OnInit, OnDestroy {
             patientImage: new FormControl(null)
           });
           this.isLoading = false;
+        },
+        error => {
+          this.alertController.create({
+            header: 'Error',
+            message: 'Could not locate patient record.',
+            buttons: [
+              {
+                text: 'Okay',
+                handler: () => {
+                  this.router.navigate(['/tabs/patients']);
+                }
+              }
+            ]
+          }).then(alertEl => {
+            alertEl.present();
+          });
         });
     });
   }

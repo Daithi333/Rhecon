@@ -169,6 +169,11 @@ export class EditRequestPage implements OnInit, OnDestroy {
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
+  onRemoveAttachment(attachmentIndex: number) {
+    this.attachments.splice(attachmentIndex, 1);
+    this.requestForm.patchValue({ attachments: this.attachments });
+  }
+
   onUpdateRequest() {
     if (!this.requestForm.valid) {
       return;

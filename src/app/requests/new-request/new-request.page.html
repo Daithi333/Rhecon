@@ -77,9 +77,23 @@
           </ion-list>
         </ion-col>
       </ion-row>
-      <app-attachment-selector (attachmentChoice)="onAttachmentChosen($event)"></app-attachment-selector>
+      <app-attachment-selector 
+        (attachmentChoice)="onAttachmentChosen($event)"
+        (removeAttachment)="onRemoveAttachment($event)"
+      ></app-attachment-selector>
       <ion-row class="grow" align-items-end>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col 
+          size="12"
+          size-sm="10"
+          offset-sm="1"
+          size-md="8"
+          offset-md="2"
+          size-lg="6"
+          offset-lg="3"
+          size-xl="4"
+          offset-xl="4"
+          padding
+        >
           <ion-button
             type="submit"
             color="tertiary"

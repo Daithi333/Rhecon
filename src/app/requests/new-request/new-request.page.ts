@@ -38,7 +38,7 @@ export class NewRequestPage implements OnInit {
     this.requestForm = new FormGroup({
       title: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required, /*Validators.pattern(/^[a-zA-Z'. -]*$/)*/]
+        validators: [Validators.required]
       }),
       patient: new FormControl(null, {
         updateOn: 'blur',
@@ -72,6 +72,11 @@ export class NewRequestPage implements OnInit {
       attachmentFile = attachmentData;
     }
     this.attachments.push(attachmentFile);
+    this.requestForm.patchValue({ attachments: this.attachments });
+  }
+
+  onRemoveAttachment(attachmentIndex: number) {
+    this.attachments.splice(attachmentIndex, 1);
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 

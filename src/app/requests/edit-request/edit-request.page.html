@@ -82,6 +82,7 @@
       </ion-row>
       <app-attachment-selector
         (attachmentChoice)="onAttachmentChosen($event)"
+        (removeAttachment)="onRemoveAttachment($event)"
         [selectedAttachments]="attachmentUrls"
         [requestId]="request.id"
       ></app-attachment-selector>

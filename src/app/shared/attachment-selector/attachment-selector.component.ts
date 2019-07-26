@@ -16,6 +16,7 @@ export class AttachmentSelectorComponent implements OnInit {
   @ViewChild('fileSelector') fileSelector: ElementRef<HTMLInputElement>;
   @ViewChild('fileSelector2') fileSelector2: ElementRef<HTMLInputElement>;
   @Output() attachmentChoice = new EventEmitter<string | File>();
+  @Output() removeAttachment = new EventEmitter<number>();
   @Input() selectedAttachments: string[] = [];
   @Input() requestId: number;
   chosenAttachmentType: string;
@@ -121,7 +122,9 @@ export class AttachmentSelectorComponent implements OnInit {
             if (attachmentUrl.substr(0, 20) === 'http://davidmcelhill') {
               this.deleteAttachment(requestId, attachmentUrl);
             } else {
+              const removalIndex = this.selectedAttachments.findIndex(a => a === attachmentUrl);
               this.selectedAttachments = this.selectedAttachments.filter(a => a !== attachmentUrl);
+              this.removeAttachment.emit(removalIndex);
             }
           }
         },
