@@ -230,10 +230,15 @@ export class GroupsService {
   }
 
   // add a group invitation record to the DB
-  addInvitation(groupName: string, groupId: number, recipient: string) {
-    return this.httpClient.post<{ message: string, dbId: number }>(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/create.php',
-      { groupName: groupName, groupId: groupId, recipient: recipient }
+  addInvitation(groupName: string, groupId: number, recipient: string, message: string) {
+    return this.authService.email.pipe(
+      take(1),
+      switchMap(email => {
+        return this.httpClient.post<{ message: string, dbId: number }>(
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/create.php',
+          { groupName: groupName, groupId: groupId, recipient: recipient, message: message, sender: email }
+        );
+      })
     );
   }
 

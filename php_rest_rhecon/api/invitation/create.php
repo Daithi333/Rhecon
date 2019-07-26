@@ -27,17 +27,20 @@
     $invitation->expiresOn = $expiry;
     $invitation->recipient = $data->recipient;
     $invitation->groupName = $data->groupName;
+    $sender = $data->sender;
+    $message = $data->message;
 
     $body = "Hello,\n\n
-    You have recieved an invitation from the Rhecon app to join the following group:\n\n
-    " . $invitation->groupName . "\n\n\n
-    Please register on the app and use the following code when requested to join the group:\n\n
+    You have recieved an invitation to join a Rhecon group (" . $invitation->groupName . ") with the following message:\n\n
+    " . $message . "\n\n\n
+    Please register on the app if not already and use the following code to join the group:\n\n
     " . $invitation->inviteCode . "\n\n
-    This code will be valid for 72 hours from when this email was sent, after which a new invitation will need to be sent.\n\n\n
-    Regards,\n
-    The Rhecon Team";
+    This code will be valid for 72 hours, after which a new invitation will be needed.\n\n\n
+    Kind Regards,\n
+    The Rhecon App";
     
-    $headers = "From: Rhecon" . "\r\n";
+    $headers = "From: Rhecon" . "\r\n" . 
+                "Cc: " . $sender .  "\r\n";
 
     // Create Invite on db. Retrieve and return the db id if successful
     if($invitation->create()) {

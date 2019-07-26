@@ -25,7 +25,8 @@ export class EmailInvitationComponent implements OnInit {
     this.form = new FormGroup({
       email: new FormControl(null, {
         validators: [Validators.required, Validators.email]
-      })
+      }),
+      message: new FormControl(null)
     });
   }
 
@@ -44,7 +45,8 @@ export class EmailInvitationComponent implements OnInit {
       this.groupsService.addInvitation(
         this.groupName,
         this.groupId,
-        this.form.value.email
+        this.form.value.email,
+        this.form.value.message
       ).subscribe(() => {
         loadingEl.dismiss();
         this.presentAlert();
