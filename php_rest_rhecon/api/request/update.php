@@ -26,6 +26,14 @@
     exit('Invalid title');
   }
 
+  if (empty($request->consultantId)) {
+    exit('Invalid consultantId');
+  }
+
+  if (empty($request->patientId)) {
+    exit('Invalid pateintId');
+  }
+
   // Update request
   if($request->update()) {
     echo json_encode(

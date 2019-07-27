@@ -25,8 +25,15 @@
     $request->notes = $data->notes;
 
     if (empty($request->title)) {
-      echo json_encode(array('message' => 'Invalid title'));
-      exit(400);
+      exit('Invalid title');
+    }
+
+    if (empty($request->consultantId)) {
+      exit('Invalid consultantId');
+    }
+  
+    if (empty($request->patientId)) {
+      exit('Invalid pateintId');
     }
 
     // Create request on db. Retrieve and return the db id if successful
