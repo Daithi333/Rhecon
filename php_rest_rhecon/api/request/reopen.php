@@ -16,12 +16,12 @@
   $request->id = isset($_GET['id']) ? $_GET['id'] : die();
 
   // Update request
-  if($request->toggleActive(0)) {
+  if($request->toggleActive(1)) {
     echo json_encode(
-      array('message' => 'Request Closed')
+      array('message' => 'Request Reopened')
     );
   } else {
     echo json_encode(
-      array('message' => 'Request Not Closed')
+      array('message' => 'Request Not Reopened')
     );
   }

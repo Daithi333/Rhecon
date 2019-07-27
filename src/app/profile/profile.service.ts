@@ -31,6 +31,7 @@ export class ProfileService {
     return this._profile.asObservable();
   }
 
+  // retrieve porofile from DB and store locally
   fetchProfile() {
     return this.authService.userId.pipe(
       take(1),
@@ -59,6 +60,7 @@ export class ProfileService {
     );
   }
 
+  // upload image file for profile
   addImage(imageFile: File) {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
@@ -69,6 +71,7 @@ export class ProfileService {
     );
   }
 
+  // update profile on DB and locally
   updateProfile(
     id: number,
     titleId: number,
@@ -87,7 +90,6 @@ export class ProfileService {
       portraitUrl,
       bio
     );
-    console.log(updatedProfile);
     return this.httpClient.put(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/update_profile.php',
       updatedProfile

@@ -111,6 +111,31 @@ export class RequestsPage implements OnInit, OnDestroy {
     });
   }
 
+  onReopenRequest(requestId: number, slidingItem: IonItemSliding) {
+    this.alertController.create({
+      header: 'Confirm reopen',
+      message: 'Are you sure you wish to reopen this request?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+            this.requestsService.reopenRequest(requestId).subscribe(() => {
+              slidingItem.close();
+            });
+          }
+        },
+        {
+          text: 'No',
+          handler: () => {
+            slidingItem.close();
+        }
+      }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
   onDeleteRequest(requestId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm deletion',

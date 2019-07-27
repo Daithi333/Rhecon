@@ -210,9 +210,9 @@
     /**
      * Function to close a single request record
      */
-    public function closeRequest() {
+    public function toggleActive($a) {
       $query = 'UPDATE ' . $this->table . '
-                SET active = 0
+                SET active = ' . $a . '
                 WHERE id = :id';
 
       // prep statement

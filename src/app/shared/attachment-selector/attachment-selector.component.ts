@@ -217,6 +217,7 @@ export class AttachmentSelectorComponent implements OnInit {
         this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
           const reorientatedDataUrl = reorientatedImage;
           this.selectedAttachments.push(reorientatedDataUrl);
+          // TODO - to upload correct orientation to DB. tried emitting this url but blob is not displaying properly
         });
       }
     });

@@ -192,6 +192,7 @@ export class RequestsService {
     );
   }
 
+  // update a request on DB and local list
   updateRequest(
     requestId: number,
     title: string,
@@ -235,6 +236,7 @@ export class RequestsService {
       }));
   }
 
+  // close an active request
   closeRequest(requestId: number) {
     return this.httpClient.put(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/close.php/?id=${requestId}`,
@@ -252,6 +254,25 @@ export class RequestsService {
     );
   }
 
+  // reopen an inactive request
+  reopenRequest(requestId: number) {
+    return this.httpClient.put(
+      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/reopen.php?id=${requestId}`,
+      { id: requestId }
+    )
+    .pipe(
+      switchMap(() => {
+        return this.requestsWithObjects;
+      }),
+      take(1),
+      tap(requests => {
+        requests.find(r => r.id === requestId).active = true;
+        this._requestsWithObjects.next(requests);
+      })
+    );
+  }
+
+  // delete an inactive request
   deleteRequest(requestId: number) {
     return this.httpClient.delete(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/request/delete.php?id=${requestId}`
@@ -267,6 +288,10 @@ export class RequestsService {
     );
   }
 
+  /**
+   * retrieve basic requests from DB and store locally
+   * lookup is based on usertype from the AuthUser object - requester or consultant
+   */
   private fetchRequests() {
     let userType;
     return this.authService.userType.pipe(
@@ -317,6 +342,10 @@ export class RequestsService {
     );
   }
 
+  /**
+   * retrieve a single basic request from db by id
+   * @param id - the request unique id
+   */
   private getRequest(id: number) {
     let userType;
     return this.authService.userType.pipe(

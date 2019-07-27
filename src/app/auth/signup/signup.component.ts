@@ -88,7 +88,6 @@ export class SignupComponent implements OnInit, OnDestroy {
           this.form.value.email,
           this.form.value.password
         ).subscribe(resData => {
-          // console.log(resData);
           this.isLoading = false;
           loadingEl.dismiss();
           this.presentAlert();
@@ -98,12 +97,9 @@ export class SignupComponent implements OnInit, OnDestroy {
           console.log(error);
           this.isLoading = false;
           loadingEl.dismiss();
-          let errorMsg = 'Could not sign up, please try again shortly';
-          if (error.error.message === 'Email address already registered') {
-            errorMsg = 'Email address is already registered.';
-          }
+          const errorMsg = this.determineError(error.error);
           this.alertController.create({
-            header: 'Signup Unsuccessful',
+            header: 'Unsuccessful Signup',
             message: errorMsg,
             buttons: ['Okay']
           }).then(alertEl => {
@@ -111,6 +107,12 @@ export class SignupComponent implements OnInit, OnDestroy {
           });
         });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.titlesSub) {
+      this.titlesSub.unsubscribe();
+    }
   }
 
   private async presentAlert() {
@@ -122,9 +124,20 @@ export class SignupComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  ngOnDestroy() {
-    if (this.titlesSub) {
-      this.titlesSub.unsubscribe();
+  private determineError(error: string) {
+    switch (error) {
+      case 'Email already registered':
+        return 'Email already registered';
+      case 'Invalid email':
+        return 'Email format is invalid';
+      case 'Invalid password':
+        return 'Password complexity is insufficient';
+      case 'Invalid firstname':
+        return 'First name format is not supported';
+      case 'Invalid lastname':
+        return 'Last name format is not supported';
+      default:
+        return 'Something went wrong. Please try again later';
     }
   }
 

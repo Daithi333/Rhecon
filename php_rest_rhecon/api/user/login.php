@@ -25,8 +25,8 @@
     $enteredPassword = $data->password;
 
     if ( empty($user->email) || (!filter_var($user->email, FILTER_VALIDATE_EMAIL)) ) {
-      echo json_encode(array('message' => 'Invalid email'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid email');
     }
 
     // Check if user is on db

@@ -92,6 +92,22 @@ export class EditRequestPage implements OnInit, OnDestroy {
           }),
         });
         this.isLoading = false;
+      },
+      error => {
+        this.alertController.create({
+          header: 'Error',
+          message: 'Could not locate request.',
+          buttons: [
+            {
+              text: 'Okay',
+              handler: () => {
+                this.router.navigate(['/tabs/requests']);
+              }
+            }
+          ]
+        }).then(alertEl => {
+          alertEl.present();
+        });
       });
     });
   }
