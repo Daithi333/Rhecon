@@ -128,8 +128,8 @@ export class PatientsService {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
 
-    return this.httpClient.post<{fileUrl: string, filePath: string}>(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/portrait_upload.php',
+    return this.httpClient.post<{fileUrl: string, filePath: string, message?: string}>(
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/patient_image_upload.php',
       imageData
     );
   }

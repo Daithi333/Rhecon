@@ -106,7 +106,7 @@ export class AttachmentsService {
 
   downloadAttachment(fileUrl: string) {
     return this.httpClient.post(
-      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_download.php?',
+      'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_download.php',
       { fileUrl: fileUrl },
       {observe: 'response', responseType: 'blob'}
     );

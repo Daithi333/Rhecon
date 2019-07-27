@@ -77,7 +77,10 @@ export class NewPatientPage implements OnInit {
         defer(() => this.callAddPatient(this.imagePreview)),
         defer(() => this.patientsService.addImage(this.form.get('patientImage').value).pipe(
           switchMap(resData => {
-            // TODO - handle error from the add image function
+            if (resData.message) {
+              this.fileConversionAlert();
+              return;
+            }
             return this.callAddPatient(resData.fileUrl);
           })
         ))
@@ -102,8 +105,8 @@ export class NewPatientPage implements OnInit {
 
   private fileConversionAlert() {
     this.alertController.create({
-      header: 'Error',
-      message: 'Something went wrong with file conversion. Please retry using .jpg format.',
+      header: 'File Error',
+      message: 'Something went wrong with file. Please retry using .jpg format.',
       buttons: [
         {
           text: 'Okay',

@@ -114,7 +114,10 @@ export class EditPatientPage implements OnInit, OnDestroy {
         defer(() => this.callUpdatePatient(this.patient.portraitUrl)),
         defer(() => this.patientsService.addImage(this.form.get('patientImage').value).pipe(
           switchMap(resData => {
-            // TODO - handle error from the add image function - server, size, etc
+            if (resData.message) {
+              this.fileConversionAlert();
+              return;
+            }
             return this.callUpdatePatient(resData.fileUrl);
           })
         ))
@@ -142,6 +145,20 @@ export class EditPatientPage implements OnInit, OnDestroy {
       patientImage,
       this.form.value.notes
     );
+  }
+
+  private fileConversionAlert() {
+    this.alertController.create({
+      header: 'File Error',
+      message: 'Something went wrong with file. Please retry using .jpg format.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 
 }
