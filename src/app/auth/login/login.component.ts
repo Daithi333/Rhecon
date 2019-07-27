@@ -54,8 +54,8 @@ export class LoginComponent implements OnInit {
           }, error => {
             loadingEl.dismiss();
             this.alertController.create({
-              header: 'Login Unsuccessful',
-              message: 'Email or password not recognised',
+              header: 'Unsuccessful Login',
+              message: 'Email or password incorrect',
               buttons: ['Okay']
             }).then(loadingEl2 => {
               loadingEl2.present();

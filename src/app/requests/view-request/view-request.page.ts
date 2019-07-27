@@ -143,6 +143,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
 
   // return icon to display in file preview, when not an image
   choosepreviewIcon(url: string) {
+    if (url.substring(url.length - 4, url.length + 1) === 'blob') {
+      return url;
+    }
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     const fileType =  fileTypes.find(f => f.ext === ext);
     if (fileType.mime.substring(0, 5) === 'image') {

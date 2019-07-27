@@ -57,7 +57,7 @@ export class ChangePasswordComponent implements OnInit {
 
   onChangePassword() {
     if (this.form.value.email !== this.email) {
-      this.presentEmailAlert();
+      this.presentAlert();
       return;
     }
     console.log('email ok');
@@ -71,7 +71,7 @@ export class ChangePasswordComponent implements OnInit {
           this.form.value.newPassword
         ).subscribe(() => {
           loadingEl.dismiss();
-          this.presentPasswordAlert();
+          this.presentAlert();
           this.onClose();
           this.authService.logout();
           this.router.navigate(['/auth']);
@@ -79,42 +79,22 @@ export class ChangePasswordComponent implements OnInit {
         error => {
           console.log(error);
           loadingEl.dismiss();
-          let errorMsg = 'Could not update password, please try again shortly';
-          if (error.error.message === 'Password incorrect') {
-            errorMsg = 'Inocrrect password entered';
-          }
-          this.alertController.create({
-            header: 'Unsuccessful',
-            message: errorMsg,
-            buttons: ['Okay']
-          }).then(alertEl => {
-            alertEl.present();
-          });
+          this.presentAlert();
         });
       });
   }
 
-  private presentEmailAlert() {
+  private presentAlert() {
     this.alertController.create({
-      header: 'Invalid email address',
-      message: 'The email address entered does not match your account.',
+      header: 'Unsucessful',
+      message: 'The email or password entered does not match your account.',
       buttons: ['Okay']
     }).then(alertEl => {
       this.form.patchValue({
-        email: ''
+        email: '',
+        currentPassword: ''
       });
       alertEl.present();
-    });
-  }
-
-  private presentPasswordAlert() {
-    this.alertController.create({
-      header: 'Success',
-      message: 'Password sucessfully updated. Please login again',
-      buttons: ['Okay']
-    }).then(alertEl => {
-      alertEl.present();
-      this.authService.logout();
     });
   }
 

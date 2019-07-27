@@ -26,18 +26,18 @@
     $patient->userId = $data->userId;
 
     if ( empty($patient->firstName) || (!preg_match("/^[a-zA-Z'. -]*$/", $patient->firstName)) ) {
-      echo json_encode(array('message' => 'Invalid firstname'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid firstname');
     }
 
     if ( empty($patient->lastName) || (!preg_match("/^[a-zA-Z'. -]*$/", $patient->lastName)) ) {
-      echo json_encode(array('message' => 'Invalid lastname'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid lastname');
     }
 
     if (empty($patient->portraitUrl)) {
-      echo json_encode(array('message' => 'Invalid portraitUrl'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid portraitUrl');
     }
 
     // Create patient on db. Retrieve and return the db id if successful

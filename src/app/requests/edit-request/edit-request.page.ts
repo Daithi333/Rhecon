@@ -181,7 +181,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
     } else {
       attachmentFile = attachmentData;
     }
-    console.log(attachmentFile);
     this.attachments.push(attachmentFile);
     this.requestForm.patchValue({ attachments: this.attachments });
   }

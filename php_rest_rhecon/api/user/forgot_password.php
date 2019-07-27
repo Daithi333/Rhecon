@@ -29,8 +29,8 @@
 
     // check email is registered
     if (!$result) {
-      echo json_encode(array('message' => 'Email not registered'));
-      exit(400);
+      http_response_code(400);
+      exit('Email not registered');
     }
 
     $user->password = password_hash($tempPassword, PASSWORD_DEFAULT);

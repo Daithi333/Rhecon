@@ -40,7 +40,7 @@
   >
     <span class="preview" *ngFor="let attachment of selectedAttachments">
       <ion-thumbnail>
-        <ion-img 
+        <ion-img
           [src]="isNewAttachment(attachment) ? choosepreviewIconNew(attachment) : choosepreviewIcon(attachment)" 
           role="button"
           (click)="onClickFile(requestId, attachment)">

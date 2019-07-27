@@ -72,6 +72,10 @@ export class PortraitSelectorComponent implements OnInit {
       this.presentAlert();
       return;
     }
+    if (chosenFile.size > 26214400) {
+      this.fileSizeAlert();
+      return;
+    }
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
@@ -96,7 +100,21 @@ export class PortraitSelectorComponent implements OnInit {
   private presentAlert() {
     this.alertController.create({
       header: 'Error',
-      message: 'There has been a problem with your file selection. Please try again later.',
+      message: 'There has been a problem with your file selection. Please try again.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
+
+  private fileSizeAlert() {
+    this.alertController.create({
+      header: 'File too large',
+      message: 'Attachments cannot be larger than 25MB.',
       buttons: [
         {
           text: 'Okay',

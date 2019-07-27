@@ -23,13 +23,13 @@
     $group->userId = $data->userId;
 
     if ( empty($group->groupName) || (!preg_match("/^[0-9a-zA-Z'. -]*$/", $group->groupName)) ) {
-      echo json_encode(array('message' => 'Invalid groupName'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid groupName');
     }
 
     if (empty($group->imageUrl)) {
-      echo json_encode(array('message' => 'Invalid imageUrl'));
-      exit(400);
+      http_response_code(400);
+      exit('Invalid imageUrl');
     }
 
     // Create Group on db. Retrieve and return the db id if successful

@@ -91,16 +91,29 @@ export class AttachmentSelectorComponent implements OnInit {
     }
     const fr = new FileReader();
     fr.onload = () => {
-      this.chosenAttachmentType = chosenFile.type;
       const dataUrl = fr.result.toString();
+      this.chosenAttachmentType = chosenFile.type;
       // if attachment is an image, may need re-orientated due to EXIF orientation
       if (chosenFile.type.substr(0, 5) === 'image') {
-        this.correctImageOrientation(chosenFile, dataUrl);
+        this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
+          // if orientation is 1 or absent from exif data, no action required
+          if (+orientation === 1 || +orientation === -1) {
+            this.selectedAttachments.push(dataUrl);
+            this.attachmentChoice.emit(chosenFile);
+          // if orientation is anything else, it needs reorientated
+          } else {
+            this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
+              const reorientatedDataUrl = reorientatedImage;
+              this.selectedAttachments.push(reorientatedDataUrl);
+              this.attachmentChoice.emit(reorientatedDataUrl);
+            });
+          }
+        });
       } else {
         this.selectedAttachments.push(dataUrl);
         console.log(this.selectedAttachments);
+        this.attachmentChoice.emit(chosenFile);
       }
-      this.attachmentChoice.emit(chosenFile);
     };
     fr.readAsDataURL(chosenFile);
   }
@@ -146,6 +159,10 @@ export class AttachmentSelectorComponent implements OnInit {
    * @param url - url for file location on server
    */
   choosepreviewIcon(url: string) {
+    // if check to handle the blob images..
+    if (url.substring(url.length - 4, url.length + 1) === 'blob') {
+      return url;
+    }
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     const fileType =  fileTypes.find(f => f.ext === ext);
     if (fileType.mime.substring(0, 5) === 'image') {
@@ -203,23 +220,6 @@ export class AttachmentSelectorComponent implements OnInit {
       }).then(alertEl => {
         alertEl.present();
       });
-    });
-  }
-
-  // helper method for onAttachmentChosen - corrects image orientation if necessary and pushes to proview array
-  private correctImageOrientation(chosenFile: File, dataUrl: string) {
-    this.imageUtilityService.getOrientation(chosenFile, (orientation) => {
-      // if orientation is 1 or absent from exif data, no action required
-      if (+orientation === 1 || +orientation === -1) {
-        this.selectedAttachments.push(dataUrl);
-      // if orientation is anything else, it needs reorientated
-      } else {
-        this.imageUtilityService.resetOrientation(dataUrl, orientation, (reorientatedImage) => {
-          const reorientatedDataUrl = reorientatedImage;
-          this.selectedAttachments.push(reorientatedDataUrl);
-          // TODO - to upload correct orientation to DB. tried emitting this url but blob is not displaying properly
-        });
-      }
     });
   }
 

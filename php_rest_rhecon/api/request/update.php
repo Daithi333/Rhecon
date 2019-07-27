@@ -23,8 +23,7 @@
   $request->notes = $data->notes;
 
   if (empty($request->title)) {
-    echo json_encode(array('message' => 'Invalid title'));
-    exit(400);
+    exit('Invalid title');
   }
 
   // Update request
