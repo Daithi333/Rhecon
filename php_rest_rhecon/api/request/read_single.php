@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Request.php';
 
-  // Instantiate DB and Request data objects
+  // Instantiate DB and Request objects
   $database = new Database();
   $db = $database->connect();
   $request = new Request($db);
@@ -40,12 +40,14 @@
       'updatedOn' => $request->updatedOn
     );
 
+    http_response_code(200);
     print_r(json_encode($requestArr));  
 
   } else {
-    // echo json_encode(
-    //   array('message' => 'No patients found')
-    // );
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No patients found')
+    );
   }
 
    

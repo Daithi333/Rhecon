@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Contact.php';
 
-  // Instantiate DB and Contact record objects
+  // Instantiate DB and Contact objects
   $database = new Database();
   $db = $database->connect();
   $contact = new Contact($db);

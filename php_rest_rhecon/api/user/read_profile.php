@@ -6,14 +6,12 @@
   include_once '../../config/Database.php';
   include_once '../../models/User.php';
 
-  // Instantiate DB and connect
+  // Instantiate DB and user objects
   $database = new Database();
   $db = $database->connect();
-
-  // Instantiate User data object
   $user = new User($db);
 
-  // get contact id from URL
+  // get user id from URL
   $user->id = isset($_GET['id']) ? $_GET['id'] : die();
 
   if ($user->readProfile()) {

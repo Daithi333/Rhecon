@@ -14,6 +14,7 @@
   $db = $database->connect();
   $user = new User($db);
 
+  // random data for temp password
   $strings = array('wander', 'spanner', 'marble', 'tablet', 'pepper', 'legend', 'bridge', 'reward', 'valley', 'island', 'winter', 'voyage');
   $rand = rand(10000, 99999);
   $tempPassword = $strings[array_rand($strings)] . $rand;
@@ -22,7 +23,7 @@
   $data = json_decode(file_get_contents("php://input"));
 
   if (isset($data)) {
-    // assign user email from the decoded data
+    // assign user email from decoded data
     $user->email = $data->email;
 
     $result = $user->readSingle();
@@ -50,10 +51,15 @@
     // change user password to the temporary one
     if ($user->updatePassword()) {
       http_response_code(200);
-      echo json_encode(array('message' => 'Password changed'));
+      echo json_encode(
+        array('message' => 'Password changed')
+      );
+      
     } else {
       http_response_code(500);
-      echo json_encode(array('message' => 'Password not changed'));
+      echo json_encode(array
+        ('message' => 'Password not changed')
+      );
     }
 
   }

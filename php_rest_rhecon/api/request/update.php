@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Request.php';
 
-  // Instantiate DB and Request data objects
+  // Instantiate DB and Request objects
   $database = new Database();
   $db = $database->connect();
   $request = new Request($db);

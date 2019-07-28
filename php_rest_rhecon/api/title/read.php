@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Title.php';
 
-  // Instantiate DB and Contact record objects
+  // Instantiate DB and title objects
   $database = new Database();
   $db = $database->connect();
   $title = new Title($db);
@@ -31,11 +31,12 @@
       array_push($titleArr, $titleElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($titleArr);
 
-    // } else {
-    //   echo json_encode(
-    //     array('message' => 'No titles found')
-    //   );
+    } else {
+      http_response_code(204);
+      echo json_encode(
+        array('message' => 'No titles found')
+      );
   }

@@ -48,21 +48,29 @@
 
         if ($user->updatePassword()) {
           http_response_code(200);
-          echo json_encode(array('message' => 'Password changed'));
+          echo json_encode(
+            array('message' => 'Password changed')
+          );
 
         } else {
           http_response_code(500);
-          echo json_encode(array('message' => 'Password not changed'));
+          echo json_encode(
+            array('message' => 'Password not changed')
+          );
         }
 
       } else {
         http_response_code(400);
-        echo json_encode(array('message' => 'Password incorrect'));
+        echo json_encode(
+          array('message' => 'Password incorrect')
+        );
       }
      
     } else {
       http_response_code(404);
-      echo json_encode(array('message' => 'User not found'));
+      echo json_encode(
+        array('message' => 'User not found')
+      );
     }
     
   }

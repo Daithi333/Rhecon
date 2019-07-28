@@ -26,6 +26,7 @@
     $user->portraitUrl = $data->portraitUrl;
     $user->bio = $data->bio;
 
+    // some data checks in case user bypassed on front-end
     if ( empty($user->firstName) || (!preg_match("/^[a-zA-Z'. -]*$/", $user->firstName)) ) {
       exit('Invalid firstname');
     }
@@ -33,8 +34,7 @@
     if ( empty($user->lastName) || (!preg_match("/^[a-zA-Z'. -]*$/", $user->lastName)) ) {
       exit('Invalid lastname');
     }
-
-    if (empty($user->portraitUrl)) {
+    pty($user->portraitUrl)) {
       exit('Invalid portraitUrl');
     }
 

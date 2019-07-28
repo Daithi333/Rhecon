@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Specialism.php';
 
-  // Instantiate DB and Specialism record objects
+  // Instantiate DB and Specialism objects
   $database = new Database();
   $db = $database->connect();
   $specialism = new Specialism($db);

@@ -16,7 +16,7 @@
     }
 
     /**
-     * Function to retrieve all attachments records for a particular request id
+     * Function to retrieve all attachments for a particular request
      */
     public function read() {
       $query = 'SELECT a.id, a.requestId, a.attachmentUrl
@@ -33,7 +33,7 @@
     }
 
     /**
-     * Function to retrieve a single attachment record by request id and its Url string
+     * Function to retrieve a single attachment by request id and its Url string
      */
     public function readSingle() {
       $query = 'SELECT a.id, a.requestId, a.attachmentUrl
@@ -61,7 +61,7 @@
     }
 
     /**
-     * Function to add a new attachment records
+     * Function to add a new attachment
      */
     public function create() {
       $query = 'INSERT INTO ' . $this->table . '
@@ -91,7 +91,7 @@
     }
 
     /**
-     * Function to delete a single attachment record
+     * Function to delete a single attachment
      */
     public function delete() {
       $query = 'DELETE FROM ' . $this->table . '

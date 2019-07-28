@@ -24,6 +24,7 @@
     $user->email = $data->email;
     $enteredPassword = $data->password;
 
+    // some data checks in case user bypassed on front-end
     if ( empty($user->email) || (!filter_var($user->email, FILTER_VALIDATE_EMAIL)) ) {
       http_response_code(400);
       exit('Invalid email');

@@ -29,6 +29,7 @@
      * Function to retrieve members of the same groups as the user id passed in.
      */
     public function read() {
+      // retrieve groups ids which user is a member
       $groupsQuery = 'SELECT n.groupId
                       FROM ' . $this->membershipTable . ' n
                       WHERE n.userId = :userId';
@@ -62,17 +63,28 @@
      * Function to retrieve a single contact by id
      */
     public function readSingle() {
+      // retrieve groups ids which user is a member
+      $groupsQuery = 'SELECT n.groupId
+                      FROM ' . $this->membershipTable . ' n
+                      WHERE n.userId = :userId';
+
       $query = 'SELECT u.id, t.title, u.firstName, u.lastName,
                 s.specialism, u.email, u.portraitUrl, u.bio
-                FROM ' . $this->userTable . ' u
+                FROM ' . $this->membershipTable . ' m
+                LEFT JOIN ' . $this->userTable  . ' u
+                ON u.id = m.userId
                 LEFT JOIN ' . $this->titleTable  . ' t
                 ON t.id = u.titleId
                 LEFT JOIN ' . $this->specialismTable  . ' s
                 ON s.id=u.specialismId
-                WHERE u.id = :id';
+                WHERE m.groupId
+                IN (' . $groupsQuery . ')
+                AND m.userId = :id
+                LIMIT 1';
 
       $stmt = $this->conn->prepare($query);
 
+      $stmt->bindParam(':userId', $this->userId);
       $stmt->bindParam(':id', $this->id);
 
       $stmt->execute();

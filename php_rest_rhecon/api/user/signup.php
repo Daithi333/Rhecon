@@ -26,6 +26,7 @@
     $user->email = $data->email;
     $user->password = $data->password;
 
+    // some data checks in case user bypassed on front-end
     if ( ($user->userTypeId == 2) && ($user->specialismId != 1) ) {
       http_response_code(400);
       exit('Invalid specialism');
@@ -51,13 +52,13 @@
       exit('Invalid password');
     }
 
-    // check if email is already in use before creating user
+    // check if email is already registered before registering
     if ($user->readSingle()) {
       http_response_code(400);
       exit('Email already registered');
     }
 
-    // has password if all the checks passed
+    // hash the password if all the checks have succeeded
     $user->password = password_hash($data->password, PASSWORD_DEFAULT);
 
     // Create user on db returning the db id if successful

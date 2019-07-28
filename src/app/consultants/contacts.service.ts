@@ -75,10 +75,16 @@ export class ContactsService {
    * @param id - unique id of the contact
    */
   getContact(id: number) {
-    return this.httpClient.get<ContactData>(
-      `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?id=${id}`
-    )
-    .pipe(
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('User not found!');
+        }
+        return this.httpClient.get<ContactData>(
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?userId=${userId}&id=${id}`
+        );
+      }),
       map(contactData => {
         return new Contact(
           id,

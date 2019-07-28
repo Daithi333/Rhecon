@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/UserType.php';
 
-  // Instantiate DB and User Type record objects
+  // Instantiate DB and UserType objects
   $database = new Database();
   $db = $database->connect();
   $userType = new UserType($db);
@@ -31,11 +31,12 @@
       array_push($userTypeArr, $userTypeElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($userTypeArr);
 
-    // } else {
-    //   echo json_encode(
-    //     array('message' => 'No user types found')
-    //   );
+  } else {
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No user types found')
+    );
   }

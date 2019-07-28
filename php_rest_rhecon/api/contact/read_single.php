@@ -13,7 +13,8 @@
   // Instantiate Contact data object
   $contact = new Contact($db);
 
-  // get contact id from URL
+  // get contact id and userId from URL
+  $contact->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
   $contact->id = isset($_GET['id']) ? $_GET['id'] : die();
 
   if ($contact->readSingle()) {
@@ -34,7 +35,7 @@
   } else {
     http_response_code(204);
     echo json_encode(
-      array('message' => 'No patients found')
+      array('message' => 'No Contacts found')
     );
   }
 

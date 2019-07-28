@@ -15,7 +15,7 @@
 
   include '../token/check_token.php';
 
-  // get patient id from URL
+  // get patient and user id from URL
   $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
   $patient->id = isset($_GET['id']) ? $_GET['id'] : die();
 
