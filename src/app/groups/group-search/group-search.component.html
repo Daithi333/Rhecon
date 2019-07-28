@@ -44,9 +44,13 @@
                 <ion-note>Admin: {{ group.admin.firstName }} {{ group.admin.lastName }}</ion-note>
                 <p>Email: {{ group.admin.email }}</p>
               </ion-label>
-              <!-- <ion-button fill="clear" slot="end" (click)="requestJoin()">
-                <ion-icon name="person-add" slot="icon-only"></ion-icon>
-              </ion-button> -->
+              <ion-button 
+                fill="clear"
+                slot="end" 
+                (click)="onRequestJoin(group.groupName, group.admin.email)"
+              >
+                <ion-icon name="mail" slot="icon-only"></ion-icon>
+              </ion-button>
             </ion-item>
           </ion-list>
         </ion-col>

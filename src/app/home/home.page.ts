@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { Profile } from '../profile/profile.model';
 import { ProfileService } from '../profile/profile.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',

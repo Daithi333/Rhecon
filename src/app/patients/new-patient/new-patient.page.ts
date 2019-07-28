@@ -45,7 +45,10 @@ export class NewPatientPage implements OnInit {
     });
   }
 
-  // if the image is a string, convert to blob before patching into the form
+  /**
+   * patch the image file into form. Convert to blob first if it is a string
+   * @param imageData - the image file or dataUrl if from Camera API
+   */
   onImageChosen(imageData: string | File) {
     let imageFile;
     if (typeof imageData === 'string') {
@@ -64,6 +67,9 @@ export class NewPatientPage implements OnInit {
     this.form.patchValue({ patientImage: imageFile });
   }
 
+  /**
+   * call addPatient directly if image unchanged, or call addimage first
+   */
   onAddPatient() {
     if (!this.form.valid) {
       return;
@@ -92,7 +98,7 @@ export class NewPatientPage implements OnInit {
     });
   }
 
-  // call AddPatient method with appropiate image url
+  // helper method to call AddPatient with appropiate image url
   private callAddPatient(patientImage: string) {
     return this.patientsService.addPatient(
       this.form.value.firstName,

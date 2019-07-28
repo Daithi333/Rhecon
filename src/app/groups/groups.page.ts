@@ -104,6 +104,7 @@ export class GroupsPage implements OnInit, OnDestroy {
     });
   }
 
+  // confirm before calling delete group. Only works if user is only member
   onDeleteGroup(groupId: number, slidingItem: IonItemSliding) {
     const group = this.groups.find(g => g.id === groupId);
     if (group.members.length > 1) {

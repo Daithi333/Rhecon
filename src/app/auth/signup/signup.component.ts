@@ -29,7 +29,7 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
-    this.httpService.fetchTitles()
+    this.titlesSub = this.httpService.fetchTitles()
     .subscribe(titleData => {
       this.titles = titleData;
       this.isLoading = false;
@@ -70,6 +70,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.modalController.dismiss(null, 'cancel', 'signup');
   }
 
+  // call the Signup method with the form data
   onSignup() {
     if (!this.form.valid) {
       return;
@@ -124,6 +125,7 @@ export class SignupComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
+  // helper method to determine error message from backend API response
   private determineError(error: string) {
     switch (error) {
       case 'Email already registered':

@@ -31,7 +31,9 @@ export class ProfileService {
     return this._profile.asObservable();
   }
 
-  // retrieve porofile from DB and store locally
+  /**
+   * Retrieve porofile from DB and store locally
+   */
   fetchProfile() {
     return this.authService.userId.pipe(
       take(1),
@@ -60,7 +62,10 @@ export class ProfileService {
     );
   }
 
-  // upload image file for profile
+  /**
+   * Upload image file for profile
+   * @param imageFile - image file to be uploaded
+   */
   addImage(imageFile: File) {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
@@ -71,7 +76,9 @@ export class ProfileService {
     );
   }
 
-  // update profile on DB and locally
+  /**
+   * Update profile on DB and locally
+   */
   updateProfile(
     id: number,
     titleId: number,

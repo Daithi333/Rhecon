@@ -39,8 +39,12 @@ export class NewGroupPage implements OnInit {
     this.fileSelector.nativeElement.click();
   }
 
+  /**
+   * Patch file into form, extracting dataUrl for preview
+   * @param event - file selection event
+   */
   onFileChosen(event: Event) {
-    this.imageChanged = true; // track if new image was added and needs uploaded
+    this.imageChanged = true;
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
       return;
@@ -54,6 +58,9 @@ export class NewGroupPage implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
+  /**
+   * Call addGroup if no image, or addimage first if there is
+   */
   onAddGroup() {
     if (!this.form.valid) {
       return;
@@ -79,7 +86,7 @@ export class NewGroupPage implements OnInit {
     });
   }
 
-  // call AddGroup method with appropiate image url
+  // helper method to call addGroup with appropiate image url
   private callAddGroup(imageUrl: string) {
     return this.groupsService.addGroup(
       this.form.value.groupName,

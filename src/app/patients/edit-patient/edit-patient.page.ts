@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription, iif, defer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { PatientsService } from '../patients.service';
 import { Patient } from '../patient.model';
-import { switchMap } from 'rxjs/operators';
-import { ImageUtilService } from 'src/app/shared-portrait/image-util-service';
+import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-edit-patient',
@@ -82,6 +82,10 @@ export class EditPatientPage implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * patch the image file into form. Convert to blob first if it is a string
+   * @param imageData - the image file or dataUrl if from Camera API
+   */
   onImageChosen(imageData: string | File) {
     this.imageChanged = true;
     let imageFile;
@@ -101,6 +105,9 @@ export class EditPatientPage implements OnInit, OnDestroy {
     this.form.patchValue({ patientImage: imageFile });
   }
 
+  /**
+   * call updatePatient directly if image unchanged, or call addimage first
+   */
   onUpdatePatient() {
     if (!this.form.valid) {
       return;
@@ -135,7 +142,7 @@ export class EditPatientPage implements OnInit, OnDestroy {
     }
   }
 
-  // call UpdatePatient method with appropriate image url
+  // helper method to call UpdatePatient with appropriate image url
   private callUpdatePatient(patientImage: string) {
     return this.patientsService.updatePatient(
       this.patient.id,

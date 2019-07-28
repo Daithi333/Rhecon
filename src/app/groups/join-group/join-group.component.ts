@@ -49,28 +49,11 @@ export class JoinGroupComponent implements OnInit {
         this.onClose();
       },
       error => {
-        let $errorMsg = 'There was a problem verifying the code';
-        let $header = 'ErrorInvalid Code';
-        switch (error.error.message) {
-          case 'Code not found':
-            $errorMsg = 'Code entered in invalid';
-            break;
-          case 'Code is no longer valid':
-            $errorMsg = 'Code is no longer valid';
-            break;
-          case 'Code has expired':
-            $errorMsg = 'Code has expired';
-            break;
-          case 'Member not Added':
-            $errorMsg = 'Could not add you to the group, please try again later.';
-            break;
-          case 'Invalidation unsuccessful':
-            $header = 'Success!';
-            $errorMsg = 'You have successfully joined the group';
-            // TODO - joining code failed to be invalidated in DB.
-            break;
-          default:
-            break;
+        const $errorMsg = this.determineError(error.error.message);
+        let $header = 'Unsuccessful';
+        if (error.error.message === 'Invalidation unsuccessful') {
+          // process worked but code failed to be invalidated in DB
+          $header = 'Success!';
         }
         loadingEl.dismiss();
         this.alertController.create({
@@ -91,5 +74,22 @@ export class JoinGroupComponent implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  private determineError(error: string) {
+    switch (error) {
+      case 'Code not found':
+        return 'The code entered is invalid';
+      case 'Code is no longer valid':
+        return 'The code is no longer valid';
+      case 'Code has expired':
+        return 'The code has expired';
+      case 'Member not Added':
+        return 'Could not add you to the group, please try again later.';
+      case 'Invalidation unsuccessful':
+        return 'You have successfully joined the group';
+      default:
+        return 'There was a problem verifying the code';
+    }
   }
 }

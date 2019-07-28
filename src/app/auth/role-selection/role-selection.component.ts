@@ -27,14 +27,24 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = true;
+    // retrieve specialisms and titles
     forkJoin([
       this.httpService.fetchSpecialisms(),
       this.httpService.fetchUserTypes()
     ])
     .subscribe(([specialisms, userTypes]) => {
+      // remove the (non) specialism 'Community Healthcare' from the options
       this.specialisms = specialisms.filter(s => s.specialism !== 'Community Healthcare');
       this.userTypes = userTypes;
       this.isLoading = false;
+      this.form = new FormGroup({
+        role: new FormControl(null, {
+          validators: [Validators.required]
+        }),
+        specialism: new FormControl('1', {
+          validators: [Validators.required]
+        })
+      });
     },
      error => {
         this.alertController.create({
@@ -51,18 +61,9 @@ export class RoleSelectionComponent implements OnInit, OnDestroy {
           alertEl.present();
         });
       });
-
-    this.form = new FormGroup({
-      role: new FormControl(null, {
-        validators: [Validators.required]
-      }),
-      specialism: new FormControl('1', {
-        validators: [Validators.required]
-      })
-    });
-
   }
 
+  // reset the specialism to 1 (Community Healthcare) if Requester role chosen
   onRoleChosen(event: any) {
     if (+event.detail.value === 3) {
       this.isConsultant = true;

@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { ContactsService } from '../consultants/contacts.service';
 import { Contact } from '../consultants/contact.model';
 import { GroupSearch } from './group-search.model';
+import { ProfileService } from '../profile/profile.service';
 
 interface GroupData {
   id: number;
@@ -25,7 +26,8 @@ export class GroupsService {
   constructor(
     private authService: AuthService,
     private httpClient: HttpClient,
-    private contactsService: ContactsService
+    private contactsService: ContactsService,
+    private profileService: ProfileService
   ) {}
 
   get groups() {
@@ -237,6 +239,27 @@ export class GroupsService {
         return this.httpClient.post<{ message: string, dbId: number }>(
           'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/invitation/create.php',
           { groupName: groupName, groupId: groupId, recipient: recipient, message: message, sender: email }
+        );
+      })
+    );
+  }
+
+  // send email request to a group admin to join their group
+  requestJoin(groupName: string, adminEmail: string) {
+    let email;
+    return this.authService.email.pipe(
+      take(1),
+      switchMap(userEmail => {
+        email = userEmail;
+        return this.profileService.fetchProfile();
+      }),
+      take(1),
+      switchMap(profile => {
+        const firstName = profile.firstName;
+        const lastName = profile.lastName;
+        return this.httpClient.post<{ message: string, dbId: number }>(
+          'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/group/request_join.php',
+          { email, firstName, lastName, groupName, adminEmail }
         );
       })
     );

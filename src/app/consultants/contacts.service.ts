@@ -30,6 +30,9 @@ export class ContactsService {
     return this._contacts.asObservable();
   }
 
+  /**
+   * Retrieve list of contacts for a user based on groups they are member of
+   */
   fetchContacts() {
     return this.authService.userId.pipe(
       take(1),
@@ -67,6 +70,10 @@ export class ContactsService {
     );
   }
 
+  /**
+   * Retrieve a single contact by id
+   * @param id - unique id of the contact
+   */
   getContact(id: number) {
     return this.httpClient.get<ContactData>(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?id=${id}`

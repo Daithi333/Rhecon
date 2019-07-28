@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
 import { tap, map, take } from 'rxjs/operators';
 import { BehaviorSubject, from } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { User } from './user.model';
 import { UserAuth } from './user-auth.model';
-import { Router } from '@angular/router';
 
 interface SignupResponseData {
   message: string;
@@ -92,6 +92,9 @@ export class AuthService implements OnDestroy {
 
   constructor(private httpClient: HttpClient, private router: Router) { }
 
+  /**
+   * Register a new user
+   */
   signup(
     titleId: number,
     firstName: string,
@@ -120,13 +123,18 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  /**
+   * Log user in and store Auth data locally and on device
+   * @param email - user email address
+   * @param password - user password
+   */
   login(email: string, password: string) {
     return this.httpClient.post<LoginResponseData>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user/login.php',
       { email: email, password: password }
     ).pipe(
       tap(resData => {
-        // store userType as string instead of number, for better readability
+        // store userType as string for readability
         let userType: string;
         if (+resData.userTypeId === 2) {
           userType = 'requester';
@@ -141,14 +149,15 @@ export class AuthService implements OnDestroy {
           new Date(resData.expiresAt * 1000)
         );
         this._userAuth.next(user);
-        // console.log(user.timeTillExpiry + ' ms');
         this.autoLogout(user.timeTillExpiry);
         this.storeAuthData(user.userId, userType, user.email, user.token, user.expiresAt.toISOString());
       })
     );
   }
 
-  // login automatically when the app is reloaded and local storage token not expired
+  /**
+   * Log user in automatically when the app is reloaded and token not yet expired
+   */
   autoLogin() {
     return from(Plugins.Storage.get({key: 'userAuth'})).pipe(
       map(storedData => {
@@ -204,6 +213,9 @@ export class AuthService implements OnDestroy {
     );
   }
 
+  /**
+   * Logout user and redirect to Auth page
+   */
   logout() {
     if (this.logoutTimer) {
       clearTimeout(this.logoutTimer);
@@ -219,7 +231,9 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  // store authentication information in local storage
+  /**
+   * Helper method to store authentication data on device with Storage API
+   */
   private storeAuthData(
     userId: number,
     userType: string,
@@ -237,7 +251,7 @@ export class AuthService implements OnDestroy {
     Plugins.Storage.set({ key: 'userAuth', value: userAuthdata });
   }
 
-  // logout when token expires
+  // logout the user out when their token expires
   private autoLogout(timeTillExpiration: number) {
     if (this.logoutTimer) {
       clearTimeout(this.logoutTimer);

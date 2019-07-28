@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, AlertController, IonItemSliding, ActionSheetController, ModalController } from '@ionic/angular';
+import { take, switchMap } from 'rxjs/operators';
 
 import { Group } from '../group-model';
 import { GroupsService } from '../groups.service';
 import { EmailInvitationComponent } from './email-invitation/email-invitation.component';
 import { AuthService } from '../../auth/auth.service';
-import { take, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-group',
@@ -114,6 +114,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     });
   }
 
+  // when user wants to hand over admin priviliges
   onChangeAdmin(newAdminId: number, slidingItem: IonItemSliding) {
     const newAdmin = this.group.members.find(m => m.id === newAdminId);
     this.alertController.create({
@@ -144,6 +145,7 @@ export class ViewGroupPage implements OnInit, OnDestroy {
     });
   }
 
+  // when admin wants to remove a group member
   onRemoveMember(memberId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm removal',
@@ -161,14 +163,15 @@ export class ViewGroupPage implements OnInit, OnDestroy {
           text: 'No',
           handler: () => {
             slidingItem.close();
+          }
         }
-      }
       ]
     }).then(alertEl => {
       alertEl.present();
     });
   }
 
+  // when member wants to leave a group
   onLeaveGroup(slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm action',
