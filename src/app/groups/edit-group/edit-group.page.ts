@@ -43,6 +43,10 @@ export class EditGroupPage implements OnInit, OnDestroy {
       this.groupSub = this.groupsService.getGroup(+paramMap.get('groupId'))
         .subscribe(group => {
           this.group = group;
+          if (!group.isAdmin) {
+            this.navController.navigateBack('/groups');
+            return;
+          }
           this.selectedImage = group.imageUrl;
           this.form = new FormGroup({
             groupName: new FormControl(this.group.groupName, {
@@ -52,6 +56,22 @@ export class EditGroupPage implements OnInit, OnDestroy {
             imageUrl: new FormControl(this.group.imageUrl)
           });
           this.isLoading = false;
+        },
+        error => {
+          this.alertController.create({
+            header: 'Error',
+            message: 'Could not locate group information.',
+            buttons: [
+              {
+                text: 'Okay',
+                handler: () => {
+                  this.router.navigate(['/groups']);
+                }
+              }
+            ]
+          }).then(alertEl => {
+            alertEl.present();
+          });
         });
     });
   }
