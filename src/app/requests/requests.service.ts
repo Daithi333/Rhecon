@@ -43,6 +43,9 @@ export class RequestsService {
     return this._requestsWithObjects.asObservable();
   }
 
+  /**
+   * construct requests list for user, each  with nested patient, consultant and requester objects
+   */
   fetchRequestsWithObjects() {
     const requestsArr: RequestWithObjects[] = [];
     return this.fetchRequests().pipe(
@@ -54,9 +57,7 @@ export class RequestsService {
         return requests.map(request => request);
       }),
       mergeMap(request => {
-        if (!request) {
-          return of(null);
-        }
+        if (!request) { return of(null); }
         return this.patientsService.getPatient(request.patientId, request.requesterId).pipe(
           map(patient => {
             request.patientId = patient;
@@ -65,9 +66,7 @@ export class RequestsService {
         );
       }),
       mergeMap(request => {
-        if (!request) {
-          return of(null);
-        }
+        if (!request) { return of(null); }
         return this.contactsService.getContact(request.requesterId).pipe(
           map(requester => {
             request.requesterId = requester;
@@ -76,9 +75,7 @@ export class RequestsService {
         );
       }),
       mergeMap(request => {
-        if (!request) {
-          return of(null);
-        }
+        if (!request) { return of(null); }
         return this.contactsService.getContact(request.consultantId).pipe(
           map(consultant => {
             request.consultantId = consultant;
@@ -101,7 +98,6 @@ export class RequestsService {
       }),
       takeLast(1),
       tap(requests => {
-        // console.log(requests);
         if (requests) {
           this._requestsWithObjects.next(requests);
         }
@@ -109,6 +105,9 @@ export class RequestsService {
     );
   }
 
+  /**
+   * construct a request object with nested patient, consultant and requester objects
+   */
   getRequestWithObjects(id: number) {
     let requestWithObjects: RequestWithObjects;
     return this.getRequest(id).pipe(
@@ -149,6 +148,7 @@ export class RequestsService {
     );
   }
 
+  // add new request on db and local list
   addRequest(
     title: string,
     patientId: number,
@@ -343,7 +343,7 @@ export class RequestsService {
   }
 
   /**
-   * retrieve a single basic request from db by id
+   * retrieve a single basic request from db by id and per user id
    * @param id - the request unique id
    */
   private getRequest(id: number) {

@@ -20,7 +20,7 @@
     }
 
     /**
-     * Function to retrieve all active patient records for a particular user id
+     * Function to retrieve all active patients for a particular user id
      */
     public function read() {
       $query = 'SELECT p.id, p.firstName, p.lastName, p.dob, p.notes, p.portraitUrl, p.userId
@@ -39,7 +39,7 @@
     }
 
     /**
-     * Function to retrieve a single patient record by id for a particular user id
+     * Function to retrieve a single patient by id for a particular user id
      */
     public function readSingle() {
       $query = 'SELECT p.id, p.firstName, p.lastName, p.dob, p.notes, p.portraitUrl, p.userId
@@ -71,7 +71,7 @@
     }
 
     /**
-     * Function to add a new patient record
+     * Function to add a new patient
      */
     public function create() {
       $query = 'INSERT INTO ' . $this->table . '
@@ -113,7 +113,7 @@
     }
 
     /**
-     * Function to update a single patient record
+     * Function to update a single patient
      */
     public function update() {
       $query = 'UPDATE ' . $this->table . '
@@ -159,7 +159,7 @@
     }
 
     /**
-     * Function to delete a single patient record
+     * Function to delete a single patient
      */
     public function delete() {
       $query = 'DELETE FROM ' . $this->table . '
@@ -185,7 +185,7 @@
     }
 
     /**
-     * Function to close a single patient record
+     * Function to close a single patient
      */
     public function closePatient() {
       $query = 'UPDATE ' . $this->table . '

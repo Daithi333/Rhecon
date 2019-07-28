@@ -5,7 +5,7 @@
     private $conn;
     private $table = 'Rhecon_Specialism';
 
-    // Title properties
+    // Specialism properties
     public $id;
     public $specialism;
 
@@ -15,7 +15,7 @@
     }
 
     /**
-     * Function to retrieve titles
+     * Function to retrieve specialisms
      */
     public function read() {
       $query = 'SELECT s.id, s.specialism

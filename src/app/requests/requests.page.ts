@@ -55,7 +55,7 @@ export class RequestsPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.isLoading = true;
     this.loadingController
-      .create({keyboardClose: true, message: 'Retrieving your requests..'})
+      .create({keyboardClose: true, message: 'Retrieving requests..'})
       .then(loadingEl => {
         loadingEl.present();
         this.requestsService.fetchRequestsWithObjects()
@@ -66,6 +66,7 @@ export class RequestsPage implements OnInit, OnDestroy {
       });
   }
 
+   // toggles active or inactive segments based on the toggle event
   onSegmentToggle(event: CustomEvent<SegmentChangeEventDetail>) {
     if (event.detail.value === 'active') {
       this.currentSegment = 'active';
@@ -80,12 +81,13 @@ export class RequestsPage implements OnInit, OnDestroy {
     }
   }
 
+  // navigates to Edit Request page from the request item's slider
   onEdit(requestId: number, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.router.navigate(['/', 'tabs', 'requests', 'edit-request', requestId]);
-    console.log('Editing request ', requestId);
   }
 
+  // calls the close request method in the requests service
   onCloseRequest(requestId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm closure',
@@ -111,6 +113,7 @@ export class RequestsPage implements OnInit, OnDestroy {
     });
   }
 
+  // calls the reopen request method in the requests service
   onReopenRequest(requestId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm reopen',
@@ -136,6 +139,7 @@ export class RequestsPage implements OnInit, OnDestroy {
     });
   }
 
+  // calls the delete request method in the requests service
   onDeleteRequest(requestId: number, slidingItem: IonItemSliding) {
     this.alertController.create({
       header: 'Confirm deletion',

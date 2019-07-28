@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavController, AlertController, ModalController, Platform } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take, switchMap, map, takeLast } from 'rxjs/operators';
+import { take, switchMap, map } from 'rxjs/operators';
 import * as FileSaver from 'file-saver';
 
 
@@ -103,6 +103,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
     });
   }
 
+  // allows user to download attachment. 
   onSelectFile(fileUrl: string) {
     this.alertController.create({
       header: 'Download',
@@ -119,7 +120,8 @@ export class ViewRequestPage implements OnInit, OnDestroy {
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
                   FileSaver.saveAs(blob);
                 } else {
-                  // opens image in device, in lieu of getting the file download to work..
+                  // TODO - only opens image on device. Need to get file downloading to work..
+                  // https://cordova.apache.org/blog/2017/10/18/from-filetransfer-to-xhr2.html
                   FileSaver.saveAs(fileUrl);
                 }
               });

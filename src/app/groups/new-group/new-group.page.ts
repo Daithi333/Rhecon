@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { iif, defer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -22,7 +22,8 @@ export class NewGroupPage implements OnInit {
   constructor(
     private groupsService: GroupsService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -39,10 +40,8 @@ export class NewGroupPage implements OnInit {
     this.fileSelector.nativeElement.click();
   }
 
-  /**
-   * Patch file into form, extracting dataUrl for preview
-   * @param event - file selection event
-   */
+
+  // Patch file into form, extracting dataUrl for preview
   onFileChosen(event: Event) {
     this.imageChanged = true;
     const chosenFile = (event.target as HTMLInputElement).files[0];
@@ -58,9 +57,7 @@ export class NewGroupPage implements OnInit {
     fr.readAsDataURL(chosenFile);
   }
 
-  /**
-   * Call addGroup if no image, or addimage first if there is
-   */
+  // Call addGroup if no image, or addimage first if there is
   onAddGroup() {
     if (!this.form.valid) {
       return;
@@ -74,7 +71,10 @@ export class NewGroupPage implements OnInit {
         defer(() => this.callAddGroup(this.selectedImage)),
         defer(() => this.groupsService.addImage(this.form.get('imageUrl').value).pipe(
           switchMap(resData => {
-            // TODO - handle error from the add image function - server, size, etc
+            if (resData.message) {
+              this.fileAlert();
+              return;
+            }
             return this.callAddGroup(resData.fileUrl);
           })
         ))
@@ -82,6 +82,9 @@ export class NewGroupPage implements OnInit {
         loadingEl.dismiss();
         this.form.reset();
         this.router.navigate(['/groups']);
+      }, error => {
+        loadingEl.dismiss();
+        this.fileAlert();
       });
     });
   }
@@ -94,5 +97,17 @@ export class NewGroupPage implements OnInit {
     );
   }
 
-
+  private fileAlert() {
+    this.alertController.create({
+      header: 'File Error',
+      message: 'Something went wrong with file upload. Please ensure the image is .jpg format.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
+  }
 }

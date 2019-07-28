@@ -18,7 +18,7 @@
     }
 
     /**
-     * Function to retrieve all comments for a particular request id
+     * Function to retrieve all comments for a particular request
      */
     public function read() {
       $query = 'SELECT c.id, c.requestId, c.authorId, c.comment, c.createdOn
@@ -36,7 +36,7 @@
     }
 
     /**
-     * Function to add a new comment record
+     * Function to add a new comment
      */
     public function create() {
       $query = 'INSERT INTO ' . $this->table . '
@@ -69,7 +69,7 @@
     }
 
     /**
-     * Function to delete a single attachment record
+     * Function to delete a single comment
      */
     public function delete() {
       $query = 'DELETE FROM ' . $this->table . '

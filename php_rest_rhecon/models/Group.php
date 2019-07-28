@@ -13,7 +13,7 @@
     public $isAdmin;
     public $userId;
     public $groupId; // same as id but for the membership table join
-    public $newAdminId; // for admin swap
+    public $newAdminId; // a user id but for admin reassignment
     
     // Constructor with DB arg
     public function __construct($db) {
@@ -59,7 +59,7 @@
     }
 
     /**
-     * Function to retrieve a single group record by id
+     * Function to retrieve a single group by id
      */
     public function readSingle() {
       $query = 'SELECT g.groupName, g.imageUrl, m.isAdmin
@@ -91,7 +91,7 @@
     }
 
     /**
-     * Function to retrieve groups and admin based on name comparison
+     * Function to retrieve groups and admin based on name wildcard search
      */
     public function search($searchedName) {
 
@@ -112,7 +112,7 @@
     }
 
     /**
-     * Function to add a new group record
+     * Function to add a new group
      */
     public function create() {
       $query = 'INSERT INTO ' . $this->table . '
@@ -142,38 +142,7 @@
     }
 
     /**
-     * Creates Admin membership record
-     */
-    public function createMembership($tinyInt) {
-      $query = 'INSERT INTO ' . $this->membershipTable . '
-                SET
-                userId = :userId,
-                groupId = :groupId,
-                isAdmin = ' . $tinyInt . ' ';
-      
-      // Prepare statement
-      $stmt = $this->conn->prepare($query);
-
-      // Sanitise data
-      $this->userId = Utility::sanitise_input($this->userId);
-      $this->groupId = Utility::sanitise_input($this->groupId);
-
-      // bind named params
-      $stmt->bindParam(':userId', $this->userId);
-      $stmt->bindParam(':groupId', $this->groupId);
-
-      // Execute query
-      if($stmt->execute()) {
-        return true;
-      }
-
-      // output msg if error
-      printf("Error: %s.\n", $stmt->error);
-      return false;
-    }
-
-    /**
-     * Function to update a single group record
+     * Function to update a single group
      */
     public function update() {
       $query = 'UPDATE ' . $this->table . '
@@ -207,7 +176,64 @@
     }
 
     /**
-    * Function to add admin to a single group membership
+     * Function to delete a single group record
+     */
+    public function delete() {
+      $query = 'DELETE FROM ' . $this->table . '
+                WHERE id = :id';
+
+      // prep statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->id = Utility::sanitise_input($this->id);
+
+      // Bind data
+      $stmt->bindParam(':id', $this->id);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+     * Creates a single membership. Admin or standard based on boolean passed in
+     */
+    public function createMembership($tinyInt) {
+      $query = 'INSERT INTO ' . $this->membershipTable . '
+                SET
+                userId = :userId,
+                groupId = :groupId,
+                isAdmin = ' . $tinyInt . ' ';
+      
+      // Prepare statement
+      $stmt = $this->conn->prepare($query);
+
+      // Sanitise data
+      $this->userId = Utility::sanitise_input($this->userId);
+      $this->groupId = Utility::sanitise_input($this->groupId);
+
+      // bind named params
+      $stmt->bindParam(':userId', $this->userId);
+      $stmt->bindParam(':groupId', $this->groupId);
+
+      // Execute query
+      if($stmt->execute()) {
+        return true;
+      }
+
+      // output msg if error
+      printf("Error: %s.\n", $stmt->error);
+      return false;
+    }
+
+    /**
+    * Function to update a single membership to add admin status
     */
     public function setAdmin() {
       $query = 'UPDATE ' . $this->membershipTable . '
@@ -237,7 +263,7 @@
     }
 
     /**
-    * Function to remove admin from a single membership record
+    * Function to update a single membership to remove admin status
     */
     public function removeAdmin() {
       $query = 'UPDATE ' . $this->membershipTable . '
@@ -267,7 +293,7 @@
     }
 
     /**
-     * Function to delete a single group membership record
+     * Function to delete a single membership record
      */
     public function deleteMembership() {
       $query = 'DELETE FROM ' . $this->membershipTable . '
@@ -284,32 +310,6 @@
       // Bind data
       $stmt->bindParam(':userId', $this->userId);
       $stmt->bindParam(':groupId', $this->groupId);
-
-      // Execute query
-      if($stmt->execute()) {
-        return true;
-      }
-
-      // output msg if error
-      printf("Error: %s.\n", $stmt->error);
-      return false;
-    }
-
-    /**
-     * Function to delete a single group record
-     */
-    public function delete() {
-      $query = 'DELETE FROM ' . $this->table . '
-                WHERE id = :id';
-
-      // prep statement
-      $stmt = $this->conn->prepare($query);
-
-      // Sanitise data
-      $this->id = Utility::sanitise_input($this->id);
-
-      // Bind data
-      $stmt->bindParam(':id', $this->id);
 
       // Execute query
       if($stmt->execute()) {

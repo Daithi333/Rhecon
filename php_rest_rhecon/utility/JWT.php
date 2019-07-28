@@ -1,5 +1,5 @@
 <?php
-// Taken from - https://github.com/rmcdaniel/angular-codeigniter-seed/blob/master/api/application/helpers/jwt_helper.php
+// Class taken from - https://github.com/rmcdaniel/angular-codeigniter-seed/blob/master/api/application/helpers/jwt_helper.php
 
 /**
  * JSON Web Token implementation, based on this spec:

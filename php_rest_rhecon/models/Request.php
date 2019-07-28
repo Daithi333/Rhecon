@@ -58,7 +58,7 @@
     }
 
     /**
-     * Function to retrieve a single request record by id for a particular user
+     * Function to retrieve a single request by id for a particular user
      */
     public function readSingle() {
       $query = 'SELECT r.id, r.title, r.requesterId, r.consultantId, r.patientId, r.notes, r.active, r.createdOn, r.updatedOn
@@ -91,8 +91,8 @@
       return false;
     }
 
-        /**
-     * Function to retrieve a single request record by id for a particular consultant
+    /**
+     * Function to retrieve a single request by id for a particular consultant
      */
     public function readSingleConsultant() {
       $query = 'SELECT r.id, r.title, r.requesterId, r.consultantId, r.patientId, r.notes, r.active, r.createdOn, r.updatedOn
@@ -126,7 +126,7 @@
     }
 
     /**
-     * Function to add a new request record
+     * Function to add a new request
      */
     public function create() {
       $timestamp = date("Y-m-d H:i:s", time());
@@ -168,7 +168,7 @@
     }
 
     /**
-     * Function to update the core content of a request record
+     * Function to update the content of a request
      */
     public function update() {
       $query = 'UPDATE ' . $this->table . '
@@ -208,7 +208,7 @@
     }
 
     /**
-     * Function to close a single request record
+     * Function to close a single request
      */
     public function toggleActive($a) {
       $query = 'UPDATE ' . $this->table . '
@@ -235,7 +235,7 @@
     }
 
     /**
-     * Function to delete a single request record
+     * Function to delete a single request
      */
     public function delete() {
       $query = 'DELETE FROM ' . $this->table . '

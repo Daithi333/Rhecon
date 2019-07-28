@@ -29,6 +29,9 @@ export class CommentsService {
     return this._comments.asObservable();
   }
 
+  /**
+   * retrieve comments for a particular request
+   */
   fetchComments(requestId: number) {
     return this.httpClient.get<{[key: number]: CommentData}>(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/comment/read.php?requestId=${requestId}`
@@ -58,6 +61,9 @@ export class CommentsService {
     );
   }
 
+  /**
+   * Add new comment for a particular request
+   */
   addComment(requestId: number, comment: string) {
     let uniqueId: number;
     let newComment;

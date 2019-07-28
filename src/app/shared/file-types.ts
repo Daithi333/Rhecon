@@ -17,6 +17,7 @@ const text = 'text_icon.png';
 const presentation = 'presentation_icon.png';
 const unknown = 'document_icon.png';
 
+// exportable constant for working with file extension, mime types and icons path when not an image
 export const fileTypes: FileType[] = [
   {ext: 'acc', mime: 'audio/aac', icon: path + audio},
   {ext: 'avi', mime: 'video/x-msvideo', icon: path + video},

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { Platform, MenuController } from '@ionic/angular';
 import { AuthService } from './auth/auth.service';
-import { Router } from '@angular/router';
 import { Plugins, Capacitor } from '@capacitor/core';
 
 @Component({

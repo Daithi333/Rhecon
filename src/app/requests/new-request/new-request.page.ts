@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, AlertController } from '@ionic/angular';
 import { map, switchMap, mergeMap, takeLast } from 'rxjs/operators';
 import { of, defer, iif } from 'rxjs';
 
@@ -31,7 +31,8 @@ export class NewRequestPage implements OnInit {
     private router: Router,
     private modalController: ModalController,
     private imageUtilService: ImageUtilService,
-    private attachmentsService: AttachmentsService
+    private attachmentsService: AttachmentsService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -56,6 +57,7 @@ export class NewRequestPage implements OnInit {
     });
   }
 
+  // patch file into form, converting first into blob if it is a string from Camera API
   onAttachmentChosen(attachmentData: string | File) {
     let attachmentFile;
     if (typeof attachmentData === 'string') {
@@ -66,7 +68,7 @@ export class NewRequestPage implements OnInit {
         );
       } catch (error) {
         console.log('File conversion error: ' + error);
-        // TODO - add alert if conversion to file fails
+        this.fileConversionAlert();
       }
     } else {
       attachmentFile = attachmentData;
@@ -75,11 +77,13 @@ export class NewRequestPage implements OnInit {
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
+  // remove an attachment from form
   onRemoveAttachment(attachmentIndex: number) {
     this.attachments.splice(attachmentIndex, 1);
     this.requestForm.patchValue({ attachments: this.attachments });
   }
 
+  // opens the patient select modal
   onPatientSelect() {
     this.modalController.create({
       component: SelectPatientComponent,
@@ -103,6 +107,7 @@ export class NewRequestPage implements OnInit {
     });
   }
 
+  // opens the consultant select modal
   onConsultantSelect() {
     this.modalController.create({
       component: SelectConsultantComponent,
@@ -126,6 +131,7 @@ export class NewRequestPage implements OnInit {
     });
   }
 
+  // calls the add request method in the requests service
   onAddRequest() {
     if (!this.requestForm.valid) {
       return;
@@ -191,5 +197,20 @@ export class NewRequestPage implements OnInit {
         takeLast(1)
       ))
     );
+  }
+
+  // helper method to alert user of file conversion error
+  private fileConversionAlert() {
+    this.alertController.create({
+      header: 'File Error',
+      message: 'Something went wrong with file. Please retry ensuring the image is .jpg format.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 }

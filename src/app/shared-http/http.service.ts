@@ -24,6 +24,7 @@ export class HttpService {
 
   constructor(private httpClient: HttpClient) { }
 
+  // fetch titles list  from db
   fetchTitles() {
     return this.httpClient.get<{[key: number]: TitleData}>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/title/read.php'
@@ -43,6 +44,7 @@ export class HttpService {
     );
   }
 
+  // fetch consultant specialisms from db
   fetchSpecialisms() {
     return this.httpClient.get<{[key: number]: SpecialismData}>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/specialism/read.php'
@@ -62,6 +64,7 @@ export class HttpService {
     );
   }
 
+  // fetch user types from db
   fetchUserTypes() {
     return this.httpClient.get<{[key: number]: UserTypeData}>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/user-type/read.php'

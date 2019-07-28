@@ -55,6 +55,7 @@ export class ChangePasswordComponent implements OnInit {
     this.modalController.dismiss(null, 'cancel', 'changePassword');
   }
 
+  // calls the change password method in the auth service
   onChangePassword() {
     if (this.form.value.email !== this.email) {
       this.presentAlert();

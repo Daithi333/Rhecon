@@ -20,8 +20,8 @@
     $body = "Hello,\n\n
     You have recieved a request from " . $requesterName . " to join " . $groupName . ".\n
     To invite them, login to the Rhecon application, navigate to the group information page and click on 'invite member'.\n
-    From there, you can send them a joining code by entering their email address given below:\n\n
-    " . $email . "\n\n\n
+    From there, you can send them a joining code by entering their email address given below:\n
+    " . $email . "\n\n
     Kind Regards,\n
     The Rhecon App";
     

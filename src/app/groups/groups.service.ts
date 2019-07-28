@@ -156,7 +156,7 @@ export class GroupsService {
     const imageData = new FormData();
     imageData.append('fileUpload', imageFile);
 
-    return this.httpClient.post<{fileUrl: string, filePath: string}>(
+    return this.httpClient.post<{fileUrl: string, filePath: string, message?: string}>(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/group_image_upload.php',
       imageData
     );

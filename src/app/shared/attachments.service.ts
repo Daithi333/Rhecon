@@ -17,6 +17,10 @@ export class AttachmentsService {
     return this._attachments.asObservable();
   }
 
+  /**
+   * Retrieve attachment urls from database for a particular request and update local list
+   * @param requestId - unique id of the request
+   */
   fetchAttachments(requestId: number) {
     return this.httpClient.get<{[key: number]: Attachment}>(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/read.php?requestId=${requestId}`
@@ -40,6 +44,11 @@ export class AttachmentsService {
     );
   }
 
+  /**
+   * retrieve an attachment record based on request it belongs to and its url (for deleting it from request)
+   * @param requestId - unique request id
+   * @param attachmentUrl - the attachment url on server
+   */
   getAttachment(requestId: number, attachmentUrl: string) {
     return this.httpClient.get<Attachment>(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/read_single.php?
@@ -56,6 +65,7 @@ export class AttachmentsService {
     );
   }
 
+  // Add new attachment record to db and local list
   addAttachment(requestId: number, attachmentUrl: string) {
     let uniqueId: number;
     const newAttachment = {
@@ -79,6 +89,7 @@ export class AttachmentsService {
     );
   }
 
+  // delete attachment from DB and local list
   deleteAttachment(attachmentId: number) {
     return this.httpClient.delete(
       `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/attachment/delete.php/?id=${attachmentId}`
@@ -94,6 +105,7 @@ export class AttachmentsService {
     );
   }
 
+  // upload attahment file to server
   addAttachmentFile(attachmentFile: File) {
     const attachmentData = new FormData();
     attachmentData.append('fileUpload', attachmentFile);
@@ -104,10 +116,11 @@ export class AttachmentsService {
     );
   }
 
+  // download attachemnt file from server
   downloadAttachment(fileUrl: string) {
     return this.httpClient.post(
       'http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/file/attachment_download.php',
-      { fileUrl: fileUrl },
+      { fileUrl },
       {observe: 'response', responseType: 'blob'}
     );
   }

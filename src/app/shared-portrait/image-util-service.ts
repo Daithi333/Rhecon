@@ -7,7 +7,7 @@ export class ImageUtilService {
 
   constructor() { }
 
-  // utility function to convert base 64 string to blob
+  // utility function found online to convert base 64 string to blob
   // https://www.udemy.com/ionic-2-the-practical-guide-to-building-ios-android-apps/learn/lecture/13728230#questions/6603702
   base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
@@ -30,8 +30,8 @@ export class ImageUtilService {
     return new Blob(byteArrays, { type: contentType });
   }
 
+  // utility function found online to extract image orientation from EXIF data in a file
   // https://stackoverflow.com/questions/7584794/accessing-jpeg-exif-rotation-data-in-javascript-on-the-client-side
-
   getOrientation = (file: File, callback: any) => {
     const reader = new FileReader();
 
@@ -83,6 +83,7 @@ export class ImageUtilService {
     reader.readAsArrayBuffer(file);
   }
 
+  // utility function found online to redraw image on HTML canvas to correct its orientation
   // https://stackoverflow.com/questions/20600800/js-client-side-exif-orientation-rotate-and-mirror-jpeg-images/20600801
   resetOrientation(srcBase64, srcOrientation, callback) {
     const img = new Image();

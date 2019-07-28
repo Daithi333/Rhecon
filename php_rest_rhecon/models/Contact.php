@@ -10,7 +10,6 @@
     private $specialismTable = 'Rhecon_Specialism';
 
     // Contact properties
-    
     public $id;
     public $title;
     public $firstName;
@@ -60,7 +59,7 @@
     }
 
     /**
-     * Function to retrieve a single contact record by id for a particular user id
+     * Function to retrieve a single contact by id
      */
     public function readSingle() {
       $query = 'SELECT u.id, t.title, u.firstName, u.lastName,

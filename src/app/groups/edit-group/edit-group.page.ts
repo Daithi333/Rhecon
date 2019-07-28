@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, LoadingController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { Subscription, iif, defer } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
 
 import { Group } from '../group-model';
 import { GroupsService } from '../groups.service';
-import { switchMap } from 'rxjs/operators';
-import { ImageUtilService } from '../../shared-portrait/image-util-service';
 
 @Component({
   selector: 'app-edit-group',
@@ -30,7 +29,7 @@ export class EditGroupPage implements OnInit, OnDestroy {
     private groupsService: GroupsService,
     private loadingController: LoadingController,
     private router: Router,
-    private imageUtilService: ImageUtilService
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -61,36 +60,23 @@ export class EditGroupPage implements OnInit, OnDestroy {
     this.fileSelector.nativeElement.click();
   }
 
+  // Patch file into form, extracting dataUrl for preview
   onFileChosen(event: Event) {
-    this.imageChanged = true; // track if new image was added and needs uploaded
+    this.imageChanged = true;
     const chosenFile = (event.target as HTMLInputElement).files[0];
     if (!chosenFile) {
-      // TODO - add alert
       return;
     }
     const fr = new FileReader();
     fr.onload = () => {
       const dataUrl = fr.result.toString();
       this.selectedImage = dataUrl;
-      // let attachmentFile;
-      // if (typeof chosenFile === 'string') {
-      //   try {
-      //     attachmentFile = this.imageUtilService.base64toBlob(
-      //       chosenFile.replace('data:image/jpeg;base64,', ''),
-      //       'image/jpeg'
-      //     );
-      //   } catch (error) {
-      //     console.log('File conversion error: ' + error);
-      //     // TODO - add alert if conversion to file fails
-      //   }
-      // } else {
-      //   attachmentFile = chosenFile;
-      // }
       this.form.patchValue({ imageUrl: chosenFile });
     };
     fr.readAsDataURL(chosenFile);
   }
 
+  // Call updateGroup if no image, or addimage first if there is
   onUpdateGroup() {
     if (!this.form.valid) {
       return;
@@ -104,7 +90,10 @@ export class EditGroupPage implements OnInit, OnDestroy {
         defer(() => this.callUpdateGroup(this.group.imageUrl)),
         defer(() => this.groupsService.addImage(this.form.get('imageUrl').value).pipe(
           switchMap(resData => {
-            // TODO - handle error from the add image function - server, size, etc
+            if (resData.message) {
+              this.fileAlert();
+              return;
+            }
             return this.callUpdateGroup(resData.fileUrl);
           })
         ))
@@ -112,6 +101,9 @@ export class EditGroupPage implements OnInit, OnDestroy {
         loadingEl.dismiss();
         this.form.reset();
         this.router.navigate(['/groups']);
+      }, error => {
+        loadingEl.dismiss();
+        this.fileAlert();
       });
     });
 
@@ -123,12 +115,26 @@ export class EditGroupPage implements OnInit, OnDestroy {
     }
   }
 
-  // call UpdateGroup method with appropiate image url
+  // helper method to call UpdateGroup with appropiate image url
   private callUpdateGroup(imageUrl: string) {
     return this.groupsService.updateGroup(
       this.group.id,
       this.form.value.groupName,
       imageUrl
     );
+  }
+
+  private fileAlert() {
+    this.alertController.create({
+      header: 'File Error',
+      message: 'Something went wrong with file upload. Please retry ensuring the image is .jpg format.',
+      buttons: [
+        {
+          text: 'Okay',
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
+    });
   }
 }

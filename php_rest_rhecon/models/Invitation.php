@@ -22,7 +22,7 @@
     }
 
     /**
-     * Function to add a new invite record
+     * Function to add a new invitation
      */
     public function create() {
       $query = 'INSERT INTO ' . $this->table . '
@@ -58,7 +58,7 @@
     }
 
     /**
-     * Function to retrieve a single Invitation record by the invitation code
+     * Function to retrieve a single invitation by its invitation code
      */
     public function readSingle() {
       $query = 'SELECT i.id, i.groupId, i.expiresOn, i.recipient, i.isValid
@@ -88,7 +88,7 @@
     }
 
     /**
-     * Function to invalidate a single invitation record after expiry or single usage
+     * Function to invalidate a single invitation after expiry or single usage
      */
     public function invalidate() {
       $query = 'UPDATE ' . $this->table . '

@@ -12,7 +12,6 @@
     }
     
     static function api_error($message) {
-      
       $error = array(
         'type' => 'error',
         'error' => true,

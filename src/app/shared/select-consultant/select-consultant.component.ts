@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { Contact } from '../../consultants/contact.model';
 import { ContactsService } from '../../consultants/contacts.service';
-import { Specialism } from 'src/app/consultants/specialism.enum';
+import { Specialism } from '../../consultants/specialism.enum';
 
 @Component({
   selector: 'app-select-consultant',
