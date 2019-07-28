@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group membership record objects
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
   $group = new Group($db);
@@ -36,11 +36,12 @@
       array_push($groupArr, $groupElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($groupArr);
 
-    // } else {
-    //   echo json_encode(
-    //     array('message' => 'No groups found')
-    //   );
+    } else {
+      http_response_code(204);
+      echo json_encode(
+        array('message' => 'No groups found')
+      );
   }

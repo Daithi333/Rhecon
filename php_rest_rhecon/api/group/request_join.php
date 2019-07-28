@@ -17,6 +17,7 @@
     $adminEmail = $data->adminEmail;
     $requesterName = $firstName . " " . $lastName;
 
+    // email content
     $body = "Hello,\n\n
     You have recieved a request from " . $requesterName . " to join " . $groupName . ".\n
     To invite them, login to the Rhecon application, navigate to the group information page and click on 'invite member'.\n

@@ -37,11 +37,12 @@
       array_push($commentArr, $commentElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($commentArr);
 
-  // } else {
-  //   echo json_encode(
-  //     array('message' => 'No attachments found')
-  //   );
+  } else {
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No attachments found')
+    );
   }

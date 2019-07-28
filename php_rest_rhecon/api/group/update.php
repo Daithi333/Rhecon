@@ -8,11 +8,9 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and connect
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
-
-  // Instantiate Group data object
   $group = new Group($db);
 
   // get the raw data
@@ -22,6 +20,7 @@
   $group->groupName = $data->groupName;
   $group->imageUrl = $data->imageUrl;
 
+  // data check in case front-end was bypassed
   if ( empty($group->groupName) || (!preg_match("/^[0-9a-zA-Z'. -]*$/", $group->groupName)) ) {
     exit('Invalid groupName');
   }

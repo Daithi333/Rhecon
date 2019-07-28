@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group membership record objects
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
   $group = new Group($db);

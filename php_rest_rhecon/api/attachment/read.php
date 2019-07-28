@@ -6,7 +6,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Attachment.php';
 
-  // Instantiate DB and Patient record objects
+  // Instantiate DB and Attachment record objects
   $database = new Database();
   $db = $database->connect();
   $attachment = new Attachment($db);
@@ -35,11 +35,12 @@
       array_push($attachmentArr, $attachmentElement);
     }
 
-    // output as JSON
+    http_response_code(200);
     echo json_encode($attachmentArr);
 
-  // } else {
-  //   echo json_encode(
-  //     array('message' => 'No attachments found')
-  //   );
+  } else {
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No attachments found')
+    );
   }

@@ -22,12 +22,14 @@
       'attachmentUrl' => $attachment->attachmentUrl
     );
 
+    http_response_code(200);
     print_r(json_encode($attachmentArr));  
 
   } else {
-    // echo json_encode(
-    //   array('message' => 'No attachments found')
-    // );
+    http_response_code(204);
+    echo json_encode(
+      array('message' => 'No attachments found')
+    );
   }
 
    

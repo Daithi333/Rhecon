@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Attachment.php';
 
-  // Instantiate DB and Patient record objects
+  // Instantiate DB and Attachment objects
   $database = new Database();
   $db = $database->connect();
   $attachment = new Attachment($db);
@@ -17,11 +17,11 @@
   $data = json_decode(file_get_contents("php://input"));
 
   if (isset($data)) {
-    // assign patient properties from the decoded data
+    // assign attachment properties from the decoded data
     $attachment->requestId = $data->requestId;
     $attachment->attachmentUrl = $data->attachmentUrl;
 
-    // Create patient on db. Retrieve and return the db id if successful
+    // Create attachment on db. Retrieve and return the db id if successful
     if($attachment->create()) {
       $uniqueId = $db->lastInsertId();
       echo json_encode(

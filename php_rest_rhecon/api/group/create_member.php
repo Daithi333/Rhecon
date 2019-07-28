@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group record objects
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
   $group = new Group($db);
@@ -25,9 +25,7 @@
       $uniqueId = $db->lastInsertId();
 
       echo json_encode(
-        array(
-          'dbId' => $uniqueId
-        )
+        array('dbId' => $uniqueId)
       );
 
     } else {

@@ -8,14 +8,14 @@
   include_once '../../config/Database.php';
   include_once '../../models/Attachment.php';
 
-  // Instantiate DB and Request data objects
+  // Instantiate DB and Attachment data objects
   $database = new Database();
   $db = $database->connect();
   $attachment = new Attachment($db);
 
   $attachment->id = isset($_GET['id']) ? $_GET['id'] : die();
 
-  // Delete request
+  // Delete attachment
   if($attachment->delete()) {
     echo json_encode(
       array('message' => 'Attachment Deleted')

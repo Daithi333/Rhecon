@@ -24,6 +24,7 @@
     $request->patientId = $data->patientId;
     $request->notes = $data->notes;
 
+    // some data checks in case user bypassed on front-end
     if (empty($request->title)) {
       exit('Invalid title');
     }

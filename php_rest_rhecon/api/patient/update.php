@@ -24,6 +24,7 @@
   $patient->portraitUrl = $data->portraitUrl;
   $patient->userId = $data->userId;
 
+  // some data checks in case user bypassed on front-end
   if ( empty($patient->firstName) || (!preg_match("/^[a-zA-Z'. -]*$/", $patient->firstName)) ) {
     exit('Invalid firstname');
   }

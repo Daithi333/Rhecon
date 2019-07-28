@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and Group data objects
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
   $group = new Group($db);

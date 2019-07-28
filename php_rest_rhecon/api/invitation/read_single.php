@@ -30,7 +30,7 @@
           'id' => $invitation->id,
           'groupId' => $invitation->groupId
         );
-        // $invitation->invalidate();
+
         http_response_code(200);
         print_r(json_encode($invitationArr));
 

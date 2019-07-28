@@ -8,7 +8,7 @@
   include_once '../../config/Database.php';
   include_once '../../models/Patient.php';
 
-  // Instantiate DB and Patient record objects
+  // Instantiate DB and Patient objects
   $database = new Database();
   $db = $database->connect();
   $patient = new Patient($db);
@@ -25,6 +25,7 @@
     $patient->portraitUrl = $data->portraitUrl;
     $patient->userId = $data->userId;
 
+    // some data checks in case user bypassed on front-end
     if ( empty($patient->firstName) || (!preg_match("/^[a-zA-Z'. -]*$/", $patient->firstName)) ) {
       http_response_code(400);
       exit('Invalid firstname');

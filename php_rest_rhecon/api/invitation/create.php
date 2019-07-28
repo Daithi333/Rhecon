@@ -30,6 +30,7 @@
     $sender = $data->sender;
     $message = $data->message;
 
+    // email content
     $body = "Hello,\n\n
     You have recieved an invitation to join a Rhecon group (" . $invitation->groupName . ") with the following message:\n\n
     " . $message . "\n\n\n

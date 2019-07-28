@@ -6,11 +6,9 @@
   include_once '../../config/Database.php';
   include_once '../../models/Group.php';
 
-  // Instantiate DB and connect
+  // Instantiate DB and Group objects
   $database = new Database();
   $db = $database->connect();
-
-  // Instantiate Group data object
   $group = new Group($db);
 
   // get contact id from URL
@@ -29,7 +27,7 @@
     print_r(json_encode($groupArr));
 
   } else {
-    http_response_code(404);
+    http_response_code(204);
     echo json_encode(
       array('message' => 'No group found')
     );
