@@ -18,6 +18,26 @@
   </div>
   <ion-grid>
     <ion-row>
+      <ion-col
+        size="12"
+        size-md="8"
+        offset-md="2"
+        size-xl="4"
+        offset-xl="4"
+      >
+        <ion-list>
+          <ion-item type="button" routerLink="/tabs/patients/new-patient">
+            <ion-avatar slot="start">
+              <ion-img src="../../assets/icon/add-patient-icon.jpg"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>New Patient</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col *ngIf="!isLoading && patients.length === 0" text-center padding>
         <h5>No patients setup</h5>
       </ion-col>
