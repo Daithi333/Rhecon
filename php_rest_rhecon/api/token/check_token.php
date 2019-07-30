@@ -1,4 +1,14 @@
 <?php
+  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+    header('Access-Control-Allow-Headers: Authorization, Content-Type');
+    header('Access-Control-Max-Age: 1728000');
+    header('Content-Length: 0');
+    header('Content-Type: text/plain');
+    exit();
+  }
+
   include_once '../../config/secure.php';
   include_once '../../utility/JWT.php';
 
@@ -14,7 +24,7 @@
       
       if($decoded->exp < time()) {
 
-        // http_response_code(401);
+        http_response_code(401);
         echo json_encode(
           array(
             "message" => "Access denied."
@@ -28,7 +38,7 @@
       }
       
     } catch (Exception $ex) {
-      // http_response_code(401);
+      http_response_code(401);
       echo json_encode(
         array(
           "message" => "Access denied.",
@@ -39,7 +49,7 @@
     }
     
   } else {
-    // http_response_code(401);
+    http_response_code(401);
     echo json_encode(
       array("message" => "Access denied.")
     );

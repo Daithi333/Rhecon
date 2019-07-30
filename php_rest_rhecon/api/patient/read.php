@@ -1,4 +1,6 @@
 <?php
+  include '../token/check_token.php';
+  
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
@@ -12,8 +14,6 @@
   $database = new Database();
   $db = $database->connect();
   $patient = new Patient($db);
-
-  include '../token/check_token.php';
   
   // get user id from URL
   $patient->userId = isset($_GET['userId']) ? $_GET['userId'] : die();
