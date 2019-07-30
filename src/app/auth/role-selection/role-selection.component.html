@@ -68,6 +68,7 @@
             expand="block"
             (click)="onProceed()"
             [disabled]="!form.valid || ( (form.get('role').value == 3) && (form.get('specialism').value == 1) )"
+            padding
             >Proceed</ion-button
           >
         </ion-col>
