@@ -43,13 +43,8 @@ export class PatientsService {
           throw new Error('User not found!');
         }
         userId = userIdData;
-        return this.authService.token;
-      }),
-      take(1),
-      switchMap(token => {
         return this.httpClient.get<{[key: number]: PatientData}>(
-          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`,
-          { headers: { Authorization: 'Bearer ' + token } }
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read.php?userId=${userId}`
         );
       }),
       map(resData => {
@@ -96,13 +91,8 @@ export class PatientsService {
           throw new Error('User not found');
         }
         userId = userIdData;
-        return this.authService.token;
-      }),
-      take(1),
-      switchMap(token => {
         return this.httpClient.get<PatientData>(
-          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`,
-          { headers: { Authorization: 'Bearer ' + token } }
+          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/patient/read_single.php?userId=${userId}&id=${id}`
         );
       }),
       take(1),

@@ -5,7 +5,6 @@ import { TitleData, SpecialismData, HttpService } from '../shared-http/http.serv
 import { ProfileService } from './profile.service';
 import { Profile } from './profile.model';
 import { AuthService } from '../auth/auth.service';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',

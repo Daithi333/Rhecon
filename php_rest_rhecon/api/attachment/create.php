@@ -1,9 +1,11 @@
 <?php
+  include '../token/check_token.php';
+
   // Headers
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
   header('Access-Control-Allow-Methods: POST');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
+  header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
   include_once '../../config/Database.php';
   include_once '../../models/Attachment.php';

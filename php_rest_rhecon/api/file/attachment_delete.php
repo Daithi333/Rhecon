@@ -1,4 +1,6 @@
 <?php
+  include '../token/check_token.php';
+  
   include_once '../../utility/Utility.php';
 
   header('Access-Control-Allow-Origin: *');

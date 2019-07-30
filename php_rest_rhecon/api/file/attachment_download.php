@@ -1,7 +1,10 @@
 <?php
+  include '../token/check_token.php';
+
+  // set headers
   header('Access-Control-Allow-Origin: *');
   header('Access-Control-Allow-Methods: GET');
-  header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,X-Requested-With');
+  header('Access-Control-Allow-Headers: Authorization');
 
   $relativePath = "../..";
   $rootDir = "http://" . $_SERVER['SERVER_NAME'] . '/php_rest_rhecon';

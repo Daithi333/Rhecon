@@ -113,7 +113,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
   }
 
   ionViewDidLeave() {
-    console.log('ionViewDidLeave.. Splicing attachments!');
+    // empty the local attachments array if user leaves page
     this.attachments.splice(0, this.attachments.length);
     this.attachmentUrls.splice(0, this.attachments.length);
   }
@@ -250,7 +250,6 @@ export class EditRequestPage implements OnInit, OnDestroy {
           );
         }),
         mergeMap(fileData => {
-          console.log(fileData);
           if (!fileData.fileUrl) {
             throw new Error(fileData.message);
           }
@@ -264,7 +263,7 @@ export class EditRequestPage implements OnInit, OnDestroy {
       ))
     );
   }
-
+  // helper method with file upload error alert
   private fileUploadAlert(errorMsg: string) {
     this.alertController.create({
       header: 'Upload Error',
