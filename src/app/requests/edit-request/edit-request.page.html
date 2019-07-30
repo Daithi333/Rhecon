@@ -38,19 +38,21 @@
               <ion-label position="floating">
                 <h2>Title</h2>
               </ion-label>
-              <ion-input type="text" formControlName="title"></ion-input>
+              <ion-input type="text" formControlName="title" [disabled]="userType === 'consultant'"></ion-input>
             </ion-item>
             <ion-item>
               <ion-icon slot="start" name="medkit"></ion-icon>
               <ion-label position="floating">
                 <h2>Patient</h2>
               </ion-label>
-              <ion-input type="text" formControlName="patient" (click)="onPatientSelect()"></ion-input>
+              <ion-input type="text" formControlName="patient" (click)="onPatientSelect()" *ngIf="userType === 'requester'"></ion-input>
+              <ion-input type="text" formControlName="patient" disabled *ngIf="userType === 'consultant'"></ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
                 type="button"
                 (click)="onPatientSelect()"
+                *ngIf="userType === 'requester'"
               >
                 <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
               </ion-button>
@@ -60,12 +62,14 @@
               <ion-label position="floating">
                 <h2>Consultant</h2>
               </ion-label>
-              <ion-input type="text" formControlName="consultant" (click)="onConsultantSelect()"></ion-input>
+              <ion-input type="text" formControlName="consultant" (click)="onConsultantSelect()" *ngIf="userType === 'requester'"></ion-input>
+              <ion-input type="text" formControlName="consultant" disabled *ngIf="userType === 'consultant'"></ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
                 type="button"
                 (click)="onConsultantSelect()"
+                *ngIf="userType === 'requester'"
               >
                 <ion-icon slot="end" name="arrow-dropdown"></ion-icon>
               </ion-button>
@@ -75,7 +79,7 @@
               <ion-label position="floating">
                 <h2>Notes</h2>
               </ion-label>
-              <ion-textarea formControlName="notes" auto-grow></ion-textarea>
+              <ion-textarea formControlName="notes" auto-grow [disabled]="userType === 'consultant'"></ion-textarea>
             </ion-item>
           </ion-list>
         </ion-col>
