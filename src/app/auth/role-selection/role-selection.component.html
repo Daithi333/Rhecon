@@ -61,14 +61,13 @@
         </ion-col>
       </ion-row>
       <ion-row class="grow" align-items-end>
-        <ion-col size-sm="8" offset-sm="2" class="sidePadding">
+        <ion-col size-sm="8" offset-sm="2" padding>
           <ion-button
             type="submit"
             color="tertiary"
             expand="block"
             (click)="onProceed()"
             [disabled]="!form.valid || ( (form.get('role').value == 3) && (form.get('specialism').value == 1) )"
-            padding
             >Proceed</ion-button
           >
         </ion-col>
