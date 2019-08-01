@@ -67,6 +67,9 @@ export class GroupSearchComponent implements OnInit {
       .subscribe(groups => {
         this.groups = groups;
         loadingEl.dismiss();
+      }, error => {
+        loadingEl.dismiss();
+        this.searchAlert();
       });
     });
   }
@@ -75,6 +78,15 @@ export class GroupSearchComponent implements OnInit {
     const alert = await this.alertController.create({
       header: 'Request Sent',
       message: 'Your request to join has been emailed to the group admin.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  private async searchAlert() {
+    const alert = await this.alertController.create({
+      header: 'Unsuccessful',
+      message: 'Unable to locate any groups.',
       buttons: ['OK']
     });
     await alert.present();

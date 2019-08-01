@@ -13,10 +13,10 @@
   $db = $database->connect();
   $group = new Group($db);
 
-  // get user id from URL
+  // get group name from URL
   $nameSearch = isset($_GET['groupName']) ? $_GET['groupName'] : die();
 
-  // group lookup query per user id
+  // group search query
   $result = $group->search($nameSearch);
 
   $count = $result->rowCount();

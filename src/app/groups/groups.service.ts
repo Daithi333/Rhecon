@@ -217,10 +217,8 @@ export class GroupsService {
         });
       }),
       mergeMap(group => {
-        if (!group) {
-          return of(null);
-        }
-        return this.contactsService.getContact(group.admin).pipe(
+        if (!group) { return of(null); }
+        return this.contactsService.getContact(+group.admin).pipe(
           map(contact => {
             group.admin = contact;
             groupArr.push(group);
