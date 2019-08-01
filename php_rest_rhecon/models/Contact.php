@@ -107,4 +107,41 @@
       return false;
     }
 
+        /**
+     * Function to retrieve a single contact by id
+     */
+    public function readAdmin() {
+      $query = 'SELECT t.title, u.firstName, u.lastName,
+                s.specialism, u.email, u.portraitUrl, u.bio
+                FROM ' . $this->userTable . ' u
+                LEFT JOIN ' . $this->titleTable  . ' t
+                ON t.id = u.titleId
+                LEFT JOIN ' . $this->specialismTable  . ' s
+                ON s.id = u.specialismId
+                WHERE u.id = :id';
+
+      $stmt = $this->conn->prepare($query);
+
+      $stmt->bindParam(':id', $this->id);
+
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        // set contact properties
+        $this->title = $row['title'];
+        $this->firstName = $row['firstName'];
+        $this->lastName = $row['lastName'];
+        $this->specialism = $row['specialism'];
+        $this->email = $row['email'];
+        $this->portraitUrl = $row['portraitUrl'];
+        $this->bio = $row['bio'];
+
+        return true;
+      }
+
+      return false;
+    }
+
   }

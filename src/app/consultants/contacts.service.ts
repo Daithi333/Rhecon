@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, iif, defer } from 'rxjs';
 import { map, tap, take, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -74,15 +74,21 @@ export class ContactsService {
    * Retrieve a single contact by id
    * @param id - unique id of the contact
    */
-  getContact(id: number) {
+  getContact(id: number, adminLookup?: boolean) {
     return this.authService.userId.pipe(
       take(1),
       switchMap(userId => {
         if (!userId) {
           throw new Error('User not found!');
         }
-        return this.httpClient.get<ContactData>(
-          `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?userId=${userId}&id=${id}`
+        return iif(
+          () => adminLookup,
+          defer(() => this.httpClient.get<ContactData>(
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_admin.php?id=${id}`
+          )),
+          defer(() => this.httpClient.get<ContactData>(
+            `http://davidmcelhill.student.davecutting.uk/php_rest_rhecon/api/contact/read_single.php?userId=${userId}&id=${id}`
+          )),
         );
       }),
       map(contactData => {
