@@ -25,7 +25,7 @@
         size-xl="4"
         offset-xl="4"
       >
-        <ion-list>
+        <ion-list no-padding *ngIf="patients.length === 0">
           <ion-item type="button" routerLink="/tabs/patients/new-patient">
             <ion-avatar slot="start">
               <ion-img src="../../assets/icon/add-patient-icon.jpg"></ion-img>

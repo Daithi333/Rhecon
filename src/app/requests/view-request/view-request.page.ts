@@ -114,7 +114,6 @@ export class ViewRequestPage implements OnInit, OnDestroy {
           handler: () => {
             this.attachmentsSub = this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
-                // console.log(resData.body);
                 const fileType = this.determineFileType(fileUrl);
                 const blob = new Blob([resData.body], { type: fileType } );
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
@@ -138,6 +137,9 @@ export class ViewRequestPage implements OnInit, OnDestroy {
 
   // Method returns mime type for blob creation in the file download function
   determineFileType(url: string) {
+    if (url.substring(url.length - 4, url.length + 1) === 'blob') {
+      return 'image/jpeg';
+    }
     const ext = url.substring(url.lastIndexOf('.') + 1, url.length);
     const fileType =  fileTypes.find(f => f.ext === ext);
     return fileType.mime;
