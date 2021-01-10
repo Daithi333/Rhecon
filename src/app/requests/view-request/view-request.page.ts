@@ -115,6 +115,7 @@ export class ViewRequestPage implements OnInit, OnDestroy {
             this.attachmentsSub = this.attachmentsService.downloadAttachment(fileUrl)
               .subscribe(resData => {
                 const fileType = this.determineFileType(fileUrl);
+                console.log(fileType);
                 const blob = new Blob([resData.body], { type: fileType } );
                 if ( (this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop') ) {
                   FileSaver.saveAs(blob);
